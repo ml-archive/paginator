@@ -2,7 +2,7 @@ import HTTP
 import Fluent
 
 extension Entity {
-    public func paginator(
+    public static func paginator(
         _ perPage: Int,
         columns: [String]? = nil,
         pageName: String = "page",
