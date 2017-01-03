@@ -7,38 +7,58 @@ public enum Error: Swift.Error {
     case nilQuery
 }
 
-public struct Paginator<E: Entity> {
+public struct Paginator<EntityType: Entity> {
     public var total: Int?
     public var perPage: Int?
     public var currentPage: Int?
-    public var totalPages: Int?
     public var links: [String]?
+    
+    public var totalPages: Int? {
+        guard let total = total, let perPage = perPage else {
+            return nil
+        }
+        
+        var pages = total / perPage
+        if total % perPage != 0 {
+            pages += 1
+        }
+        
+        return pages
+    }
+    
+    public var previousPage: String? {
+        return nil
+    }
+    
+    public var nextPage: String? {
+        return nil
+    }
     
     public var data: Node?
     
-    var query: Query<E>?
+    var query: Query<EntityType>?
     
-    init(query: Query<E>, pageName: String? = nil, request: Request) throws {
+    init(query: Query<EntityType>, pageName: String? = nil, request: Request) throws {
         self.query = query
         self.data = try extractQueryNode()
     }
     
-    init?(perPage: Int, pageName: String? = nil, request: Request) {
-        guard let query = request.query else { return nil }
-        deserialize(node: query, pageName: pageName)
+    init(perPage: Int, pageName: String? = nil, request: Request) throws {
+        if let query = request.query {
+            deserialize(node: query, pageName: pageName)
+        }
+        
         self.perPage = perPage
         
-        do {
-            self.query = try E.query()
-        } catch { return nil }
+        self.query = try EntityType.query()
+        self.data = try extractQueryNode()
     }
 }
 
 extension Paginator {
     mutating func deserialize(node: Node, pageName: String?) {
-        currentPage = node[pageName ?? "page"]?.int
+        currentPage = node[pageName ?? "page"]?.int ?? 0
         total = node["total"]?.int
-        
     }
     
     mutating func extractQueryNode() throws -> Node {
@@ -46,13 +66,15 @@ extension Paginator {
             throw Error.nilQuery
         }
         
-        //FIXME: Better caching system
-        total = try total ?? query.getTotalCount()
-        
         if let count = perPage {
-            let limit = Limit(count: count, offset: (currentPage ?? 0) * count)
+            let current = currentPage ?? 0
+            let offset = (current - 1) * count
+            let limit = Limit(count: count, offset: offset)
             query.limit = limit
         }
+        
+        //FIXME: Better caching system
+        total = try total ?? query.count()
         
         return try query.raw()
     }
@@ -84,16 +106,5 @@ extension Paginator: NodeRepresentable, JSONRepresentable, ResponseRepresentable
         ])
         
         return node
-    }
-}
-
-extension Query {
-    func getTotalCount() throws -> Int {
-        //since this doesn't init the objects it _should_ be faster
-        guard case .array(let array) = try raw() else {
-            throw Error.internal
-        }
-        
-        return array.count
     }
 }

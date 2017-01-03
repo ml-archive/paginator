@@ -8,7 +8,11 @@ extension Entity {
         pageName: String = "page",
         page currentPage: Int? = nil,
         request: Request
-        ) -> Paginator<Self>? {
-        return Paginator(perPage: perPage, pageName: pageName, request: request)
+    ) throws -> Paginator<Self> {
+        return try Paginator(
+            perPage: perPage,
+            pageName: pageName,
+            request: request
+        )
     }
 }
