@@ -73,10 +73,11 @@ extension Paginator {
             query.limit = limit
         }
         
+        let node = try query.raw()
         //FIXME: Better caching system
         total = try total ?? query.count()
         
-        return try query.raw()
+        return node
     }
 }
 
