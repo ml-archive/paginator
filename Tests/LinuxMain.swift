@@ -1,5 +1,5 @@
 import XCTest
-@testable import paginatorTests
+@testable import PaginatorTests
 
 XCTMain([
      testCase(PaginatorTests.allTests),

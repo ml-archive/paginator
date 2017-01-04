@@ -1,4 +1,5 @@
 import XCTest
+
 @testable import Paginator
 
 class PaginatorTests: XCTestCase {
