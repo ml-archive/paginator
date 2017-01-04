@@ -3,11 +3,6 @@ import HTTP
 import Vapor
 import Fluent
 
-public enum Error: Swift.Error {
-    case `internal`
-    case nilQuery
-}
-
 public struct Paginator<EntityType: Entity> {
     public var currentPage: Int
     public var perPage: Int
@@ -72,25 +67,17 @@ public struct Paginator<EntityType: Entity> {
 }
 
 extension Paginator {
-    mutating func deserialize(query node: Node) {
-        if let currentPage = node[pageName]?.int {
-            self.currentPage = currentPage
-        }
-        
-        if let total = node["total"]?.int {
-            self.total = total
-        }
-    }
-    
     mutating func extractEntityData(_ node: Node?) throws -> Node {
-        let page = node?[pageName]?.int ?? currentPage
+        if let page = node?[pageName]?.int {
+            currentPage = page
+        }
         
-        let offset = (page - 1) * perPage
+        let offset = (currentPage - 1) * perPage
         let limit = Limit(count: perPage, offset: offset)
         query.limit = limit
         
-        //FIXME: Better caching system
-        total = try total ?? EntityType.query().count()
+        //FIXME(Brett): Better caching system
+        total = try EntityType.query().count()
         
         let node = try query.raw()
         
@@ -112,22 +99,9 @@ extension Paginator {
     }
 }
 
-extension Paginator: NodeRepresentable, JSONRepresentable, ResponseRepresentable {
-    public func makeResponse() throws -> Response {
-        return try makeJSON().makeResponse()
-    }
-    
-    public func makeJSON() throws -> JSON {
-        let node = try makeNode()
-        return try JSON(node: node)
-    }
-    
+extension Paginator: NodeRepresentable {
     public func makeNode(context: Context) throws -> Node {
-        guard let data = data else {
-            throw Error.internal
-        }
-        
-        let node =  try Node(node: [
+        return try Node(node: [
             "meta": Node(node: [
                 "paginator": Node(node: [
                     "total": total,
@@ -143,7 +117,5 @@ extension Paginator: NodeRepresentable, JSONRepresentable, ResponseRepresentable
             
             dataKey: data
         ])
-        
-        return node
     }
 }
