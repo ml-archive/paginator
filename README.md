@@ -16,7 +16,7 @@ Update your `Package.swift` file.
 Paginator does most of the hard work for you. Create and return a  paginated [Model](https://vapor.github.io/documentation/fluent/model.html) like so:
 ```swift
 import Vapor
-import Paginator 
+import Paginator
 
 drop.get("models") { req in
     // returns a pagination of 10 `MyModel`s.
