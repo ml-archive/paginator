@@ -24,6 +24,54 @@ drop.get("models") { req in
 }
 ```
 
+## Rendering views with 🍃
+What would pagination be without handy-dandy view rendering? Nothing. Before you can begin rendering paginators, you need to registor the custom tag with your droplet.
+
+### main.swift
+```swift
+import Vapor
+import Paginator
+
+let drop = Droplet()
+// ... provider setup
+
+if let view = drop.view as? LeafRenderer {
+    view.stem.register(PaginatorTag())
+}
+```
+
+Good! Now, pass a `Paginator` to your 🍃 templates like so:
+
+### main.swift
+```swift
+drop.get("/") { req in
+    let posts = try Post.paginator(10, request: req)
+    
+    return try drop.view.make("index", [
+        "posts": try posts.makeNode()
+    ])
+}
+```
+
+Inside of your 🍃 template you can iterate over your paginator's entities by accessing the paginator's `data` field.
+
+### index.leaf
+```html
+#loop(posts.data, "post") {
+<div class="post">
+  <span class="date">#(post.date)</span>
+  <span class="text">#(post.content)</span>
+</div>
+}
+```
+
+Finally, the pièce de résistance: navigation controllers using paginators and 🍃.
+
+### index.leaf
+```html
+#paginator(posts)
+```
+
 ## Overriding the `page` query key
 If you don't like the query key `page`, you can override it at the paginator callsite.
 ```swift
