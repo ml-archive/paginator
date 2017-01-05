@@ -25,7 +25,7 @@ drop.get("models") { req in
 ```
 
 ## Rendering views with 🍃
-What would pagination be without handy-dandy view rendering? Nothing. Before you can begin rendering paginators, you need to registor the custom tag with your droplet.
+What would pagination be without handy-dandy view rendering? Nothing. Before you can begin rendering paginators, you need to registor the custom tag with your droplet. We have a [Provider](https://vapor.github.io/documentation/guide/provider.html) that will register the tag for you.
 
 ### main.swift
 ```swift
@@ -33,11 +33,7 @@ import Vapor
 import Paginator
 
 let drop = Droplet()
-// ... provider setup
-
-if let view = drop.view as? LeafRenderer {
-    view.stem.register(PaginatorTag())
-}
+try drop.addProvider(PaginatorProvider.self)
 ```
 
 Good! Now, pass a `Paginator` to your 🍃 templates like so:

@@ -33,3 +33,22 @@ extension Entity {
         )
     }
 }
+
+extension Query {
+    public func paginator(
+        _ perPage: Int,
+        page currentPage: Int = 1,
+        pageName: String = "page",
+        dataKey: String = "data",
+        request: Request
+    ) throws -> Paginator<T> {
+        return try Paginator(
+            query: self,
+            currentPage: currentPage,
+            perPage: perPage,
+            pageName: pageName,
+            dataKey: dataKey,
+            request: request
+        )
+    }
+}

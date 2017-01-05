@@ -72,6 +72,10 @@ extension Paginator {
             currentPage = page
         }
         
+        if let count = node?["count"]?.int, count < perPage {
+            perPage = count
+        }
+        
         let offset = (currentPage - 1) * perPage
         let limit = Limit(count: perPage, offset: offset)
         query.limit = limit

@@ -10,8 +10,6 @@ public final class PaginatorTag: Tag {
     
     public let name = "paginator"
     
-    public init() {}
-    
     public func run(
         stem: Stem,
         context: Context,
@@ -60,8 +58,8 @@ extension PaginatorTag {
         guard let url = url else {
             return "<li class=\"disabled\"><span>«</span></li>\n".bytes
         }
-        
-        return "<li><a href=\"\(url)\" rel=\"next\">«</a></li>\n".bytes
+
+        return "<li><a href=\"\(url)\" rel=\"prev\">«</a></li>\n".bytes
     }
     
     func buildForwardButton(url: String?) -> Bytes {
@@ -79,7 +77,7 @@ extension PaginatorTag {
             if i == currentPage {
                 bytes += "<li class=\"active\"><span>\(i)</span></li>\n".bytes
             } else {
-                bytes += "<li><a href=\"#\">\(i)</a></li>\n".bytes
+                bytes += "<li><a href=\"?page=\(i)\">\(i)</a></li>\n".bytes
             }
         }
         
