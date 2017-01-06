@@ -2,6 +2,9 @@ import Core
 import Leaf
 
 public final class PaginatorTag: Tag {
+
+    public init() {}
+
     public enum Error: Swift.Error {
         case expectedOneArgument(got: Int)
         case expectedVariable
