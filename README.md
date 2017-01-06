@@ -1,3 +1,5 @@
+![GIF of paginator](https://cloud.githubusercontent.com/assets/1977704/21704234/c4f7a9a8-d36c-11e6-8522-7043d51b21b2.gif)
+
 # Paginator
 [![Language](https://img.shields.io/badge/Swift-3-brightgreen.svg)](http://swift.org)
 [![Build Status](https://travis-ci.org/nodes-vapor/paginator.svg?branch=master)](https://travis-ci.org/nodes-vapor/paginator)
