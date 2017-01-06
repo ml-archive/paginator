@@ -6,11 +6,11 @@ import Vapor
 @testable import Paginator
 
 class LeafTests: XCTestCase {
-    static var allTest = [
-        ("testExample", testExample)
+    static var allTests = [
+        ("testRunTag", testRunTag)
     ]
     
-    func testExample() {
+    func testRunTag() {
         let tag = PaginatorTag()
         let paginator = buildPaginator()
         
