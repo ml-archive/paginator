@@ -27,7 +27,7 @@ drop.get("models") { req in
 ```
 
 ## Rendering views with 🍃
-What would pagination be without handy-dandy view rendering? Nothing. Before you can begin rendering paginators, you need to registor the custom tag with your droplet. We have a [Provider](https://vapor.github.io/documentation/guide/provider.html) that will register the tag for you.
+What would pagination be without handy-dandy view rendering? Nothing. Before you can begin rendering paginators, you need to register the custom tag with your droplet. We have a [Provider](https://vapor.github.io/documentation/guide/provider.html) that will register the tag for you.
 
 ### main.swift
 ```swift
