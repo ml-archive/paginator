@@ -8,7 +8,9 @@ import Fluent
 class EntityTest: XCTestCase {
     static var allTests = [
         ("testBasic", testBasic),
-        ("testMakeNode", testMakeNode)
+        ("testAddingQueries", testAddingQueries),
+        ("testMakeNode", testMakeNode),
+        ("testEntityQueryExtension", testEntityQueryExtension)
     ]
     
     override func setUp() {
@@ -16,7 +18,7 @@ class EntityTest: XCTestCase {
     }
     
     func testBasic() {
-        let request = try! Request(method: .get, uri: "http://localhost/users?page=2")
+        let request = try! Request(method: .get, uri: "/users?page=2")
         
         //TODO(Brett): add `expect` tools
         let paginator = try! TestUserEntity.paginator(2, request: request)
@@ -40,10 +42,22 @@ class EntityTest: XCTestCase {
         XCTAssertEqual(paginator.total, 6)
     }
     
-    
+    func testAddingQueries() {
+        let request = try! Request(method: .get, uri: "/users")
+        
+        //TODO(Brett): add `expect` tools
+        let paginator = try! TestUserEntity.paginator(
+            2,
+            request: request.addingValues(["search": "Brett"])
+        )
+        
+        XCTAssertNil(paginator.previousPage)
+        XCTAssertNotNil(paginator.nextPage)
+        XCTAssertEqual(paginator.nextPage, "/users?count=2&page=2&search=Brett")
+    }
     
     func testMakeNode() {
-        let request = try! Request(method: .get, uri: "http://localhost/users")
+        let request = try! Request(method: .get, uri: "/users")
         let paginator = try! TestUserEntity.paginator(4, request: request)
         
         //TODO(Brett): add `expect` tools
@@ -74,6 +88,10 @@ class EntityTest: XCTestCase {
         
         XCTAssertNil(links["previous"]?.string)
         XCTAssertEqual(links["next"]?.string, "/users?page=2&count=4")
+    }
+    
+    func testEntityQueryExtension() {
+        
     }
 }
 

@@ -3,4 +3,5 @@ import XCTest
 
 XCTMain([
      testCase(PaginatorTests.allTests),
+     testCase(LeafTests.allTests),
 ])

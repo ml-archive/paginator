@@ -1,5 +1,6 @@
 import URI
 import HTTP
+import Core
 import Vapor
 import Fluent
 
@@ -10,6 +11,7 @@ public struct Paginator<EntityType: Entity> {
     public var total: Int?
     
     public var baseURI: URI
+    public var uriQueries: Node?
     
     public var pageName: String
     public var dataKey: String
@@ -61,18 +63,19 @@ public struct Paginator<EntityType: Entity> {
         self.dataKey = dataKey
         
         baseURI = request.uri
+        uriQueries = request.query
         
-        self.data = try extractEntityData(request.query)
+        self.data = try extractEntityData()
     }
 }
 
 extension Paginator {
-    mutating func extractEntityData(_ node: Node?) throws -> Node {
-        if let page = node?[pageName]?.int {
+    mutating func extractEntityData() throws -> Node {
+        if let page = uriQueries?[pageName]?.int {
             currentPage = page
         }
         
-        if let count = node?["count"]?.int, count < perPage {
+        if let count = uriQueries?["count"]?.int, count < perPage {
             perPage = count
         }
         
@@ -81,7 +84,7 @@ extension Paginator {
         query.limit = limit
         
         //FIXME(Brett): Better caching system
-        total = try EntityType.query().count()
+        total = try total ?? EntityType.query().count()
         
         let node = try query.raw()
         
@@ -90,16 +93,18 @@ extension Paginator {
 }
 
 extension Paginator {
-    func buildPath(page: Int, count: Int) -> String {
+    func buildPath(page: Int, count: Int) -> String? {
+        var urlQueriesRaw = uriQueries ?? [:]
+        urlQueriesRaw[pageName] = .number(.int(page))
+        urlQueriesRaw["count"] = .number(.int(count))
+        
+        guard let urlQueries = urlQueriesRaw.formEncode() else { return nil }
+        
         return [
             baseURI.path,
             "?",
-            pageName,
-            "=",
-            "\(page)",
-            "&count=",
-            "\(count)"
-            ].joined()
+            urlQueries
+        ].joined()
     }
 }
 
@@ -121,5 +126,30 @@ extension Paginator: NodeRepresentable {
             
             dataKey: data
         ])
+    }
+}
+
+extension Node {
+    func formEncode() -> String? {
+        guard case .object(let dict) = self else {
+            return nil
+        }
+        
+        return dict.map {
+            [$0.key, $0.value.string ?? ""].joined(separator: "=")
+        }.joined(separator: "&")
+    }
+}
+
+extension Request {
+    public func addingValues(_ queries: [String : String]) throws -> Request {
+        var newQueries = query?.nodeObject ?? [:]
+        
+        queries.forEach {
+            newQueries[$0.key] = $0.value.makeNode()
+        }
+        
+        query = try newQueries.makeNode()
+        return self
     }
 }
