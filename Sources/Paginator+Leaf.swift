@@ -2,14 +2,13 @@ import Core
 import Leaf
 
 public final class PaginatorTag: Tag {
-
-    public init() {}
-
     public enum Error: Swift.Error {
         case expectedOneArgument(got: Int)
         case expectedVariable
         case expectedValidPaginator
     }
+    
+    public init() {}
     
     public let name = "paginator"
     
@@ -104,5 +103,22 @@ extension PaginatorTag {
         bytes += footer
         
         return .bytes(bytes)
+    }
+}
+
+extension PaginatorTag.Error: Equatable {
+    public static func ==(lhs: PaginatorTag.Error, rhs: PaginatorTag.Error) -> Bool {
+        switch (lhs, rhs) {
+        case (.expectedOneArgument(let a), .expectedOneArgument(let b)):
+            return a == b
+            
+        case
+            (.expectedVariable, .expectedVariable),
+            (.expectedValidPaginator, .expectedValidPaginator):
+                return true
+            
+        default:
+            return false
+        }
     }
 }
