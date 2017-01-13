@@ -10,7 +10,7 @@ class EntityTest: XCTestCase {
         ("testBasic", testBasic),
         ("testAddingQueries", testAddingQueries),
         ("testMakeNode", testMakeNode),
-        ("testEntityQueryExtension", testEntityQueryExtension)
+        ("testEntityQueryExtension", testEntityQueryExtension),
     ]
     
     override func setUp() {
