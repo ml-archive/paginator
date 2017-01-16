@@ -7,20 +7,24 @@ import Vapor
 
 class LeafTests: XCTestCase {
     static var allTests = [
-        ("testRunTag", testRunTag)
+        ("testRunTag", testRunTag),
+        ("testRunTagFailedTwoArgs", testRunTagFailedTwoArgs),
     ]
     
     func testRunTag() {
         let tag = PaginatorTag()
         let paginator = buildPaginator()
         
-        let result = try! run(
-            tag: tag,
-            context: paginator,
-            arguments: [
-                .variable(path: [], value: paginator)
-            ]
-        )
+        let result = expectNoThrow() {
+            return try run(
+                tag: tag,
+                context: paginator,
+                arguments: [
+                    .variable(path: [], value: paginator)
+                ]
+            )
+
+        }!
         
         guard result != nil, case .bytes(let bytes) = result! else {
             XCTFail("Should have returned bytes")
@@ -30,6 +34,19 @@ class LeafTests: XCTestCase {
         let expectedHTML = "<nav class=\"paginator text-center\">\n<ul class=\"pagination\">\n<li><a href=\"/posts?page=1\" rel=\"prev\">«</a></li>\n<li><a href=\"?page=1\">1</a></li>\n<li class=\"active\"><span>2</span></li>\n<li><a href=\"?page=3\">3</a></li>\n<li><a href=\"?page=4\">4</a></li>\n<li><a href=\"?page=5\">5</a></li>\n<li><a href=\"?page=6\">6</a></li>\n<li><a href=\"?page=7\">7</a></li>\n<li><a href=\"?page=8\">8</a></li>\n<li><a href=\"?page=9\">9</a></li>\n<li><a href=\"?page=10\">10</a></li>\n<li><a href=\"/posts?page=3\" rel=\"next\">»</a></li>\n</ul>\n</nav>"
         
         XCTAssertEqual(bytes.string, expectedHTML)
+    }
+    
+    func testRunTagFailedTwoArgs() {
+        let tag = PaginatorTag()
+        
+        expect(toThrow: PaginatorTag.Error.expectedOneArgument(got: 0)) {
+            let _ = try run(
+                tag: tag,
+                context: .null,
+                arguments: [
+                ]
+            )
+        }
     }
 }
 
