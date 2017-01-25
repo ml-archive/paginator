@@ -9,17 +9,20 @@ public final class PaginatorProvider: Provider {
             return
         }
         
-        renderer.stem.register(PaginatorTag(useBootstrap4: useBootstrap4))
+        renderer.stem.register(PaginatorTag(useBootstrap4: useBootstrap4, paginationLabel: paginationLabel))
     }
     
     fileprivate let useBootstrap4: Bool
+    fileprivate let paginationLabel: String?
     
-    public init(useBootstrap4: Bool = false) {
+    public init(useBootstrap4: Bool = false, paginationLabel: String? = nil) {
         self.useBootstrap4 = useBootstrap4
+        self.paginationLabel = paginationLabel
     }
     public init(config: Config) throws {
         // TODO
         useBootstrap4 = false
+        paginationLabel = nil
     }
     public func afterInit(_ drop: Droplet) {}
     public func beforeRun(_: Droplet) {}

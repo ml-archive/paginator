@@ -9,9 +9,11 @@ public final class PaginatorTag: Tag {
     }
     
     fileprivate let useBootstrap4: Bool
+    fileprivate let paginationLabel: String?
     
-    public init(useBootstrap4: Bool = false) {
+    public init(useBootstrap4: Bool = false, paginationLabel: String? = nil) {
         self.useBootstrap4 = useBootstrap4
+        self.paginationLabel = paginationLabel
     }
     
     public let name = "paginator"
@@ -141,7 +143,7 @@ extension PaginatorTag {
             navClass = "paginator text-center"
             ulClass = "pagination"
         }
-        let header = "<nav class=\"\(navClass)\">\n<ul class=\"\(ulClass)\">\n".bytes
+        let header = "<nav class=\"\(navClass)\" aria-label=\"\(paginationLabel ?? "")\">\n<ul class=\"\(ulClass)\">\n".bytes
         let footer = "</ul>\n</nav>".bytes
         
         bytes += header
