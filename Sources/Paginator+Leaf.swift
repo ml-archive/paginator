@@ -8,7 +8,11 @@ public final class PaginatorTag: Tag {
         case expectedValidPaginator
     }
     
-    public init() {}
+    fileprivate let useBootstrap4: Bool
+    
+    public init(useBootstrap4: Bool = false) {
+        self.useBootstrap4 = useBootstrap4
+    }
     
     public let name = "paginator"
     
