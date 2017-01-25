@@ -72,20 +72,8 @@ extension PaginatorTag {
     }
     
     func buildForwardButton(url: String?) -> Bytes {
-
-        let liClass: String
-        let linkClass: String
-        if useBootstrap4 {
-            liClass = "page-item"
-            linkClass = "page-link"
-        }
-        else {
-            liClass = ""
-            linkClass = ""
-        }
-        
         guard let url = url else {
-            return "<li class=\"disabled \(liClass)\"><span aria-hidden=\"true\" class=\"\(linkClass)\">»</span></span><span class=\"sr-only\">Next</span></li>\n".bytes
+            return buildLink(title: "»", active: false, link: nil, disabled: true).bytes
         }
         
         return buildLink(title: "»", active: false, link: url, disabled: false).bytes
