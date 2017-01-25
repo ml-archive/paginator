@@ -60,30 +60,68 @@ public final class PaginatorTag: Tag {
 }
 
 extension PaginatorTag {
+    
     func buildBackButton(url: String?) -> Bytes {
+        
+        let liClass: String
+        let linkClass: String
+        if useBootstrap4 {
+            liClass = "page-item"
+            linkClass = "page-link"
+        }
+        else {
+            liClass = ""
+            linkClass = ""
+        }
+        
         guard let url = url else {
-            return "<li class=\"disabled\"><span>«</span></li>\n".bytes
+            return "<li class=\"disabled \(liClass)\"><span class=\"\(linkClass)\" aria-label=\"Previous\" aria-hidden=\"true\">«</span><span class=\"sr-only\">Previous</span></li>\n".bytes
         }
 
-        return "<li><a href=\"\(url)\" rel=\"prev\">«</a></li>\n".bytes
+        return "<li class=\"\(liClass)\"><a href=\"\(url)\" rel=\"prev\" aria-label=\"Previous\" class=\"\(linkClass)\"><span aria-hidden=\"true\">«</span><span class=\"sr-only\">Previous</span></a></li>\n".bytes
     }
     
     func buildForwardButton(url: String?) -> Bytes {
-        guard let url = url else {
-            return "<li class=\"disabled\"><span>»</span></li>\n".bytes
+
+        let liClass: String
+        let linkClass: String
+        if useBootstrap4 {
+            liClass = "page-item"
+            linkClass = "page-link"
+        }
+        else {
+            liClass = ""
+            linkClass = ""
         }
         
-        return "<li><a href=\"\(url)\" rel=\"next\">»</a></li>\n".bytes
+        guard let url = url else {
+            return "<li class=\"disabled \(liClass)\"><span aria-hidden=\"true\" class=\"\(linkClass)\">»</span></span><span class=\"sr-only\">Next</span></li>\n".bytes
+        }
+        
+        return "<li class=\"\(liClass)\"><a href=\"\(url)\" rel=\"next\" class=\"\(linkClass)\" aria-label=\"Next\"><span class=\"sr-only\">Next</span><span aria-hidden=\"true\">»</span></a></li>\n".bytes
     }
     
     func buildLinks(currentPage: Int, count: Int) -> Bytes {
         var bytes: Bytes = []
         
+        let linkClass: String
+        let liClass: String
+        let activeSpan = "<span class=\"sr-only\">(current)</span>"
+        
+        if useBootstrap4 {
+            linkClass = "page-link"
+            liClass = "page-item"
+        }
+        else {
+            linkClass = ""
+            liClass = ""
+        }
+        
         for i in 1...count {
             if i == currentPage {
-                bytes += "<li class=\"active\"><span>\(i)</span></li>\n".bytes
+                bytes += "<li class=\"active \(liClass)\"><span class=\"\(linkClass)\">\(i)</span>\(activeSpan)</li>\n".bytes
             } else {
-                bytes += "<li><a href=\"?page=\(i)\">\(i)</a></li>\n".bytes
+                bytes += "<li><a href=\"?page=\(i)\" class=\"\(linkClass)\">\(i)</a></li>\n".bytes
             }
         }
         
@@ -93,7 +131,17 @@ extension PaginatorTag {
     func buildNavigation(currentPage: Int, totalPages: Int, links: [String : Polymorphic]) -> Node {
         var bytes: Bytes = []
         
-        let header = "<nav class=\"paginator text-center\">\n<ul class=\"pagination\">\n".bytes
+        let navClass: String
+        let ulClass: String
+        if useBootstrap4 {
+            navClass = "paginator"
+            ulClass = "pagination justify-content-center"
+        }
+        else {
+            navClass = "paginator text-center"
+            ulClass = "pagination"
+        }
+        let header = "<nav class=\"\(navClass)\">\n<ul class=\"\(ulClass)\">\n".bytes
         let footer = "</ul>\n</nav>".bytes
         
         bytes += header
