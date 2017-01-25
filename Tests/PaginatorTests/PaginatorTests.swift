@@ -7,14 +7,9 @@ import Vapor
 
 class PaginatorTests: XCTestCase {
     static var allTests = [
-        ("testExample", testExample),
         ("testRequestQueryExtension", testRequestQueryExtension)
     ]
-    
-    func testExample() {
-        XCTAssertEqual(2+2, 4)
-    }
-    
+
     func testRequestQueryExtension() {
         var request = try! Request(method: .get, uri: "/?key=value")
         request = try! request.addingValues(["hello": "world"])
