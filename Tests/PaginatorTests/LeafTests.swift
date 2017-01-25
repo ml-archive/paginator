@@ -31,7 +31,7 @@ class LeafTests: XCTestCase {
             return
         }
         
-        let expectedHTML = "<nav class=\"paginator text-center\">\n<ul class=\"pagination\">\n<li><a href=\"/posts?page=1\" rel=\"prev\">«</a></li>\n<li><a href=\"?page=1\">1</a></li>\n<li class=\"active\"><span>2</span></li>\n<li><a href=\"?page=3\">3</a></li>\n<li><a href=\"?page=4\">4</a></li>\n<li><a href=\"?page=5\">5</a></li>\n<li><a href=\"?page=6\">6</a></li>\n<li><a href=\"?page=7\">7</a></li>\n<li><a href=\"?page=8\">8</a></li>\n<li><a href=\"?page=9\">9</a></li>\n<li><a href=\"?page=10\">10</a></li>\n<li><a href=\"/posts?page=3\" rel=\"next\">»</a></li>\n</ul>\n</nav>"
+        let expectedHTML = "<nav class=\"paginator text-center\">\n<ul class=\"pagination\">\n<li><a href=\"/posts?page=1\" rel=\"prev\" aria-label=\"Previous\"><span aria-hidden=\"true\">«</span><span class=\"sr-only\">Previous</span></a></li>\n<li><a href=\"?page=1\">1</a></li>\n<li class=\"active\"><span>2</span><span class=\"sr-only\">(current)</span></li>\n<li><a href=\"?page=3\">3</a></li>\n<li><a href=\"?page=4\">4</a></li>\n<li><a href=\"?page=5\">5</a></li>\n<li><a href=\"?page=6\">6</a></li>\n<li><a href=\"?page=7\">7</a></li>\n<li><a href=\"?page=8\">8</a></li>\n<li><a href=\"?page=9\">9</a></li>\n<li><a href=\"?page=10\">10</a></li>\n<li><a href=\"/posts?page=3\" rel=\"next\" aria-label=\"Next\"><span aria-hidden=\"true\">»</span><span class=\"sr-only\">Next</span></a></li>\n</ul>\n</nav>"
         
         XCTAssertEqual(bytes.string, expectedHTML)
     }
