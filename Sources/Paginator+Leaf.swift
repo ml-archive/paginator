@@ -8,7 +8,13 @@ public final class PaginatorTag: Tag {
         case expectedValidPaginator
     }
     
-    public init() {}
+    fileprivate let useBootstrap4: Bool
+    fileprivate let paginationLabel: String?
+    
+    public init(useBootstrap4: Bool = false, paginationLabel: String? = nil) {
+        self.useBootstrap4 = useBootstrap4
+        self.paginationLabel = paginationLabel
+    }
     
     public let name = "paginator"
     
@@ -56,20 +62,21 @@ public final class PaginatorTag: Tag {
 }
 
 extension PaginatorTag {
+    
     func buildBackButton(url: String?) -> Bytes {
         guard let url = url else {
-            return "<li class=\"disabled\"><span>«</span></li>\n".bytes
+            return buildLink(title: "«", active: false, link: nil, disabled: true).bytes
         }
 
-        return "<li><a href=\"\(url)\" rel=\"prev\">«</a></li>\n".bytes
+        return buildLink(title: "«", active: false, link: url, disabled: false).bytes
     }
     
     func buildForwardButton(url: String?) -> Bytes {
         guard let url = url else {
-            return "<li class=\"disabled\"><span>»</span></li>\n".bytes
+            return buildLink(title: "»", active: false, link: nil, disabled: true).bytes
         }
         
-        return "<li><a href=\"\(url)\" rel=\"next\">»</a></li>\n".bytes
+        return buildLink(title: "»", active: false, link: url, disabled: false).bytes
     }
     
     func buildLinks(currentPage: Int, count: Int) -> Bytes {
@@ -77,9 +84,9 @@ extension PaginatorTag {
         
         for i in 1...count {
             if i == currentPage {
-                bytes += "<li class=\"active\"><span>\(i)</span></li>\n".bytes
+                bytes += buildLink(title: "\(i)", active: true, link: nil, disabled: false).bytes
             } else {
-                bytes += "<li><a href=\"?page=\(i)\">\(i)</a></li>\n".bytes
+                bytes += buildLink(title: "\(i)", active: false, link: "?page=\(i)", disabled: false).bytes
             }
         }
         
@@ -89,7 +96,21 @@ extension PaginatorTag {
     func buildNavigation(currentPage: Int, totalPages: Int, links: [String : Polymorphic]) -> Node {
         var bytes: Bytes = []
         
-        let header = "<nav class=\"paginator text-center\">\n<ul class=\"pagination\">\n".bytes
+        let navClass: String
+        let ulClass: String
+        if useBootstrap4 {
+            navClass = "paginator"
+            ulClass = "pagination justify-content-center"
+        } else {
+            navClass = "paginator text-center"
+            ulClass = "pagination"
+        }
+        var headerString = "<nav class=\"\(navClass)\""
+        if let ariaLabel = paginationLabel {
+            headerString += " aria-label=\"\(ariaLabel)\""
+        }
+        headerString += ">\n<ul class=\"\(ulClass)\">\n"
+        let header = headerString.bytes
         let footer = "</ul>\n</nav>".bytes
         
         bytes += header
@@ -103,6 +124,84 @@ extension PaginatorTag {
         bytes += footer
         
         return .bytes(bytes)
+    }
+    
+    func buildLink(title: String, active: Bool, link: String?, disabled: Bool) -> String {
+        let linkClass: String?
+        let liClass: String?
+        let activeSpan = "<span class=\"sr-only\">(current)</span>"
+        
+        if useBootstrap4 {
+            linkClass = "page-link"
+            liClass = "page-item"
+        } else {
+            linkClass = nil
+            liClass = nil
+        }
+        
+        var linkString = "<li"
+        
+        if active || disabled || liClass != nil {
+            linkString += " class=\""
+            
+            if active {
+                linkString += "active"
+            }
+            if disabled {
+                linkString += "disabled"
+            }
+            
+            if let liClass = liClass {
+                if active || disabled {
+                    linkString += " "
+                }
+                linkString += "\(liClass)"
+            }
+            
+            linkString += "\""
+        }
+        
+        linkString += ">"
+        
+        if let link = link {
+            linkString += "<a href=\"\(link)\""
+            
+            if let linkClass = linkClass {
+                linkString += " class=\"\(linkClass)\""
+            }
+            
+            if title == "«" {
+                linkString += " rel=\"prev\" aria-label=\"Previous\"><span aria-hidden=\"true\">«</span><span class=\"sr-only\">Previous</span>"
+            } else if title == "»" {
+                linkString += " rel=\"next\" aria-label=\"Next\"><span aria-hidden=\"true\">»</span><span class=\"sr-only\">Next</span>"
+            } else {
+                linkString += ">\(title)"
+            }
+            
+            linkString += "</a>"
+        } else {
+            linkString += "<span"
+            
+            if let linkClass = linkClass {
+                linkString += " class=\"\(linkClass)\""
+            }
+            
+            if title == "«" {
+                linkString += " aria-label=\"Previous\" aria-hidden=\"true\">«</span><span class=\"sr-only\">Previous</span>"
+            } else if title == "»" {
+                linkString += " aria-label=\"Next\" aria-hidden=\"true\">»</span><span class=\"sr-only\">Next</span>"
+            } else {
+                linkString += ">\(title)</span>"
+                
+                if active {
+                    linkString += activeSpan
+                }
+            }
+        }
+        
+        linkString += "</li>\n"
+        
+        return linkString
     }
 }
 

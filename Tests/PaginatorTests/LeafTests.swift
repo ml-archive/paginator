@@ -31,7 +31,107 @@ class LeafTests: XCTestCase {
             return
         }
         
-        let expectedHTML = "<nav class=\"paginator text-center\">\n<ul class=\"pagination\">\n<li><a href=\"/posts?page=1\" rel=\"prev\">«</a></li>\n<li><a href=\"?page=1\">1</a></li>\n<li class=\"active\"><span>2</span></li>\n<li><a href=\"?page=3\">3</a></li>\n<li><a href=\"?page=4\">4</a></li>\n<li><a href=\"?page=5\">5</a></li>\n<li><a href=\"?page=6\">6</a></li>\n<li><a href=\"?page=7\">7</a></li>\n<li><a href=\"?page=8\">8</a></li>\n<li><a href=\"?page=9\">9</a></li>\n<li><a href=\"?page=10\">10</a></li>\n<li><a href=\"/posts?page=3\" rel=\"next\">»</a></li>\n</ul>\n</nav>"
+        let expectedHTML = "<nav class=\"paginator text-center\">\n<ul class=\"pagination\">\n<li><a href=\"/posts?page=1\" rel=\"prev\" aria-label=\"Previous\"><span aria-hidden=\"true\">«</span><span class=\"sr-only\">Previous</span></a></li>\n<li><a href=\"?page=1\">1</a></li>\n<li class=\"active\"><span>2</span><span class=\"sr-only\">(current)</span></li>\n<li><a href=\"?page=3\">3</a></li>\n<li><a href=\"?page=4\">4</a></li>\n<li><a href=\"?page=5\">5</a></li>\n<li><a href=\"?page=6\">6</a></li>\n<li><a href=\"?page=7\">7</a></li>\n<li><a href=\"?page=8\">8</a></li>\n<li><a href=\"?page=9\">9</a></li>\n<li><a href=\"?page=10\">10</a></li>\n<li><a href=\"/posts?page=3\" rel=\"next\" aria-label=\"Next\"><span aria-hidden=\"true\">»</span><span class=\"sr-only\">Next</span></a></li>\n</ul>\n</nav>"
+        
+        XCTAssertEqual(bytes.string, expectedHTML)
+    }
+    
+    func testRunTagWithAriaLabel() {
+        let tag = PaginatorTag(paginationLabel: "Some Aria Label Pages")
+        let paginator = buildPaginator()
+        
+        let result = expectNoThrow() {
+            return try run(
+                tag: tag,
+                context: paginator,
+                arguments: [
+                    .variable(path: [], value: paginator)
+                ]
+            )
+            
+            }!
+        
+        guard result != nil, case .bytes(let bytes) = result! else {
+            XCTFail("Should have returned bytes")
+            return
+        }
+        
+        let expectedHTML = "<nav class=\"paginator text-center\" aria-label=\"Some Aria Label Pages\">\n<ul class=\"pagination\">\n<li><a href=\"/posts?page=1\" rel=\"prev\" aria-label=\"Previous\"><span aria-hidden=\"true\">«</span><span class=\"sr-only\">Previous</span></a></li>\n<li><a href=\"?page=1\">1</a></li>\n<li class=\"active\"><span>2</span><span class=\"sr-only\">(current)</span></li>\n<li><a href=\"?page=3\">3</a></li>\n<li><a href=\"?page=4\">4</a></li>\n<li><a href=\"?page=5\">5</a></li>\n<li><a href=\"?page=6\">6</a></li>\n<li><a href=\"?page=7\">7</a></li>\n<li><a href=\"?page=8\">8</a></li>\n<li><a href=\"?page=9\">9</a></li>\n<li><a href=\"?page=10\">10</a></li>\n<li><a href=\"/posts?page=3\" rel=\"next\" aria-label=\"Next\"><span aria-hidden=\"true\">»</span><span class=\"sr-only\">Next</span></a></li>\n</ul>\n</nav>"
+        
+        XCTAssertEqual(bytes.string, expectedHTML)
+    }
+    
+    func testRunTagWithExplicitBootstrap3() {
+        let tag = PaginatorTag(useBootstrap4: false)
+        let paginator = buildPaginator()
+        
+        let result = expectNoThrow() {
+            return try run(
+                tag: tag,
+                context: paginator,
+                arguments: [
+                    .variable(path: [], value: paginator)
+                ]
+            )
+            
+            }!
+        
+        guard result != nil, case .bytes(let bytes) = result! else {
+            XCTFail("Should have returned bytes")
+            return
+        }
+        
+        let expectedHTML = "<nav class=\"paginator text-center\">\n<ul class=\"pagination\">\n<li><a href=\"/posts?page=1\" rel=\"prev\" aria-label=\"Previous\"><span aria-hidden=\"true\">«</span><span class=\"sr-only\">Previous</span></a></li>\n<li><a href=\"?page=1\">1</a></li>\n<li class=\"active\"><span>2</span><span class=\"sr-only\">(current)</span></li>\n<li><a href=\"?page=3\">3</a></li>\n<li><a href=\"?page=4\">4</a></li>\n<li><a href=\"?page=5\">5</a></li>\n<li><a href=\"?page=6\">6</a></li>\n<li><a href=\"?page=7\">7</a></li>\n<li><a href=\"?page=8\">8</a></li>\n<li><a href=\"?page=9\">9</a></li>\n<li><a href=\"?page=10\">10</a></li>\n<li><a href=\"/posts?page=3\" rel=\"next\" aria-label=\"Next\"><span aria-hidden=\"true\">»</span><span class=\"sr-only\">Next</span></a></li>\n</ul>\n</nav>"
+        
+        XCTAssertEqual(bytes.string, expectedHTML)
+    }
+    
+    func testRunTagWithBootstrap4() {
+        let tag = PaginatorTag(useBootstrap4: true)
+        let paginator = buildPaginator()
+        
+        let result = expectNoThrow() {
+            return try run(
+                tag: tag,
+                context: paginator,
+                arguments: [
+                    .variable(path: [], value: paginator)
+                ]
+            )
+            
+            }!
+        
+        guard result != nil, case .bytes(let bytes) = result! else {
+            XCTFail("Should have returned bytes")
+            return
+        }
+        
+        let expectedHTML = "<nav class=\"paginator\">\n<ul class=\"pagination justify-content-center\">\n<li class=\"page-item\"><a href=\"/posts?page=1\" class=\"page-link\" rel=\"prev\" aria-label=\"Previous\"><span aria-hidden=\"true\">«</span><span class=\"sr-only\">Previous</span></a></li>\n<li class=\"page-item\"><a href=\"?page=1\" class=\"page-link\">1</a></li>\n<li class=\"active page-item\"><span class=\"page-link\">2</span><span class=\"sr-only\">(current)</span></li>\n<li class=\"page-item\"><a href=\"?page=3\" class=\"page-link\">3</a></li>\n<li class=\"page-item\"><a href=\"?page=4\" class=\"page-link\">4</a></li>\n<li class=\"page-item\"><a href=\"?page=5\" class=\"page-link\">5</a></li>\n<li class=\"page-item\"><a href=\"?page=6\" class=\"page-link\">6</a></li>\n<li class=\"page-item\"><a href=\"?page=7\" class=\"page-link\">7</a></li>\n<li class=\"page-item\"><a href=\"?page=8\" class=\"page-link\">8</a></li>\n<li class=\"page-item\"><a href=\"?page=9\" class=\"page-link\">9</a></li>\n<li class=\"page-item\"><a href=\"?page=10\" class=\"page-link\">10</a></li>\n<li class=\"page-item\"><a href=\"/posts?page=3\" class=\"page-link\" rel=\"next\" aria-label=\"Next\"><span aria-hidden=\"true\">»</span><span class=\"sr-only\">Next</span></a></li>\n</ul>\n</nav>"
+        
+        XCTAssertEqual(bytes.string, expectedHTML)
+    }
+    
+    func testRunTagWithBootstrap4AndAriaLabel() {
+        let tag = PaginatorTag(useBootstrap4: true, paginationLabel: "Some Pages")
+        let paginator = buildPaginator()
+        
+        let result = expectNoThrow() {
+            return try run(
+                tag: tag,
+                context: paginator,
+                arguments: [
+                    .variable(path: [], value: paginator)
+                ]
+            )
+            
+            }!
+        
+        guard result != nil, case .bytes(let bytes) = result! else {
+            XCTFail("Should have returned bytes")
+            return
+        }
+        
+        let expectedHTML = "<nav class=\"paginator\" aria-label=\"Some Pages\">\n<ul class=\"pagination justify-content-center\">\n<li class=\"page-item\"><a href=\"/posts?page=1\" class=\"page-link\" rel=\"prev\" aria-label=\"Previous\"><span aria-hidden=\"true\">«</span><span class=\"sr-only\">Previous</span></a></li>\n<li class=\"page-item\"><a href=\"?page=1\" class=\"page-link\">1</a></li>\n<li class=\"active page-item\"><span class=\"page-link\">2</span><span class=\"sr-only\">(current)</span></li>\n<li class=\"page-item\"><a href=\"?page=3\" class=\"page-link\">3</a></li>\n<li class=\"page-item\"><a href=\"?page=4\" class=\"page-link\">4</a></li>\n<li class=\"page-item\"><a href=\"?page=5\" class=\"page-link\">5</a></li>\n<li class=\"page-item\"><a href=\"?page=6\" class=\"page-link\">6</a></li>\n<li class=\"page-item\"><a href=\"?page=7\" class=\"page-link\">7</a></li>\n<li class=\"page-item\"><a href=\"?page=8\" class=\"page-link\">8</a></li>\n<li class=\"page-item\"><a href=\"?page=9\" class=\"page-link\">9</a></li>\n<li class=\"page-item\"><a href=\"?page=10\" class=\"page-link\">10</a></li>\n<li class=\"page-item\"><a href=\"/posts?page=3\" class=\"page-link\" rel=\"next\" aria-label=\"Next\"><span aria-hidden=\"true\">»</span><span class=\"sr-only\">Next</span></a></li>\n</ul>\n</nav>"
         
         XCTAssertEqual(bytes.string, expectedHTML)
     }

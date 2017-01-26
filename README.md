@@ -100,6 +100,42 @@ The JSON response will now look like:
 }
 ```
 
+## Using Bootstrap 4
+
+By default, Paginator prints Bootstrap 3-compatible HTML in Leaf, however it is possible to configure it to use Bootstrap 4. You can add a `paginator.json` file to your Config directory with the values:
+
+```json
+{
+    "useBootstrap4": true
+}
+```
+
+You can alternatively manually build the Paginator Provider and add it to your `Droplet`:
+
+```swift
+let paginator = PaginatorProvider(useBootstrap4: true)
+drop.addProvider(paginator)
+```
+
+## Specifying an Aria Label 
+
+The Paginator HTML adds in Aria labels for accessibility options, such as screen readers. It is recommended that you add a label to your paginator to assist this. This can be done in the same way as the Bootstrap 4 options. Either in `paginator.json`:
+
+```json
+{
+    "paginatorLabel": "Blog Post Pages"
+}
+```
+
+Or manually:
+
+```swift
+let paginator = PaginatorProvider(paginationLabel: "Blog Post Pages")
+drop.addProvider(paginator)
+```
+
+The two configurable options (label and Bootstrap 4) can obviously be combined.
+
 ## 🏆 Credits
 This package is developed and maintained by the Vapor team at [Nodes](https://www.nodes.dk).
 

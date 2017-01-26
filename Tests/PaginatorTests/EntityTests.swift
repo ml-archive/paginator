@@ -2,6 +2,7 @@ import XCTest
 
 import HTTP
 import Fluent
+import Foundation
 
 @testable import Paginator
 
@@ -32,9 +33,22 @@ class EntityTest: XCTestCase {
         XCTAssertEqual(paginator.dataKey, "data")
         
         XCTAssertNotNil(paginator.previousPage)
-        XCTAssertEqual(paginator.previousPage, "/users?page=1&count=2")
+        let previousPageComponents = URLComponents(string: paginator.previousPage!)
+        let previousPagePath = previousPageComponents?.path
+        let previousPageQuery = previousPageComponents?.query
+        let expectedPreviousPageQueryNode = Node(formURLEncoded: "page=1&count=2".bytes)
+        let actualPreviousPageQueryNode = Node(formURLEncoded: previousPageQuery!.bytes)
+        XCTAssertEqual(expectedPreviousPageQueryNode, actualPreviousPageQueryNode)
+        XCTAssertEqual(previousPagePath, "/users")
+        
         XCTAssertNotNil(paginator.nextPage)
-        XCTAssertEqual(paginator.nextPage, "/users?page=3&count=2")
+        let nextPageComponents = URLComponents(string: paginator.nextPage!)
+        let nextPagePath = nextPageComponents?.path
+        let nextPageQuery = nextPageComponents?.query
+        let expectedNextPageQueryNode = Node(formURLEncoded: "page=3&count=2".bytes)
+        let actualNextPageQueryNode = Node(formURLEncoded: nextPageQuery!.bytes)
+        XCTAssertEqual(expectedNextPageQueryNode, actualNextPageQueryNode)
+        XCTAssertEqual(nextPagePath, "/users")
         
         XCTAssertEqual(paginator.totalPages, 3)
         
@@ -53,7 +67,16 @@ class EntityTest: XCTestCase {
         
         XCTAssertNil(paginator.previousPage)
         XCTAssertNotNil(paginator.nextPage)
-        XCTAssertEqual(paginator.nextPage, "/users?count=2&page=2&search=Brett")
+        
+        let components = URLComponents(string: "/users?count=2&search=Brett&page=2")
+        let query = components?.query
+        let path = components?.path
+        
+        let queryNode = Node(formURLEncoded: query!.bytes)
+        let expectedQueryNode = Node(formURLEncoded: "count=2&search=Brett&page=2".bytes)
+        
+        XCTAssertEqual(queryNode, expectedQueryNode)
+        XCTAssertEqual(path, "/users")
     }
     
     func testMakeNode() {
@@ -87,7 +110,12 @@ class EntityTest: XCTestCase {
         }
         
         XCTAssertNil(links["previous"]?.string)
-        XCTAssertEqual(links["next"]?.string, "/users?page=2&count=4")
+        
+        let actualNextPathComponents = URLComponents(string: (links["next"]?.string)!)
+        let expectedQueryNode = Node(formURLEncoded: "page=2&count=4".bytes)
+        let actualQueryNode = Node(formURLEncoded: actualNextPathComponents!.query!.bytes)
+        XCTAssertEqual(expectedQueryNode, actualQueryNode)
+        XCTAssertEqual(actualNextPathComponents?.path, "/users")
     }
     
     func testEntityQueryExtension() {
