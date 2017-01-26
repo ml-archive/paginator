@@ -101,8 +101,7 @@ extension PaginatorTag {
         if useBootstrap4 {
             navClass = "paginator"
             ulClass = "pagination justify-content-center"
-        }
-        else {
+        } else {
             navClass = "paginator text-center"
             ulClass = "pagination"
         }
@@ -135,8 +134,7 @@ extension PaginatorTag {
         if useBootstrap4 {
             linkClass = "page-link"
             liClass = "page-item"
-        }
-        else {
+        } else {
             linkClass = nil
             liClass = nil
         }
@@ -174,17 +172,14 @@ extension PaginatorTag {
             
             if title == "«" {
                 linkString += " rel=\"prev\" aria-label=\"Previous\"><span aria-hidden=\"true\">«</span><span class=\"sr-only\">Previous</span>"
-            }
-            else if title == "»" {
+            } else if title == "»" {
                 linkString += " rel=\"next\" aria-label=\"Next\"><span aria-hidden=\"true\">»</span><span class=\"sr-only\">Next</span>"
-            }
-            else {
+            } else {
                 linkString += ">\(title)"
             }
             
             linkString += "</a>"
-        }
-        else {
+        } else {
             linkString += "<span"
             
             if let linkClass = linkClass {
@@ -193,11 +188,9 @@ extension PaginatorTag {
             
             if title == "«" {
                 linkString += " aria-label=\"Previous\" aria-hidden=\"true\">«</span><span class=\"sr-only\">Previous</span>"
-            }
-            else if title == "»" {
+            } else if title == "»" {
                 linkString += " aria-label=\"Next\" aria-hidden=\"true\">»</span><span class=\"sr-only\">Next</span>"
-            }
-            else {
+            } else {
                 linkString += ">\(title)</span>"
                 
                 if active {
