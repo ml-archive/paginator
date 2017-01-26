@@ -32,8 +32,15 @@ class EntityTest: XCTestCase {
         XCTAssertEqual(paginator.dataKey, "data")
         
         XCTAssertNotNil(paginator.previousPage)
+        let previousPageComponents = URLComponents(string: paginator.previousPage!)
+        let expectedPreviousPageComponents = URLComponents(string: "/users?page=1&count=2")
+        XCTAssertEqual(previousPageComponents, expectedPreviousPageComponents)
         XCTAssertEqual(paginator.previousPage, "/users?page=1&count=2")
+        
         XCTAssertNotNil(paginator.nextPage)
+        let nextPageComponents = URLComponents(string: paginator.nextPage!)
+        let expectedNextPageComponents = URLComponents(string: "/users?page=3&count=2")
+        XCTAssertEqual(nextPageComponents, expectedNextPageComponents)
         XCTAssertEqual(paginator.nextPage, "/users?page=3&count=2")
         
         XCTAssertEqual(paginator.totalPages, 3)
@@ -97,7 +104,10 @@ class EntityTest: XCTestCase {
         }
         
         XCTAssertNil(links["previous"]?.string)
-        XCTAssertEqual(links["next"]?.string, "/users?page=2&count=4")
+        
+        let actualNextPathComponents = URLComponents(string: (links["next"]?.string)!)
+        let expectedPathComponents = URLComponents(string: "/users?page=2&count=4")
+        XCTAssertEqual(expectedPathComponents, actualNextPathComponents)
     }
     
     func testEntityQueryExtension() {
