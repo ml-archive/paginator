@@ -2,6 +2,7 @@ import XCTest
 
 import HTTP
 import Fluent
+import Foundation
 
 @testable import Paginator
 
