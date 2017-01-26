@@ -63,15 +63,9 @@ class EntityTest: XCTestCase {
         XCTAssertNotNil(paginator.nextPage)
         
         let components = URLComponents(string: paginator.nextPage!)
-        let queries = components?.queryItems
+        let expectedComponets = URLComponents(string: "/users?count=2&page=2&search=Brett")
         
-        let expectedQueries = [URLQueryItem(name: "count", value: "2"), URLQueryItem(name: "page", value: "2"), URLQueryItem(name: "search", value: "Brett")]
-        
-        for query in expectedQueries {
-            XCTAssertTrue((queries?.contains(query))!)
-        }
-        
-        XCTAssertEqual(components?.path, "/users")
+        XCTAssertEqual(components, expectedComponets)
     }
     
     func testMakeNode() {
