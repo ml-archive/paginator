@@ -44,9 +44,10 @@ public struct Paginator<EntityType: Entity> {
         return buildPath(page: next, count: perPage)
     }
     
-    public var data: Node?
+    public var data: [EntityType]?
     
     var query: Query<EntityType>
+    var transform: (([EntityType]) throws -> Node)?
     
     init(
         query: Query<EntityType>,
@@ -54,6 +55,7 @@ public struct Paginator<EntityType: Entity> {
         perPage: Int,
         pageName: String,
         dataKey: String,
+        transform: (([EntityType]) throws -> Node)?,
         request: Request
     ) throws {
         self.query = query
@@ -61,16 +63,17 @@ public struct Paginator<EntityType: Entity> {
         self.perPage = perPage
         self.pageName = pageName
         self.dataKey = dataKey
-        
+        self.transform = transform
+
         baseURI = request.uri
         uriQueries = request.query
-        
+
         self.data = try extractEntityData()
     }
 }
 
 extension Paginator {
-    mutating func extractEntityData() throws -> Node {
+    mutating func extractEntityData() throws -> [EntityType] {
         if let page = uriQueries?[pageName]?.int {
             currentPage = page
         }
@@ -86,9 +89,7 @@ extension Paginator {
         //FIXME(Brett): Better caching system
         total = try total ?? EntityType.query().count()
         
-        let node = try query.raw()
-        
-        return node
+        return try query.run()
     }
 }
 
@@ -124,7 +125,7 @@ extension Paginator: NodeRepresentable {
                 ])
             ]),
             
-            dataKey: data
+            dataKey: transform?(data ?? []) ?? data?.makeNode(context: context)
         ])
     }
 }
