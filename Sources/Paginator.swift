@@ -4,7 +4,7 @@ import Core
 import Vapor
 import Fluent
 
-public struct Paginator<EntityType: Entity> {
+public class Paginator<EntityType: Entity> {
     public var currentPage: Int
     public var perPage: Int
     
@@ -44,9 +44,10 @@ public struct Paginator<EntityType: Entity> {
         return buildPath(page: next, count: perPage)
     }
     
-    public var data: Node?
+    public var data: [EntityType]?
     
     var query: Query<EntityType>
+    var transform: (([EntityType]) throws -> Node)?
     
     init(
         query: Query<EntityType>,
@@ -54,6 +55,7 @@ public struct Paginator<EntityType: Entity> {
         perPage: Int,
         pageName: String,
         dataKey: String,
+        transform: (([EntityType]) throws -> Node)?,
         request: Request
     ) throws {
         self.query = query
@@ -61,16 +63,38 @@ public struct Paginator<EntityType: Entity> {
         self.perPage = perPage
         self.pageName = pageName
         self.dataKey = dataKey
+        self.transform = transform
+
+        baseURI = request.uri
+        uriQueries = request.query
+
+        self.data = try extractEntityData()
+    }
+    
+    public init(
+        _ entities: [EntityType],
+        page currentPage: Int = 1,
+        perPage: Int,
+        pageName: String = "page",
+        dataKey: String = "data",
+        request: Request
+    ) throws {
+        query = try EntityType.query()
+        self.currentPage = currentPage
+        self.perPage = perPage
+        self.pageName = pageName
+        self.dataKey = dataKey
         
         baseURI = request.uri
         uriQueries = request.query
-        
-        self.data = try extractEntityData()
+        total = entities.count
+        data = entities
+        transform = nil
     }
 }
 
 extension Paginator {
-    mutating func extractEntityData() throws -> Node {
+    func extractEntityData() throws -> [EntityType] {
         if let page = uriQueries?[pageName]?.int {
             currentPage = page
         }
@@ -86,9 +110,7 @@ extension Paginator {
         //FIXME(Brett): Better caching system
         total = try total ?? EntityType.query().count()
         
-        let node = try query.raw()
-        
-        return node
+        return try query.run()
     }
 }
 
@@ -124,7 +146,7 @@ extension Paginator: NodeRepresentable {
                 ])
             ]),
             
-            dataKey: data
+            dataKey: transform?(data ?? []) ?? data?.makeNode(context: context)
         ])
     }
 }

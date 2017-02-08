@@ -21,7 +21,8 @@ extension Entity {
         page currentPage: Int = 1,
         pageName: String = "page",
         dataKey: String = "data",
-        request: Request
+        request: Request,
+        transform: (([Self]) throws -> Node)? = nil
     ) throws -> Paginator<Self> {
         return try Paginator(
             query: Self.query(),
@@ -29,6 +30,7 @@ extension Entity {
             perPage: perPage,
             pageName: pageName,
             dataKey: dataKey,
+            transform: transform,
             request: request
         )
     }
@@ -54,7 +56,8 @@ extension Query {
         page currentPage: Int = 1,
         pageName: String = "page",
         dataKey: String = "data",
-        request: Request
+        request: Request,
+        transform: (([T]) throws -> Node)? = nil
     ) throws -> Paginator<T> {
         return try Paginator(
             query: self,
@@ -62,31 +65,9 @@ extension Query {
             perPage: perPage,
             pageName: pageName,
             dataKey: dataKey,
+            transform: transform,
             request: request
         )
-    }
-}
-
-extension Paginator {
-    public init(
-        _ entities: [EntityType],
-        page currentPage: Int = 1,
-        perPage: Int,
-        pageName: String = "page",
-        dataKey: String = "data",
-        request: Request
-    ) throws {
-        query = try EntityType.query()
-        self.currentPage = currentPage
-        self.perPage = perPage
-        self.pageName = pageName
-        self.dataKey = dataKey
-        
-        baseURI = request.uri
-        uriQueries = request.query
-        
-        total = entities.count
-        data = try entities.makeNode()
     }
 }
 
