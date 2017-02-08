@@ -4,7 +4,7 @@ import Core
 import Vapor
 import Fluent
 
-public struct Paginator<EntityType: Entity> {
+public class Paginator<EntityType: Entity> {
     public var currentPage: Int
     public var perPage: Int
     
@@ -70,10 +70,31 @@ public struct Paginator<EntityType: Entity> {
 
         self.data = try extractEntityData()
     }
+    
+    public init(
+        _ entities: [EntityType],
+        page currentPage: Int = 1,
+        perPage: Int,
+        pageName: String = "page",
+        dataKey: String = "data",
+        request: Request
+    ) throws {
+        query = try EntityType.query()
+        self.currentPage = currentPage
+        self.perPage = perPage
+        self.pageName = pageName
+        self.dataKey = dataKey
+        
+        baseURI = request.uri
+        uriQueries = request.query
+        total = entities.count
+        data = entities
+        transform = nil
+    }
 }
 
 extension Paginator {
-    mutating func extractEntityData() throws -> [EntityType] {
+    func extractEntityData() throws -> [EntityType] {
         if let page = uriQueries?[pageName]?.int {
             currentPage = page
         }

@@ -71,29 +71,6 @@ extension Query {
     }
 }
 
-extension Paginator {
-    public init(
-        _ entities: [EntityType],
-        page currentPage: Int = 1,
-        perPage: Int,
-        pageName: String = "page",
-        dataKey: String = "data",
-        request: Request
-    ) throws {
-        query = try EntityType.query()
-        self.currentPage = currentPage
-        self.perPage = perPage
-        self.pageName = pageName
-        self.dataKey = dataKey
-        
-        baseURI = request.uri
-        uriQueries = request.query
-        total = entities.count
-        data = entities
-        transform = nil
-    }
-}
-
 extension Sequence where Iterator.Element: Entity {
     public func paginator(
         _ perPage: Int,
