@@ -95,21 +95,21 @@ public class Paginator<EntityType: Entity> {
 
 extension Paginator {
     func extractEntityData() throws -> [EntityType] {
+        //FIXME(Brett): Better caching system
+        total = try total ?? query.run().count
+
         if let page = uriQueries?[pageName]?.int {
             currentPage = page
         }
-        
+
         if let count = uriQueries?["count"]?.int, count < perPage {
             perPage = count
         }
-        
+
         let offset = (currentPage - 1) * perPage
         let limit = Limit(count: perPage, offset: offset)
         query.limit = limit
-        
-        //FIXME(Brett): Better caching system
-        total = try total ?? EntityType.query().count()
-        
+
         return try query.run()
     }
 }
