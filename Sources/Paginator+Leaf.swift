@@ -82,6 +82,10 @@ extension PaginatorTag {
     func buildLinks(currentPage: Int, count: Int) -> Bytes {
         var bytes: Bytes = []
         
+        if count == 0 {
+            return bytes
+        }
+        
         for i in 1...count {
             if i == currentPage {
                 bytes += buildLink(title: "\(i)", active: true, link: nil, disabled: false).bytes
