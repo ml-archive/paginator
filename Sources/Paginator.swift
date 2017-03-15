@@ -136,9 +136,9 @@ extension Paginator: NodeRepresentable {
             "meta": Node(node: [
                 "paginator": Node(node: [
                     "total": total,
-                    "per_page": perPage,
-                    "current_page": currentPage,
-                    "total_pages": totalPages,
+                    "perPage": perPage,
+                    "currentPage": currentPage,
+                    "totalPages": totalPages,
                     "links": Node(node: [
                         "previous": previousPage,
                         "next": nextPage
