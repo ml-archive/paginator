@@ -100,6 +100,17 @@ The JSON response will now look like:
 }
 ```
 
+## Overriding the deafult response formatter
+In case you've defined specific formatters for your data, you can override the default formatter
+
+```
+let stores: Paginator<Store> = try storesQuery.paginator(20, request: request) { stores in
+    return try stores.map { store in
+        return try store.makeJSON()
+    }.makeNode()
+}
+```
+
 ## Using Bootstrap 4
 
 By default, Paginator prints Bootstrap 3-compatible HTML in Leaf, however it is possible to configure it to use Bootstrap 4. You can add a `paginator.json` file to your Config directory with the values:
