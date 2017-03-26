@@ -85,6 +85,8 @@ If you wish to be more explicit with the name of your data, you can override the
 return try MyModel.paginator(10, dataKey: "my_models")
 ```
 
+
+
 The JSON response will now look like:
 ```
 {
@@ -97,6 +99,19 @@ The JSON response will now look like:
             //...
         }
     }
+}
+```
+
+```
+
+## Overriding the deafult response formatter
+In case you've defined specific formatters for your data, you can override the default formatter
+
+```
+let models: Paginator<Model> = try Model.query().paginator(20, request: request) { models in
+    return try models.map { model in
+        return try model.makeJSON()
+    }.makeNode()
 }
 ```
 
