@@ -102,8 +102,6 @@ The JSON response will now look like:
 }
 ```
 
-```
-
 ## Overriding the deafult response formatter
 In case you've defined specific formatters for your data, you can override the default formatter
 
