@@ -106,11 +106,11 @@ The JSON response will now look like:
 In case you've defined specific formatters for your data, you can override the default formatter
 
 ```
-let models: Paginator<Model> = try Model.query().paginator(20, request: request) { models in
-    return try models.map { model in
-        return try model.makeJSON()
-    }.makeNode()
-}
+let signups: Paginator<SignUp> = try query.paginator(25, request: request) { signups in
+            return try signups.map { signup in
+                return try signup.makeNode()
+            }.makeNode()
+        }
 ```
 
 ## Using Bootstrap 4
