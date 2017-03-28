@@ -13,6 +13,7 @@ public class Paginator<EntityType: Entity> {
     public var baseURI: URI
     public var uriQueries: Node?
     
+    public var paginatorName: String
     public var pageName: String
     public var dataKey: String
     
@@ -53,6 +54,7 @@ public class Paginator<EntityType: Entity> {
         query: Query<EntityType>,
         currentPage: Int = 1,
         perPage: Int,
+        paginatorName: String,
         pageName: String,
         dataKey: String,
         transform: (([EntityType]) throws -> Node)?,
@@ -61,6 +63,7 @@ public class Paginator<EntityType: Entity> {
         self.query = query
         self.currentPage = currentPage
         self.perPage = perPage
+        self.paginatorName = paginatorName
         self.pageName = pageName
         self.dataKey = dataKey
         self.transform = transform
@@ -75,6 +78,7 @@ public class Paginator<EntityType: Entity> {
         _ entities: [EntityType],
         page currentPage: Int = 1,
         perPage: Int,
+        paginatorName: String = "paginator",
         pageName: String = "page",
         dataKey: String = "data",
         request: Request
@@ -82,6 +86,7 @@ public class Paginator<EntityType: Entity> {
         query = try EntityType.query()
         self.currentPage = currentPage
         self.perPage = perPage
+        self.paginatorName = paginatorName
         self.pageName = pageName
         self.dataKey = dataKey
         
@@ -134,7 +139,7 @@ extension Paginator: NodeRepresentable {
     public func makeNode(context: Context) throws -> Node {
         return try Node(node: [
             "meta": Node(node: [
-                "paginator": Node(node: [
+                paginatorName: Node(node: [
                     "total": total,
                     "per_page": perPage,
                     "current_page": currentPage,

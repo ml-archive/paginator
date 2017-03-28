@@ -19,6 +19,7 @@ extension Entity {
     public static func paginator(
         _ perPage: Int,
         page currentPage: Int = 1,
+        paginatorName: String = "paginator",
         pageName: String = "page",
         dataKey: String = "data",
         request: Request,
@@ -28,6 +29,7 @@ extension Entity {
             query: Self.query(),
             currentPage: currentPage,
             perPage: perPage,
+            paginatorName: paginatorName,
             pageName: pageName,
             dataKey: dataKey,
             transform: transform,
@@ -54,6 +56,7 @@ extension Query {
     public func paginator(
         _ perPage: Int,
         page currentPage: Int = 1,
+        paginatorName: String = "paginator",
         pageName: String = "page",
         dataKey: String = "data",
         request: Request,
@@ -63,6 +66,7 @@ extension Query {
             query: self,
             currentPage: currentPage,
             perPage: perPage,
+            paginatorName: paginatorName,
             pageName: pageName,
             dataKey: dataKey,
             transform: transform,
@@ -75,6 +79,7 @@ extension Sequence where Iterator.Element: Entity {
     public func paginator(
         _ perPage: Int,
         page currentPage: Int = 1,
+        paginatorName: String = "paginator",
         pageName: String = "page",
         dataKey: String = "data",
         request: Request
@@ -83,6 +88,7 @@ extension Sequence where Iterator.Element: Entity {
             Array(self),
             page: currentPage,
             perPage: perPage,
+            paginatorName: paginatorName,
             pageName: pageName,
             dataKey: dataKey,
             request: request
