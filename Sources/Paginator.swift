@@ -7,49 +7,49 @@ import Fluent
 public class Paginator<EntityType: Entity> {
     public var currentPage: Int
     public var perPage: Int
-    
+
     public var total: Int?
-    
+
     public var baseURI: URI
     public var uriQueries: Node?
-    
+
     public var paginatorName: String
     public var pageName: String
     public var dataKey: String
-    
+
     public var totalPages: Int? {
         guard let total = total else {
             return nil
         }
-        
+
         var pages = total / perPage
         if total % perPage != 0 {
             pages += 1
         }
-        
+
         return pages
     }
-    
+
     public var previousPage: String? {
         let previous = currentPage - 1
         guard previous >= 1 else { return nil }
-        
+
         return buildPath(page: previous, count: perPage)
     }
-    
+
     public var nextPage: String? {
         guard let totalPages = totalPages else { return nil }
         let next = currentPage + 1
         guard next <= totalPages else { return nil }
-        
+
         return buildPath(page: next, count: perPage)
     }
-    
+
     public var data: [EntityType]?
-    
+
     var query: Query<EntityType>
     var transform: (([EntityType]) throws -> Node)?
-    
+
     init(
         query: Query<EntityType>,
         currentPage: Int = 1,
@@ -73,7 +73,7 @@ public class Paginator<EntityType: Entity> {
 
         self.data = try extractEntityData()
     }
-    
+
     public init(
         _ entities: [EntityType],
         page currentPage: Int = 1,
@@ -89,11 +89,11 @@ public class Paginator<EntityType: Entity> {
         self.paginatorName = paginatorName
         self.pageName = pageName
         self.dataKey = dataKey
-        
+
         baseURI = request.uri
         uriQueries = request.query
         total = entities.count
-        data = entities
+        data = extractSequenceData(from: entities)
         transform = nil
     }
 }
@@ -117,6 +117,40 @@ extension Paginator {
 
         return try query.run()
     }
+
+    func extractSequenceData(from data: [EntityType]?) -> [EntityType] {
+        guard let sequenceData = data else {
+            return []
+        }
+
+        var pageData = sequenceData
+
+        if pageData.count > 0 {
+            if let page = uriQueries?[pageName]?.int {
+                currentPage = page
+            }
+
+            if let count = uriQueries?["count"]?.int, count < perPage {
+                perPage = count
+            }
+
+            var position = (((currentPage - 1) * perPage) + perPage) - 1
+
+            let offset = perPage * (currentPage - 1)
+
+            if offset > pageData.count {
+                return []
+            }
+
+            if position >= pageData.count {
+                position = pageData.count - 1
+            }
+
+            pageData = Array(pageData[offset...position])
+        }
+
+        return pageData
+    }
 }
 
 extension Paginator {
@@ -124,9 +158,9 @@ extension Paginator {
         var urlQueriesRaw = uriQueries ?? [:]
         urlQueriesRaw[pageName] = .number(.int(page))
         urlQueriesRaw["count"] = .number(.int(count))
-        
+
         guard let urlQueries = urlQueriesRaw.formEncode() else { return nil }
-        
+
         return [
             baseURI.path,
             "?",
@@ -150,7 +184,7 @@ extension Paginator: NodeRepresentable {
                     ]),
                 ])
             ]),
-            
+
             dataKey: transform?(data ?? []) ?? data?.makeNode(context: context)
         ])
     }
@@ -161,7 +195,7 @@ extension Node {
         guard case .object(let dict) = self else {
             return nil
         }
-        
+
         return dict.map {
             [$0.key, $0.value.string ?? ""].joined(separator: "=")
         }.joined(separator: "&")
@@ -171,11 +205,11 @@ extension Node {
 extension Request {
     public func addingValues(_ queries: [String : String]) throws -> Request {
         var newQueries = query?.nodeObject ?? [:]
-        
+
         queries.forEach {
             newQueries[$0.key] = $0.value.makeNode()
         }
-        
+
         query = try newQueries.makeNode()
         return self
     }
