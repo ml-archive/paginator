@@ -184,7 +184,7 @@ extension PaginatorTag {
             
             linkString += "</a>"
         } else {
-            linkString += "<span><span"
+            linkString += "<span"
             
             if let linkClass = linkClass {
                 linkString += " class=\"\(linkClass)\""
@@ -203,7 +203,7 @@ extension PaginatorTag {
             }
         }
         
-        linkString += "</span></li>\n"
+        linkString += "</li>\n"
         
         return linkString
     }
