@@ -1,7 +1,7 @@
 import XCTest
 
 import HTTP
-import Fluent
+import FluentProvider
 import Foundation
 
 @testable import Paginator
@@ -36,8 +36,8 @@ class EntityTest: XCTestCase {
         let previousPageComponents = URLComponents(string: paginator.previousPage!)
         let previousPagePath = previousPageComponents?.path
         let previousPageQuery = previousPageComponents?.query
-        let expectedPreviousPageQueryNode = Node(formURLEncoded: "page=1&count=2".bytes)
-        let actualPreviousPageQueryNode = Node(formURLEncoded: previousPageQuery!.bytes)
+        let expectedPreviousPageQueryNode = try! Node(node: "page=1&count=2".bytes)
+        let actualPreviousPageQueryNode = try! Node(node: previousPageQuery!.bytes)
         XCTAssertEqual(expectedPreviousPageQueryNode, actualPreviousPageQueryNode)
         XCTAssertEqual(previousPagePath, "/users")
         
@@ -45,8 +45,8 @@ class EntityTest: XCTestCase {
         let nextPageComponents = URLComponents(string: paginator.nextPage!)
         let nextPagePath = nextPageComponents?.path
         let nextPageQuery = nextPageComponents?.query
-        let expectedNextPageQueryNode = Node(formURLEncoded: "page=3&count=2".bytes)
-        let actualNextPageQueryNode = Node(formURLEncoded: nextPageQuery!.bytes)
+        let expectedNextPageQueryNode = try! Node(node: "page=3&count=2".bytes)
+        let actualNextPageQueryNode = try! Node(node: nextPageQuery!.bytes)
         XCTAssertEqual(expectedNextPageQueryNode, actualNextPageQueryNode)
         XCTAssertEqual(nextPagePath, "/users")
         
@@ -72,8 +72,8 @@ class EntityTest: XCTestCase {
         let query = components?.query
         let path = components?.path
         
-        let queryNode = Node(formURLEncoded: query!.bytes)
-        let expectedQueryNode = Node(formURLEncoded: "count=2&search=Brett&page=2".bytes)
+        let queryNode = try! Node(node: query!.bytes)
+        let expectedQueryNode = try! Node(node: "count=2&search=Brett&page=2".bytes)
         
         XCTAssertEqual(queryNode, expectedQueryNode)
         XCTAssertEqual(path, "/users")
@@ -84,7 +84,7 @@ class EntityTest: XCTestCase {
         let paginator = try! TestUserEntity.paginator(4, request: request)
         
         //TODO(Brett): add `expect` tools
-        let node = try! paginator.makeNode()
+        let node = try! paginator.makeNode(in: nil)
         
         XCTAssertNotNil(node["data"])
         
@@ -112,8 +112,8 @@ class EntityTest: XCTestCase {
         XCTAssertNil(links["previous"]?.string)
         
         let actualNextPathComponents = URLComponents(string: (links["next"]?.string)!)
-        let expectedQueryNode = Node(formURLEncoded: "page=2&count=4".bytes)
-        let actualQueryNode = Node(formURLEncoded: actualNextPathComponents!.query!.bytes)
+        let expectedQueryNode = try! Node(node: "page=2&count=4".bytes)
+        let actualQueryNode = try! Node(node: actualNextPathComponents!.query!.bytes)
         XCTAssertEqual(expectedQueryNode, actualQueryNode)
         XCTAssertEqual(actualNextPathComponents?.path, "/users")
     }
@@ -125,7 +125,15 @@ class EntityTest: XCTestCase {
 
 class TestDriver: Driver {
     var idKey: String = "id"
-    
+    var idType: IdentifierType = .custom("my-type")
+    var keyNamingConvention: KeyNamingConvention = .camelCase
+    var queryLogger: QueryLogger? = nil
+
+
+    func makeConnection(_ type: ConnectionType) throws -> Connection {
+        return TestConnection()
+    }
+
     func query<T : Entity>(_ query: Query<T>) throws -> Node {
         let entities = [
             ("John", 1),
@@ -151,7 +159,7 @@ class TestDriver: Driver {
             return .number(.int(entityCount))
             
         case .fetch:
-            return try entitiesNode.makeNode()
+            return Node(entitiesNode)
         default:
             return nil
         }
@@ -165,26 +173,38 @@ class TestDriver: Driver {
     }
 }
 
-struct TestUserEntity: Entity {
+final class TestUserEntity: Entity, NodeConvertible {
     var id: Node?
     
     var name: String
     var age: Int
-    
+
+    let storage = Storage()
+
+    init(row: Row) throws {
+        id = try row.get("id")
+        name = try row.get("name")
+        age = try row.get("age")
+    }
+
+    func makeRow() throws -> Row {
+        return Row()
+    }
+
     init(name: String, age: Int) {
         self.name = name
         self.age = age
     }
     
-    init(node: Node, in context: Context) throws {
-        id = try node.extract("id")
-        name = try node.extract("name")
-        age = try node.extract("age")
+    init(node: Node) throws {
+        id = try node.get("id")
+        name = try node.get("name")
+        age = try node.get("age")
     }
     
-    func makeNode(context: Context) throws -> Node {
+    func makeNode(in context: Context?) throws -> Node {
         return try Node(node: [
-            "id": id,
+            "id": id as Any,
             "name": name,
             "age": age
         ])
@@ -192,4 +212,62 @@ struct TestUserEntity: Entity {
     
     static func prepare(_ database: Database) throws {}
     static func revert(_ database: Database) throws {}
+}
+
+class TestConnection: Connection {
+    var queryLogger: QueryLogger?
+    var isClosed: Bool = false
+    public func query<E: Entity>(_ query: RawOr<Query<E>>) throws -> Node {
+        let entities = [
+            ("John", 1),
+            ("Ye-Sol", 2),
+            ("Timmy", 3),
+            ("MacFree", 4),
+            ("Zed", 5),
+            ("Glenn", 6)
+        ]
+
+        let entityCount = entities.count
+
+        let entitiesNode = entities.map { (name, id) in
+            Node.object([
+                "id": .number(.int(id)),
+                "name": .string(name),
+                "age": .number(.int(id * 10))
+                ])
+        }
+
+        switch query.wrapped!.action {
+        case .count:
+            return .number(.int(entityCount))
+
+        case .fetch:
+            return Node(entitiesNode)
+        default:
+            return nil
+        }
+
+
+
+
+
+
+
+//        switch query.wrapped!.action {
+//        case .fetch:
+//            return Node.array([Node.object([
+//                "id": 1,
+//                "name": "Jimmy",
+//                "age": 13
+//                ])])
+//
+//        case .count:
+//            return Node.array([
+//                Node.object(["_fluent_count": 1])
+//            ])
+//
+//        default:
+//            return nil
+//        }
+    }
 }

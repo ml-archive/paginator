@@ -97,7 +97,7 @@ extension PaginatorTag {
         return bytes
     }
     
-    func buildNavigation(currentPage: Int, totalPages: Int, links: [String : Polymorphic]) -> Node {
+    func buildNavigation(currentPage: Int, totalPages: Int, links: [String : Node]) -> Node {
         var bytes: Bytes = []
         
         let navClass: String
@@ -182,7 +182,6 @@ extension PaginatorTag {
                 linkString += ">\(title)"
             }
             
-            linkString += "</a>"
         } else {
             linkString += "<a><span"
             

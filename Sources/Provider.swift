@@ -1,8 +1,11 @@
 import Vapor
+import LeafProvider
 
-public final class PaginatorProvider: Provider {
-    public var provided: Providable = Providable()
-    
+public final class PaginatorProvider: Vapor.Provider {
+    public static var repositoryName: String = "Paginator"
+
+    public func boot(_ config: Config) throws {}
+
     public func boot(_ drop: Droplet) {
         guard let renderer = drop.view as? LeafRenderer else {
             print("warning: you are not using Leaf, cannot register Paginator extensions.")

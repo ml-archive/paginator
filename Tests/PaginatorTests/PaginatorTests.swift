@@ -14,7 +14,7 @@ class PaginatorTests: XCTestCase {
         var request = try! Request(method: .get, uri: "/?key=value")
         request = try! request.addingValues(["hello": "world"])
         
-        guard var query = request.query?.nodeObject else {
+        guard var query = request.query?.object else {
             XCTFail("Query shouldn't be nil")
             return
         }

@@ -2,9 +2,9 @@ import URI
 import HTTP
 import Core
 import Vapor
-import Fluent
+import FluentProvider
 
-public class Paginator<EntityType: Entity> {
+public class Paginator<EntityType: Entity> where EntityType: NodeConvertible {
     public var currentPage: Int
     public var perPage: Int
 
@@ -83,7 +83,7 @@ public class Paginator<EntityType: Entity> {
         dataKey: String = "data",
         request: Request
     ) throws {
-        query = try EntityType.query()
+        query = try EntityType.makeQuery()
         self.currentPage = currentPage
         self.perPage = perPage
         self.paginatorName = paginatorName
@@ -101,7 +101,7 @@ public class Paginator<EntityType: Entity> {
 extension Paginator {
     func extractEntityData() throws -> [EntityType] {
         //FIXME(Brett): Better caching system
-        total = try total ?? query.run().count
+        total = try total ?? query.count()
 
         if let page = uriQueries?[pageName]?.int {
             currentPage = page
@@ -113,9 +113,9 @@ extension Paginator {
 
         let offset = (currentPage - 1) * perPage
         let limit = Limit(count: perPage, offset: offset)
-        query.limit = limit
+        query.limits.append(RawOr.some(limit))
 
-        return try query.run()
+        return try query.all()
     }
 
     func extractSequenceData(from data: [EntityType]?) -> [EntityType] {
@@ -170,29 +170,34 @@ extension Paginator {
 }
 
 extension Paginator: NodeRepresentable {
-    public func makeNode(context: Context) throws -> Node {
-        return try Node(node: [
-            "meta": Node(node: [
-                paginatorName: Node(node: [
-                    "total": total,
-                    "per_page": perPage,
-                    "current_page": currentPage,
-                    "total_pages": totalPages,
-                    "links": Node(node: [
-                        "previous": previousPage,
-                        "next": nextPage
-                    ]),
-                ])
-            ]),
+    public func makeNode(in context: Context?) throws -> Node {
+        var node = Node.object([:])
 
-            dataKey: transform?(data ?? []) ?? data?.makeNode(context: context)
-        ])
+        var paginator = Node.object([:])
+        try paginator.set("total", total)
+        try paginator.set("per_page", perPage)
+        try paginator.set("current_page", currentPage)
+        try paginator.set("total_pages", totalPages)
+
+        var links = Node.object([:])
+        try links.set("previous", previousPage)
+        try links.set("next", nextPage)
+
+        try paginator.set("links", links)
+
+        var meta = Node.object([:])
+        try meta.set(paginatorName, paginator)
+
+        try node.set("meta", meta)
+        try node.set(dataKey, transform?(data ?? []) ?? data?.makeNode(in: nil))
+
+        return node
     }
 }
 
 extension Node {
     func formEncode() -> String? {
-        guard case .object(let dict) = self else {
+        guard let dict: [String: StructuredData] = self.wrapped.object else {
             return nil
         }
 
@@ -204,13 +209,13 @@ extension Node {
 
 extension Request {
     public func addingValues(_ queries: [String : String]) throws -> Request {
-        var newQueries = query?.nodeObject ?? [:]
+        var newQueries = query?.object ?? [:]
 
         queries.forEach {
-            newQueries[$0.key] = $0.value.makeNode()
+            newQueries[$0.key] = Node($0.value)
         }
 
-        query = try newQueries.makeNode()
+        query = Node(newQueries)
         return self
     }
 }

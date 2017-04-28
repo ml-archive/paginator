@@ -7,7 +7,7 @@ extension Paginator: JSONRepresentable, ResponseRepresentable {
     }
     
     public func makeJSON() throws -> JSON {
-        let node = try makeNode()
-        return try JSON(node: node)
+        let node = try makeNode(in: nil)
+        return JSON(node: node)
     }
 }
