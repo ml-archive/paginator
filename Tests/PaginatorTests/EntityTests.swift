@@ -159,7 +159,7 @@ class TestDriver: Driver {
             return .number(.int(entityCount))
             
         case .fetch:
-            return Node(entitiesNode)
+            return try entitiesNode.makeNode(in: nil)
         default:
             return nil
         }

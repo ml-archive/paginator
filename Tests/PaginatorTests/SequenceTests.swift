@@ -82,7 +82,7 @@ class SequenceTests: XCTestCase {
         let paginator = try! TestUserEntity.all().paginator(4, request: request)
         
         //TODO(Brett): add `expect` tools
-        let node = try! Node(node: paginator)
+        let node = try! paginator.makeNode(in: nil)
         
         XCTAssertNotNil(node["data"])
         

@@ -212,10 +212,10 @@ extension Request {
         var newQueries = query?.object ?? [:]
 
         queries.forEach {
-            newQueries[$0.key] = Node($0.value)
+            newQueries[$0.key] = $0.value.makeNode(in: nil)
         }
 
-        query = Node(newQueries)
+        query = try newQueries.makeNode(in: nil)
         return self
     }
 }
