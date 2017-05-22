@@ -110,9 +110,15 @@ class SequenceTests: XCTestCase {
         XCTAssertNil(links["previous"]?.string)
         
         let actualNextPathComponents = URLComponents(string: (links["next"]?.string)!)
-        let expectedQueryNode = try! Node(node: "page=2&count=4".bytes)
-        let actualQueryNode = try! Node(node: actualNextPathComponents!.query!.bytes)
-        XCTAssertEqual(expectedQueryNode, actualQueryNode)
+        let expectedQueryNode = Node(formURLEncoded: "page=2&count=4".bytes, allowEmptyValues: true)
+        var actualQueryNode = Node(formURLEncoded: actualNextPathComponents!.query!.bytes, allowEmptyValues: true)
+
+        expectedQueryNode.object?.forEach {
+            XCTAssertEqual($0.value, actualQueryNode[$0.key])
+            actualQueryNode.removeKey($0.key)
+        }
+
+        XCTAssertEqual(actualQueryNode.object?.count, 0, "Expected object to be empty")
         XCTAssertEqual(actualNextPathComponents?.path, "/users")
     }
     
