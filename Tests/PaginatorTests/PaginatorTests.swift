@@ -11,7 +11,7 @@ class PaginatorTests: XCTestCase {
     ]
 
     func testRequestQueryExtension() {
-        var request = try! Request(method: .get, uri: "/?key=value")
+        var request = Request(method: .get, uri: "/?key=value")
         request = try! request.addingValues(["hello": "world"])
         
         guard var query = request.query?.object else {

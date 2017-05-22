@@ -18,7 +18,7 @@ class SequenceTests: XCTestCase {
     }
     
     func testBasic() {
-        let request = try! Request(method: .get, uri: "/users?page=2")
+        let request = Request(method: .get, uri: "/users?page=2")
         
         //TODO(Brett): add `expect` tools
         let paginator = try! TestUserEntity.all().paginator(2, request: request)
@@ -56,7 +56,7 @@ class SequenceTests: XCTestCase {
     }
     
     func testAddingQueries() {
-        let request = try! Request(method: .get, uri: "/users")
+        let request = Request(method: .get, uri: "/users")
         
         //TODO(Brett): add `expect` tools
         let paginator = try! TestUserEntity.all().paginator(
@@ -78,7 +78,7 @@ class SequenceTests: XCTestCase {
     }
     
     func testMakeNode() {
-        let request = try! Request(method: .get, uri: "/users")
+        let request = Request(method: .get, uri: "/users")
         let paginator = try! TestUserEntity.all().paginator(4, request: request)
         
         //TODO(Brett): add `expect` tools

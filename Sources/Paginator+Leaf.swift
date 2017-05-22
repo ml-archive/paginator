@@ -19,14 +19,12 @@ public final class PaginatorTag: Tag {
     public let name = "paginator"
     
     public func run(
-        stem: Stem,
-        context: Context,
         tagTemplate: TagTemplate,
-        arguments: [Argument]
+        arguments: ArgumentList
     ) throws -> Node? {
         guard
-            arguments.count == 1,
-            let argument = arguments.first
+            arguments.list.count == 1,
+            let argument = arguments.list.first
         else {
                 throw Error.expectedOneArgument(got: arguments.count)
         }

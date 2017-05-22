@@ -19,7 +19,7 @@ class EntityTest: XCTestCase {
     }
     
     func testBasic() {
-        let request = try! Request(method: .get, uri: "/users?page=2")
+        let request = Request(method: .get, uri: "/users?page=2")
         
         //TODO(Brett): add `expect` tools
         let paginator = try! TestUserEntity.paginator(2, request: request)
@@ -57,7 +57,7 @@ class EntityTest: XCTestCase {
     }
     
     func testAddingQueries() {
-        let request = try! Request(method: .get, uri: "/users")
+        let request = Request(method: .get, uri: "/users")
         
         //TODO(Brett): add `expect` tools
         let paginator = try! TestUserEntity.paginator(
@@ -80,7 +80,7 @@ class EntityTest: XCTestCase {
     }
     
     func testMakeNode() {
-        let request = try! Request(method: .get, uri: "/users")
+        let request = Request(method: .get, uri: "/users")
         let paginator = try! TestUserEntity.paginator(4, request: request)
         
         //TODO(Brett): add `expect` tools
@@ -155,7 +155,7 @@ class TestDriver: Driver {
         }
         
         switch query.action {
-        case .count:
+        case .aggregate(field: nil, .count):    
             return .number(.int(entityCount))
             
         case .fetch:
@@ -238,7 +238,7 @@ class TestConnection: Connection {
         }
 
         switch query.wrapped!.action {
-        case .count:
+        case .aggregate(field: nil, .count):
             return .number(.int(entityCount))
 
         case .fetch:

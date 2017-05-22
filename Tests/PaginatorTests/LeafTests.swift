@@ -676,10 +676,8 @@ extension LeafTests {
         let context = Context(node)
         
         return try tag.run(
-            stem: Stem(FileProtocolTest()),
-            context: context,
             tagTemplate: TagTemplate(name: "", parameters: [], body: nil),
-            arguments: arguments
+            arguments: ArgumentList(list: arguments, stem: Stem(FileProtocolTest()), context: context)
         )
     }
 }
