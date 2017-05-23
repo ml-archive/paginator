@@ -40,35 +40,22 @@ class EntityTest: XCTestCase {
         let previousPageQuery = previousPageComponents?.query
 
         let expectedPreviousPageQueryNode = Node(formURLEncoded: "page=1&count=2".bytes, allowEmptyValues: true)
-        var actualPreviousPageQueryNode = Node(formURLEncoded: previousPageQuery!.bytes, allowEmptyValues: true)
-
-        expectedPreviousPageQueryNode.object?.forEach {
-            XCTAssertEqual($0.value, actualPreviousPageQueryNode[$0.key])
-            actualPreviousPageQueryNode.removeKey($0.key)
-        }
-        XCTAssertEqual(actualPreviousPageQueryNode.object?.count, 0, "Expected object to be empty")
-
+        let actualPreviousPageQueryNode = Node(formURLEncoded: previousPageQuery!.bytes, allowEmptyValues: true)
+        assertUnorderedEquals(actualPreviousPageQueryNode, expectedPreviousPageQueryNode)
 
         XCTAssertEqual(previousPagePath, "/users")
-        
         XCTAssertNotNil(paginator.nextPage)
+
         let nextPageComponents = URLComponents(string: paginator.nextPage!)
         let nextPagePath = nextPageComponents?.path
         let nextPageQuery = nextPageComponents?.query
 
         let expectedNextPageQueryNode = Node(formURLEncoded: "page=3&count=2".bytes, allowEmptyValues: true)
-        var actualNextPageQueryNode = Node(formURLEncoded: nextPageQuery!.bytes, allowEmptyValues: true)
+        let actualNextPageQueryNode = Node(formURLEncoded: nextPageQuery!.bytes, allowEmptyValues: true)
+        assertUnorderedEquals(actualNextPageQueryNode, expectedNextPageQueryNode)
 
-        expectedNextPageQueryNode.object?.forEach {
-            XCTAssertEqual($0.value, actualNextPageQueryNode[$0.key])
-            actualNextPageQueryNode.removeKey($0.key)
-        }
-
-        XCTAssertEqual(actualNextPageQueryNode.object?.count, 0, "Expected object to be empty")
         XCTAssertEqual(nextPagePath, "/users")
-        
         XCTAssertEqual(paginator.totalPages, 3)
-        
         XCTAssertNotNil(paginator.total)
         XCTAssertEqual(paginator.total, 6)
     }
@@ -89,10 +76,10 @@ class EntityTest: XCTestCase {
         let query = components?.query
         let path = components?.path
         
-        let queryNode = try! Node(node: query!.bytes)
-        let expectedQueryNode = try! Node(node: "count=2&search=Brett&page=2".bytes)
+        let queryNode = Node(formURLEncoded: query!.bytes, allowEmptyValues: true)
+        let expectedQueryNode = Node(formURLEncoded: "count=2&search=Brett&page=2".bytes, allowEmptyValues: true)
         
-        XCTAssertEqual(queryNode, expectedQueryNode)
+        assertUnorderedEquals(queryNode, expectedQueryNode)
         XCTAssertEqual(path, "/users")
     }
     
@@ -131,15 +118,9 @@ class EntityTest: XCTestCase {
         let actualNextPathComponents = URLComponents(string: (links["next"]?.string)!)
 
         let expectedQueryNode = Node(formURLEncoded: "page=2&count=4".bytes, allowEmptyValues: true)
-        var actualQueryNode = Node(formURLEncoded: actualNextPathComponents!.query!.bytes, allowEmptyValues: true)
+        let actualQueryNode = Node(formURLEncoded: actualNextPathComponents!.query!.bytes, allowEmptyValues: true)
 
-        expectedQueryNode.object?.forEach {
-            XCTAssertEqual($0.value, actualQueryNode[$0.key])
-            actualQueryNode.removeKey($0.key)
-        }
-        XCTAssertEqual(actualQueryNode.object?.count, 0, "Expected object to be empty")
-
-
+        assertUnorderedEquals(actualQueryNode, expectedQueryNode)
         XCTAssertEqual(actualNextPathComponents?.path, "/users")
     }
     
@@ -271,28 +252,5 @@ class TestConnection: Connection {
         default:
             return nil
         }
-
-
-
-
-
-
-
-//        switch query.wrapped!.action {
-//        case .fetch:
-//            return Node.array([Node.object([
-//                "id": 1,
-//                "name": "Jimmy",
-//                "age": 13
-//                ])])
-//
-//        case .count:
-//            return Node.array([
-//                Node.object(["_fluent_count": 1])
-//            ])
-//
-//        default:
-//            return nil
-//        }
     }
 }
