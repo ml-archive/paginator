@@ -38,18 +38,33 @@ class EntityTest: XCTestCase {
         let previousPageComponents = URLComponents(string: paginator.previousPage!)
         let previousPagePath = previousPageComponents?.path
         let previousPageQuery = previousPageComponents?.query
-        let expectedPreviousPageQueryNode = try! Node(node: "page=1&count=2".bytes)
-        let actualPreviousPageQueryNode = try! Node(node: previousPageQuery!.bytes)
-        XCTAssertEqual(expectedPreviousPageQueryNode, actualPreviousPageQueryNode)
+
+        let expectedPreviousPageQueryNode = Node(formURLEncoded: "page=1&count=2".bytes, allowEmptyValues: true)
+        var actualPreviousPageQueryNode = Node(formURLEncoded: previousPageQuery!.bytes, allowEmptyValues: true)
+
+        expectedPreviousPageQueryNode.object?.forEach {
+            XCTAssertEqual($0.value, actualPreviousPageQueryNode[$0.key])
+            actualPreviousPageQueryNode.removeKey($0.key)
+        }
+        XCTAssertEqual(actualPreviousPageQueryNode.object?.count, 0, "Expected object to be empty")
+
+
         XCTAssertEqual(previousPagePath, "/users")
         
         XCTAssertNotNil(paginator.nextPage)
         let nextPageComponents = URLComponents(string: paginator.nextPage!)
         let nextPagePath = nextPageComponents?.path
         let nextPageQuery = nextPageComponents?.query
-        let expectedNextPageQueryNode = try! Node(node: "page=3&count=2".bytes)
-        let actualNextPageQueryNode = try! Node(node: nextPageQuery!.bytes)
-        XCTAssertEqual(expectedNextPageQueryNode, actualNextPageQueryNode)
+
+        let expectedNextPageQueryNode = Node(formURLEncoded: "page=3&count=2".bytes, allowEmptyValues: true)
+        var actualNextPageQueryNode = Node(formURLEncoded: nextPageQuery!.bytes, allowEmptyValues: true)
+
+        expectedNextPageQueryNode.object?.forEach {
+            XCTAssertEqual($0.value, actualNextPageQueryNode[$0.key])
+            actualNextPageQueryNode.removeKey($0.key)
+        }
+
+        XCTAssertEqual(actualNextPageQueryNode.object?.count, 0, "Expected object to be empty")
         XCTAssertEqual(nextPagePath, "/users")
         
         XCTAssertEqual(paginator.totalPages, 3)
@@ -114,9 +129,17 @@ class EntityTest: XCTestCase {
         XCTAssertNil(links["previous"]?.string)
         
         let actualNextPathComponents = URLComponents(string: (links["next"]?.string)!)
-        let expectedQueryNode = try! Node(node: "page=2&count=4".bytes)
-        let actualQueryNode = try! Node(node: actualNextPathComponents!.query!.bytes)
-        XCTAssertEqual(expectedQueryNode, actualQueryNode)
+
+        let expectedQueryNode = Node(formURLEncoded: "page=2&count=4".bytes, allowEmptyValues: true)
+        var actualQueryNode = Node(formURLEncoded: actualNextPathComponents!.query!.bytes, allowEmptyValues: true)
+
+        expectedQueryNode.object?.forEach {
+            XCTAssertEqual($0.value, actualQueryNode[$0.key])
+            actualQueryNode.removeKey($0.key)
+        }
+        XCTAssertEqual(actualQueryNode.object?.count, 0, "Expected object to be empty")
+
+
         XCTAssertEqual(actualNextPathComponents?.path, "/users")
     }
     
