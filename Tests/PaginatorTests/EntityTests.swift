@@ -15,7 +15,9 @@ class EntityTest: XCTestCase {
     ]
     
     override func setUp() {
-        Database.default = Database(TestDriver())
+        let db = Database(TestDriver())
+        db.keyNamingConvention = .snake_case
+        Database.default = db
     }
     
     func testBasic() {

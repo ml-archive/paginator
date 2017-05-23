@@ -2,6 +2,7 @@ import URI
 import HTTP
 import Core
 import Vapor
+import Fluent
 import FluentProvider
 
 public class Paginator<EntityType: Entity> where EntityType: NodeConvertible {
@@ -169,15 +170,37 @@ extension Paginator {
     }
 }
 
+enum Keys {
+    case perPage
+    case currentPage
+    case totalPages
+
+    internal var key: String {
+        let convention = Database.default?.keyNamingConvention ?? .camelCase
+
+        switch self {
+        case .perPage:
+            return convention == .camelCase ? "perPage" : "per_page"
+
+        case .currentPage:
+            return convention == .camelCase ? "currentPage" : "current_page"
+
+        case .totalPages:
+            return convention == .camelCase ? "totalPages" : "total_pages"
+        }
+    }
+
+}
+
 extension Paginator: NodeRepresentable {
     public func makeNode(in context: Context?) throws -> Node {
         var node = Node.object([:])
 
         var paginator = Node.object([:])
         try paginator.set("total", total)
-        try paginator.set("per_page", perPage)
-        try paginator.set("current_page", currentPage)
-        try paginator.set("total_pages", totalPages)
+        try paginator.set(Keys.perPage.key, perPage)
+        try paginator.set(Keys.currentPage.key, currentPage)
+        try paginator.set(Keys.totalPages.key, totalPages)
 
         var links = Node.object([:])
         try links.set("previous", previousPage)
