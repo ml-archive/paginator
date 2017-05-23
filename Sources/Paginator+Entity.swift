@@ -1,7 +1,7 @@
 import HTTP
 import Fluent
 
-extension Entity {
+extension Entity where Self: NodeConvertible {
     /**
         Constructs a paginator object.
      
@@ -26,7 +26,7 @@ extension Entity {
         transform: (([Self]) throws -> Node)? = nil
     ) throws -> Paginator<Self> {
         return try Paginator(
-            query: Self.query(),
+            query: Self.makeQuery(),
             currentPage: currentPage,
             perPage: perPage,
             paginatorName: paginatorName,
@@ -38,7 +38,7 @@ extension Entity {
     }
 }
 
-extension Query {
+extension Query where E: NodeConvertible {
     /**
         Constructs a paginator object.
     
@@ -60,8 +60,8 @@ extension Query {
         pageName: String = "page",
         dataKey: String = "data",
         request: Request,
-        transform: (([T]) throws -> Node)? = nil
-    ) throws -> Paginator<T> {
+        transform: (([E]) throws -> Node)? = nil
+    ) throws -> Paginator<E> {
         return try Paginator(
             query: self,
             currentPage: currentPage,
@@ -75,7 +75,7 @@ extension Query {
     }
 }
 
-extension Sequence where Iterator.Element: Entity {
+extension Sequence where Iterator.Element: Entity, Iterator.Element: NodeConvertible {
     public func paginator(
         _ perPage: Int,
         page currentPage: Int = 1,

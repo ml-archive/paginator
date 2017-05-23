@@ -30,7 +30,7 @@ class LeafTests: XCTestCase {
                 arguments: [
                     .variable(path: [], value: paginator)
                 ]
-            )
+            )?.wrapped
 
         }!
         
@@ -39,9 +39,52 @@ class LeafTests: XCTestCase {
             return
         }
         
-        let expectedHTML = "<nav class=\"paginator text-center\">\n<ul class=\"pagination\">\n<li><a href=\"/posts?page=1\" rel=\"prev\" aria-label=\"Previous\"><span aria-hidden=\"true\">«</span><span class=\"sr-only\">Previous</span></a></li>\n<li><a href=\"?page=1\">1</a></li>\n<li class=\"active\"><span>2</span><span class=\"sr-only\">(current)</span></li>\n<li><a href=\"?page=3\">3</a></li>\n<li><a href=\"?page=4\">4</a></li>\n<li><a href=\"?page=5\">5</a></li>\n<li><a href=\"?page=6\">6</a></li>\n<li><a href=\"?page=7\">7</a></li>\n<li><a href=\"?page=8\">8</a></li>\n<li><a href=\"?page=9\">9</a></li>\n<li><a href=\"?page=10\">10</a></li>\n<li><a href=\"/posts?page=3\" rel=\"next\" aria-label=\"Next\"><span aria-hidden=\"true\">»</span><span class=\"sr-only\">Next</span></a></li>\n</ul>\n</nav>"
+        let expectedHTML =
+            "<nav class=\"paginator text-center\">\n" +
+                "<ul class=\"pagination\">\n" +
+                    "<li>" +
+                        "<a href=\"/posts?page=1\" rel=\"prev\" aria-label=\"Previous\">" +
+                            "<span aria-hidden=\"true\">«</span><span class=\"sr-only\">Previous</span>" +
+                        "</a>" +
+                    "</li>\n" +
+                    "<li><a href=\"?page=1\">1</a></li>\n" +
+                    "<li class=\"active\"><a>" +
+                        "<span>2</span><span class=\"sr-only\">(current)</span></a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=3\">3</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=4\">4</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=5\">5</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=6\">6</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=7\">7</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=8\">8</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=9\">9</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=10\">10</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"/posts?page=3\" rel=\"next\" aria-label=\"Next\">" +
+                            "<span aria-hidden=\"true\">»</span>" +
+                            "<span class=\"sr-only\">Next</span>" +
+                        "</a>" +
+                    "</li>\n" +
+                "</ul>\n" +
+            "</nav>"
         
-        XCTAssertEqual(bytes.string, expectedHTML)
+        XCTAssertEqual(bytes.makeString(), expectedHTML)
     }
     
     func testRunTagWithAriaLabel() {
@@ -55,7 +98,7 @@ class LeafTests: XCTestCase {
                 arguments: [
                     .variable(path: [], value: paginator)
                 ]
-            )
+            )?.wrapped
             
             }!
         
@@ -64,9 +107,52 @@ class LeafTests: XCTestCase {
             return
         }
         
-        let expectedHTML = "<nav class=\"paginator text-center\" aria-label=\"Some Aria Label Pages\">\n<ul class=\"pagination\">\n<li><a href=\"/posts?page=1\" rel=\"prev\" aria-label=\"Previous\"><span aria-hidden=\"true\">«</span><span class=\"sr-only\">Previous</span></a></li>\n<li><a href=\"?page=1\">1</a></li>\n<li class=\"active\"><span>2</span><span class=\"sr-only\">(current)</span></li>\n<li><a href=\"?page=3\">3</a></li>\n<li><a href=\"?page=4\">4</a></li>\n<li><a href=\"?page=5\">5</a></li>\n<li><a href=\"?page=6\">6</a></li>\n<li><a href=\"?page=7\">7</a></li>\n<li><a href=\"?page=8\">8</a></li>\n<li><a href=\"?page=9\">9</a></li>\n<li><a href=\"?page=10\">10</a></li>\n<li><a href=\"/posts?page=3\" rel=\"next\" aria-label=\"Next\"><span aria-hidden=\"true\">»</span><span class=\"sr-only\">Next</span></a></li>\n</ul>\n</nav>"
+        let expectedHTML =
+            "<nav class=\"paginator text-center\" aria-label=\"Some Aria Label Pages\">\n" +
+                "<ul class=\"pagination\">\n" +
+                    "<li>" +
+                        "<a href=\"/posts?page=1\" rel=\"prev\" aria-label=\"Previous\">" +
+                            "<span aria-hidden=\"true\">«</span><span class=\"sr-only\">Previous</span>" +
+                        "</a>" +
+                    "</li>\n" +
+                    "<li><a href=\"?page=1\">1</a></li>\n" +
+                    "<li class=\"active\"><a>" +
+                        "<span>2</span><span class=\"sr-only\">(current)</span></a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=3\">3</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=4\">4</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=5\">5</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=6\">6</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=7\">7</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=8\">8</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=9\">9</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=10\">10</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"/posts?page=3\" rel=\"next\" aria-label=\"Next\">" +
+                            "<span aria-hidden=\"true\">»</span>" +
+                            "<span class=\"sr-only\">Next</span>" +
+                        "</a>" +
+                    "</li>\n" +
+                "</ul>\n" +
+        "</nav>"
         
-        XCTAssertEqual(bytes.string, expectedHTML)
+        XCTAssertEqual(bytes.makeString(), expectedHTML)
     }
     
     func testRunTagWithExplicitBootstrap3() {
@@ -80,7 +166,7 @@ class LeafTests: XCTestCase {
                 arguments: [
                     .variable(path: [], value: paginator)
                 ]
-            )
+            )?.wrapped
             
             }!
         
@@ -89,9 +175,45 @@ class LeafTests: XCTestCase {
             return
         }
         
-        let expectedHTML = "<nav class=\"paginator text-center\">\n<ul class=\"pagination\">\n<li><a href=\"/posts?page=1\" rel=\"prev\" aria-label=\"Previous\"><span aria-hidden=\"true\">«</span><span class=\"sr-only\">Previous</span></a></li>\n<li><a href=\"?page=1\">1</a></li>\n<li class=\"active\"><span>2</span><span class=\"sr-only\">(current)</span></li>\n<li><a href=\"?page=3\">3</a></li>\n<li><a href=\"?page=4\">4</a></li>\n<li><a href=\"?page=5\">5</a></li>\n<li><a href=\"?page=6\">6</a></li>\n<li><a href=\"?page=7\">7</a></li>\n<li><a href=\"?page=8\">8</a></li>\n<li><a href=\"?page=9\">9</a></li>\n<li><a href=\"?page=10\">10</a></li>\n<li><a href=\"/posts?page=3\" rel=\"next\" aria-label=\"Next\"><span aria-hidden=\"true\">»</span><span class=\"sr-only\">Next</span></a></li>\n</ul>\n</nav>"
-        
-        XCTAssertEqual(bytes.string, expectedHTML)
+        let expectedHTML =
+            "<nav class=\"paginator text-center\">\n" +
+                "<ul class=\"pagination\">\n" +
+                    "<li>" +
+                        "<a href=\"/posts?page=1\" rel=\"prev\" aria-label=\"Previous\">" +
+                            "<span aria-hidden=\"true\">«</span><span class=\"sr-only\">Previous</span>" +
+                        "</a>" +
+                    "</li>\n" +
+                    "<li><a href=\"?page=1\">1</a></li>\n" +
+                    "<li class=\"active\"><a>" +
+                        "<span>2</span><span class=\"sr-only\">(current)</span></a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=3\">3</a>" +
+                    "</li>\n" +
+                    "<li><a href=\"?page=4\">4</a>" +
+                    "</li>\n" +
+                    "<li><a href=\"?page=5\">5</a>" +
+                    "</li>\n" +
+                    "<li><a href=\"?page=6\">6</a>" +
+                    "</li>\n" +
+                    "<li><a href=\"?page=7\">7</a>" +
+                    "</li>\n" +
+                    "<li><a href=\"?page=8\">8</a>" +
+                    "</li>\n" +
+                    "<li><a href=\"?page=9\">9</a>" +
+                    "</li>\n" +
+                    "<li><a href=\"?page=10\">10</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"/posts?page=3\" rel=\"next\" aria-label=\"Next\">" +
+                            "<span aria-hidden=\"true\">»</span>" +
+                            "<span class=\"sr-only\">Next</span>" +
+                        "</a>" +
+                    "</li>\n" +
+                "</ul>\n" +
+            "</nav>"
+
+        XCTAssertEqual(bytes.makeString(), expectedHTML)
     }
     
     func testRunTagWithBootstrap4() {
@@ -105,7 +227,7 @@ class LeafTests: XCTestCase {
                 arguments: [
                     .variable(path: [], value: paginator)
                 ]
-            )
+            )?.wrapped
             
             }!
         
@@ -113,12 +235,56 @@ class LeafTests: XCTestCase {
             XCTFail("Should have returned bytes")
             return
         }
-        
-        let expectedHTML = "<nav class=\"paginator\">\n<ul class=\"pagination justify-content-center\">\n<li class=\"page-item\"><a href=\"/posts?page=1\" class=\"page-link\" rel=\"prev\" aria-label=\"Previous\"><span aria-hidden=\"true\">«</span><span class=\"sr-only\">Previous</span></a></li>\n<li class=\"page-item\"><a href=\"?page=1\" class=\"page-link\">1</a></li>\n<li class=\"active page-item\"><span class=\"page-link\">2</span><span class=\"sr-only\">(current)</span></li>\n<li class=\"page-item\"><a href=\"?page=3\" class=\"page-link\">3</a></li>\n<li class=\"page-item\"><a href=\"?page=4\" class=\"page-link\">4</a></li>\n<li class=\"page-item\"><a href=\"?page=5\" class=\"page-link\">5</a></li>\n<li class=\"page-item\"><a href=\"?page=6\" class=\"page-link\">6</a></li>\n<li class=\"page-item\"><a href=\"?page=7\" class=\"page-link\">7</a></li>\n<li class=\"page-item\"><a href=\"?page=8\" class=\"page-link\">8</a></li>\n<li class=\"page-item\"><a href=\"?page=9\" class=\"page-link\">9</a></li>\n<li class=\"page-item\"><a href=\"?page=10\" class=\"page-link\">10</a></li>\n<li class=\"page-item\"><a href=\"/posts?page=3\" class=\"page-link\" rel=\"next\" aria-label=\"Next\"><span aria-hidden=\"true\">»</span><span class=\"sr-only\">Next</span></a></li>\n</ul>\n</nav>"
-        
-        XCTAssertEqual(bytes.string, expectedHTML)
+
+        let expectedHTML =
+            "<nav class=\"paginator\">\n" +
+                "<ul class=\"pagination justify-content-center\">\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"/posts?page=1\" class=\"page-link\" rel=\"prev\" aria-label=\"Previous\">" +
+                            "<span aria-hidden=\"true\">«</span>" +
+                            "<span class=\"sr-only\">Previous</span>" +
+                        "</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\"><a href=\"?page=1\" class=\"page-link\">1</a></li>\n" +
+                    "<li class=\"active page-item\"><a>" +
+                        "<span class=\"page-link\">2</span><span class=\"sr-only\">(current)</span></a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"?page=3\" class=\"page-link\">3</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"?page=4\" class=\"page-link\">4</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"?page=5\" class=\"page-link\">5</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"?page=6\" class=\"page-link\">6</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"?page=7\" class=\"page-link\">7</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"?page=8\" class=\"page-link\">8</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"?page=9\" class=\"page-link\">9</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"?page=10\" class=\"page-link\">10</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"/posts?page=3\" class=\"page-link\" rel=\"next\" aria-label=\"Next\">" +
+                            "<span aria-hidden=\"true\">»</span>" +
+                            "<span class=\"sr-only\">Next</span>" +
+                        "</a>" +
+                    "</li>\n" +
+                "</ul>\n" +
+            "</nav>"
+
+        XCTAssertEqual(bytes.makeString(), expectedHTML)
     }
-    
+
     func testRunTagWithBootstrap4AndAriaLabel() {
         let tag = PaginatorTag(useBootstrap4: true, paginationLabel: "Some Pages")
         let paginator = buildPaginator()
@@ -130,7 +296,7 @@ class LeafTests: XCTestCase {
                 arguments: [
                     .variable(path: [], value: paginator)
                 ]
-            )
+            )?.wrapped
             
             }!
         
@@ -139,21 +305,65 @@ class LeafTests: XCTestCase {
             return
         }
         
-        let expectedHTML = "<nav class=\"paginator\" aria-label=\"Some Pages\">\n<ul class=\"pagination justify-content-center\">\n<li class=\"page-item\"><a href=\"/posts?page=1\" class=\"page-link\" rel=\"prev\" aria-label=\"Previous\"><span aria-hidden=\"true\">«</span><span class=\"sr-only\">Previous</span></a></li>\n<li class=\"page-item\"><a href=\"?page=1\" class=\"page-link\">1</a></li>\n<li class=\"active page-item\"><span class=\"page-link\">2</span><span class=\"sr-only\">(current)</span></li>\n<li class=\"page-item\"><a href=\"?page=3\" class=\"page-link\">3</a></li>\n<li class=\"page-item\"><a href=\"?page=4\" class=\"page-link\">4</a></li>\n<li class=\"page-item\"><a href=\"?page=5\" class=\"page-link\">5</a></li>\n<li class=\"page-item\"><a href=\"?page=6\" class=\"page-link\">6</a></li>\n<li class=\"page-item\"><a href=\"?page=7\" class=\"page-link\">7</a></li>\n<li class=\"page-item\"><a href=\"?page=8\" class=\"page-link\">8</a></li>\n<li class=\"page-item\"><a href=\"?page=9\" class=\"page-link\">9</a></li>\n<li class=\"page-item\"><a href=\"?page=10\" class=\"page-link\">10</a></li>\n<li class=\"page-item\"><a href=\"/posts?page=3\" class=\"page-link\" rel=\"next\" aria-label=\"Next\"><span aria-hidden=\"true\">»</span><span class=\"sr-only\">Next</span></a></li>\n</ul>\n</nav>"
-        
-        XCTAssertEqual(bytes.string, expectedHTML)
+        let expectedHTML =
+            "<nav class=\"paginator\" aria-label=\"Some Pages\">\n" +
+                "<ul class=\"pagination justify-content-center\">\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"/posts?page=1\" class=\"page-link\" rel=\"prev\" aria-label=\"Previous\">" +
+                            "<span aria-hidden=\"true\">«</span>" +
+                            "<span class=\"sr-only\">Previous</span>" +
+                        "</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\"><a href=\"?page=1\" class=\"page-link\">1</a></li>\n" +
+                    "<li class=\"active page-item\"><a>" +
+                        "<span class=\"page-link\">2</span><span class=\"sr-only\">(current)</span></a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"?page=3\" class=\"page-link\">3</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"?page=4\" class=\"page-link\">4</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"?page=5\" class=\"page-link\">5</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"?page=6\" class=\"page-link\">6</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"?page=7\" class=\"page-link\">7</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"?page=8\" class=\"page-link\">8</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"?page=9\" class=\"page-link\">9</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"?page=10\" class=\"page-link\">10</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"/posts?page=3\" class=\"page-link\" rel=\"next\" aria-label=\"Next\">" +
+                            "<span aria-hidden=\"true\">»</span>" +
+                            "<span class=\"sr-only\">Next</span>" +
+                        "</a>" +
+                    "</li>\n" +
+                "</ul>\n" +
+            "</nav>"
+
+        XCTAssertEqual(bytes.makeString(), expectedHTML)
     }
-    
+
     func testNoPreviousPageWithBootstrap3() {
         let tag = PaginatorTag(useBootstrap4: false, paginationLabel: "Some Pages")
         let paginator = buildPaginator(currentPage: 1)
-        
+
         let result = expectNoThrow() {
             return try run(
                 tag: tag,
                 context: paginator,
                 arguments: [.variable(path: [], value: paginator)]
-            )
+            )?.wrapped
             }!
         
         guard result != nil, case .bytes(let bytes) = result! else {
@@ -161,11 +371,57 @@ class LeafTests: XCTestCase {
             return
         }
         
-        let expectedHTML = "<nav class=\"paginator text-center\" aria-label=\"Some Pages\">\n<ul class=\"pagination\">\n<li class=\"disabled\"><span aria-label=\"Previous\" aria-hidden=\"true\">«</span><span class=\"sr-only\">Previous</span></li>\n<li class=\"active\"><span>1</span><span class=\"sr-only\">(current)</span></li>\n<li><a href=\"?page=2\">2</a></li>\n<li><a href=\"?page=3\">3</a></li>\n<li><a href=\"?page=4\">4</a></li>\n<li><a href=\"?page=5\">5</a></li>\n<li><a href=\"?page=6\">6</a></li>\n<li><a href=\"?page=7\">7</a></li>\n<li><a href=\"?page=8\">8</a></li>\n<li><a href=\"?page=9\">9</a></li>\n<li><a href=\"?page=10\">10</a></li>\n<li><a href=\"/posts?page=2\" rel=\"next\" aria-label=\"Next\"><span aria-hidden=\"true\">»</span><span class=\"sr-only\">Next</span></a></li>\n</ul>\n</nav>"
-        
-        XCTAssertEqual(bytes.string, expectedHTML)
+        let expectedHTML =
+            "<nav class=\"paginator text-center\" aria-label=\"Some Pages\">\n" +
+                "<ul class=\"pagination\">\n" +
+                    "<li class=\"disabled\">" +
+                        "<a>" +
+                            "<span aria-label=\"Previous\" aria-hidden=\"true\">«</span>" +
+                            "<span class=\"sr-only\">Previous</span>" +
+                        "</a>" +
+                    "</li>\n" +
+                    "<li class=\"active\">" +
+                        "<a><span>1</span><span class=\"sr-only\">(current)</span></a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=2\">2</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=3\">3</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=4\">4</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=5\">5</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=6\">6</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=7\">7</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=8\">8</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=9\">9</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=10\">10</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"/posts?page=2\" rel=\"next\" aria-label=\"Next\">" +
+                            "<span aria-hidden=\"true\">»</span>" +
+                            "<span class=\"sr-only\">Next</span>" +
+                        "</a>" +
+                    "</li>\n" +
+                "</ul>\n" +
+            "</nav>"
+
+        XCTAssertEqual(bytes.makeString(), expectedHTML)
     }
-    
+
     func testNoNextPageWithBootstrap3() {
         let tag = PaginatorTag(useBootstrap4: false, paginationLabel: "Some Pages")
         let paginator = buildPaginator(currentPage: 10)
@@ -175,7 +431,7 @@ class LeafTests: XCTestCase {
                 tag: tag,
                 context: paginator,
                 arguments: [.variable(path: [], value: paginator)]
-            )
+            )?.wrapped
             }!
         
         guard result != nil, case .bytes(let bytes) = result! else {
@@ -183,9 +439,58 @@ class LeafTests: XCTestCase {
             return
         }
         
-        let expectedHTML = "<nav class=\"paginator text-center\" aria-label=\"Some Pages\">\n<ul class=\"pagination\">\n<li><a href=\"/posts?page=9\" rel=\"prev\" aria-label=\"Previous\"><span aria-hidden=\"true\">«</span><span class=\"sr-only\">Previous</span></a></li>\n<li><a href=\"?page=1\">1</a></li>\n<li><a href=\"?page=2\">2</a></li>\n<li><a href=\"?page=3\">3</a></li>\n<li><a href=\"?page=4\">4</a></li>\n<li><a href=\"?page=5\">5</a></li>\n<li><a href=\"?page=6\">6</a></li>\n<li><a href=\"?page=7\">7</a></li>\n<li><a href=\"?page=8\">8</a></li>\n<li><a href=\"?page=9\">9</a></li>\n<li class=\"active\"><span>10</span><span class=\"sr-only\">(current)</span></li>\n<li class=\"disabled\"><span aria-label=\"Next\" aria-hidden=\"true\">»</span><span class=\"sr-only\">Next</span></li>\n</ul>\n</nav>"
+        let expectedHTML =
+            "<nav class=\"paginator text-center\" aria-label=\"Some Pages\">\n" +
+                "<ul class=\"pagination\">\n" +
+                    "<li>" +
+                        "<a href=\"/posts?page=9\" rel=\"prev\" aria-label=\"Previous\">" +
+                            "<span aria-hidden=\"true\">«</span>" +
+                            "<span class=\"sr-only\">Previous</span>" +
+                        "</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=1\">1</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=2\">2</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=3\">3</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                    "<a href=\"?page=4\">4</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=5\">5</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=6\">6</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=7\">7</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=8\">8</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=9\">9</a>" +
+                    "</li>\n" +
+                    "<li class=\"active\">" +
+                        "<a>" +
+                            "<span>10</span>" +
+                            "<span class=\"sr-only\">(current)</span>" +
+                        "</a>" +
+                    "</li>\n" +
+                    "<li class=\"disabled\">" +
+                        "<a>" +
+                            "<span aria-label=\"Next\" aria-hidden=\"true\">»</span>" +
+                            "<span class=\"sr-only\">Next</span>" +
+                        "</a>" +
+                    "</li>\n" +
+                "</ul>\n" +
+            "</nav>"
         
-        XCTAssertEqual(bytes.string, expectedHTML)
+        XCTAssertEqual(bytes.makeString(), expectedHTML)
     }
     
     func testNoPreviousPageWithBootstrap4() {
@@ -197,7 +502,7 @@ class LeafTests: XCTestCase {
                 tag: tag,
                 context: paginator,
                 arguments: [.variable(path: [], value: paginator)]
-            )
+            )?.wrapped
         }!
         
         guard result != nil, case .bytes(let bytes) = result! else {
@@ -205,9 +510,58 @@ class LeafTests: XCTestCase {
             return
         }
         
-        let expectedHTML = "<nav class=\"paginator\" aria-label=\"Some Pages\">\n<ul class=\"pagination justify-content-center\">\n<li class=\"disabled page-item\"><span class=\"page-link\" aria-label=\"Previous\" aria-hidden=\"true\">«</span><span class=\"sr-only\">Previous</span></li>\n<li class=\"active page-item\"><span class=\"page-link\">1</span><span class=\"sr-only\">(current)</span></li>\n<li class=\"page-item\"><a href=\"?page=2\" class=\"page-link\">2</a></li>\n<li class=\"page-item\"><a href=\"?page=3\" class=\"page-link\">3</a></li>\n<li class=\"page-item\"><a href=\"?page=4\" class=\"page-link\">4</a></li>\n<li class=\"page-item\"><a href=\"?page=5\" class=\"page-link\">5</a></li>\n<li class=\"page-item\"><a href=\"?page=6\" class=\"page-link\">6</a></li>\n<li class=\"page-item\"><a href=\"?page=7\" class=\"page-link\">7</a></li>\n<li class=\"page-item\"><a href=\"?page=8\" class=\"page-link\">8</a></li>\n<li class=\"page-item\"><a href=\"?page=9\" class=\"page-link\">9</a></li>\n<li class=\"page-item\"><a href=\"?page=10\" class=\"page-link\">10</a></li>\n<li class=\"page-item\"><a href=\"/posts?page=2\" class=\"page-link\" rel=\"next\" aria-label=\"Next\"><span aria-hidden=\"true\">»</span><span class=\"sr-only\">Next</span></a></li>\n</ul>\n</nav>"
+        let expectedHTML =
+            "<nav class=\"paginator\" aria-label=\"Some Pages\">\n" +
+                "<ul class=\"pagination justify-content-center\">\n" +
+                    "<li class=\"disabled page-item\">" +
+                        "<a>" +
+                            "<span class=\"page-link\" aria-label=\"Previous\" aria-hidden=\"true\">«</span>" +
+                            "<span class=\"sr-only\">Previous</span>" +
+                        "</a>" +
+                    "</li>\n" +
+                    "<li class=\"active page-item\">" +
+                        "<a>" +
+                            "<span class=\"page-link\">1</span>" +
+                            "<span class=\"sr-only\">(current)</span>" +
+                        "</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"?page=2\" class=\"page-link\">2</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"?page=3\" class=\"page-link\">3</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"?page=4\" class=\"page-link\">4</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"?page=5\" class=\"page-link\">5</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"?page=6\" class=\"page-link\">6</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"?page=7\" class=\"page-link\">7</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"?page=8\" class=\"page-link\">8</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"?page=9\" class=\"page-link\">9</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"?page=10\" class=\"page-link\">10</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"/posts?page=2\" class=\"page-link\" rel=\"next\" aria-label=\"Next\">" +
+                            "<span aria-hidden=\"true\">»</span>" +
+                            "<span class=\"sr-only\">Next</span>" +
+                        "</a>" +
+                    "</li>\n" +
+                "</ul>\n" +
+            "</nav>"
         
-        XCTAssertEqual(bytes.string, expectedHTML)
+        XCTAssertEqual(bytes.makeString(), expectedHTML)
     }
     
     func testNoNextPageWithBootstrap4() {
@@ -219,7 +573,7 @@ class LeafTests: XCTestCase {
                 tag: tag,
                 context: paginator,
                 arguments: [.variable(path: [], value: paginator)]
-            )
+            )?.wrapped
             }!
         
         guard result != nil, case .bytes(let bytes) = result! else {
@@ -227,9 +581,58 @@ class LeafTests: XCTestCase {
             return
         }
         
-        let expectedHTML = "<nav class=\"paginator\" aria-label=\"Some Pages\">\n<ul class=\"pagination justify-content-center\">\n<li class=\"page-item\"><a href=\"/posts?page=9\" class=\"page-link\" rel=\"prev\" aria-label=\"Previous\"><span aria-hidden=\"true\">«</span><span class=\"sr-only\">Previous</span></a></li>\n<li class=\"page-item\"><a href=\"?page=1\" class=\"page-link\">1</a></li>\n<li class=\"page-item\"><a href=\"?page=2\" class=\"page-link\">2</a></li>\n<li class=\"page-item\"><a href=\"?page=3\" class=\"page-link\">3</a></li>\n<li class=\"page-item\"><a href=\"?page=4\" class=\"page-link\">4</a></li>\n<li class=\"page-item\"><a href=\"?page=5\" class=\"page-link\">5</a></li>\n<li class=\"page-item\"><a href=\"?page=6\" class=\"page-link\">6</a></li>\n<li class=\"page-item\"><a href=\"?page=7\" class=\"page-link\">7</a></li>\n<li class=\"page-item\"><a href=\"?page=8\" class=\"page-link\">8</a></li>\n<li class=\"page-item\"><a href=\"?page=9\" class=\"page-link\">9</a></li>\n<li class=\"active page-item\"><span class=\"page-link\">10</span><span class=\"sr-only\">(current)</span></li>\n<li class=\"disabled page-item\"><span class=\"page-link\" aria-label=\"Next\" aria-hidden=\"true\">»</span><span class=\"sr-only\">Next</span></li>\n</ul>\n</nav>"
+        let expectedHTML =
+            "<nav class=\"paginator\" aria-label=\"Some Pages\">\n" +
+                "<ul class=\"pagination justify-content-center\">\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"/posts?page=9\" class=\"page-link\" rel=\"prev\" aria-label=\"Previous\">" +
+                            "<span aria-hidden=\"true\">«</span>" +
+                            "<span class=\"sr-only\">Previous</span>" +
+                        "</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"?page=1\" class=\"page-link\">1</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"?page=2\" class=\"page-link\">2</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"?page=3\" class=\"page-link\">3</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"?page=4\" class=\"page-link\">4</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"?page=5\" class=\"page-link\">5</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"?page=6\" class=\"page-link\">6</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"?page=7\" class=\"page-link\">7</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"?page=8\" class=\"page-link\">8</a>" +
+                    "</li>\n" +
+                    "<li class=\"page-item\">" +
+                        "<a href=\"?page=9\" class=\"page-link\">9</a>" +
+                    "</li>\n" +
+                    "<li class=\"active page-item\">" +
+                        "<a>" +
+                            "<span class=\"page-link\">10</span>" +
+                            "<span class=\"sr-only\">(current)</span>" +
+                        "</a>" +
+                    "</li>\n" +
+                    "<li class=\"disabled page-item\">" +
+                        "<a>" +
+                            "<span class=\"page-link\" aria-label=\"Next\" aria-hidden=\"true\">»</span>" +
+                            "<span class=\"sr-only\">Next</span>" +
+                        "</a>" +
+                    "</li>\n" +
+                "</ul>\n" +
+            "</nav>"
         
-        XCTAssertEqual(bytes.string, expectedHTML)
+        XCTAssertEqual(bytes.makeString(), expectedHTML)
     }
     
     func testRunTagFailedTwoArgs() {
@@ -251,17 +654,17 @@ extension LeafTests {
         var linksNode = Node([:])
         
         if currentPage > 1 {
-            linksNode["previous"] = "/posts?page=\(currentPage - 1)".makeNode()
+            linksNode["previous"] = Node("/posts?page=\(currentPage - 1)")
         }
         
         if currentPage < 10 {
-            linksNode["next"] = "/posts?page=\(currentPage + 1)".makeNode()
+            linksNode["next"] = Node("/posts?page=\(currentPage + 1)")
         }
         
-        return Node([
-            "meta": Node([
-                "paginator": Node([
-                    "current_page": try! currentPage.makeNode(),
+        return try! Node(node: [
+            "meta": try! Node(node: [
+                "paginator": try! Node(node: [
+                    "current_page": Node(currentPage),
                     "total_pages": 10,
                     "links": linksNode
                 ])
@@ -273,10 +676,17 @@ extension LeafTests {
         let context = Context(node)
         
         return try tag.run(
-            stem: Stem(workingDirectory: ""),
-            context: context,
             tagTemplate: TagTemplate(name: "", parameters: [], body: nil),
-            arguments: arguments
+            arguments: ArgumentList(list: arguments, stem: Stem(FileProtocolTest()), context: context)
         )
     }
+}
+
+class FileProtocolTest: FileProtocol {
+    func read(at path: String) throws -> Bytes {
+        return []
+    }
+    func write(_ bytes: Bytes, to path: String) throws {}
+
+    func delete(at path: String) throws {}
 }

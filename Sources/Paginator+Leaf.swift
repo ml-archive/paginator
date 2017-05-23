@@ -19,14 +19,12 @@ public final class PaginatorTag: Tag {
     public let name = "paginator"
     
     public func run(
-        stem: Stem,
-        context: Context,
         tagTemplate: TagTemplate,
-        arguments: [Argument]
+        arguments: ArgumentList
     ) throws -> Node? {
         guard
-            arguments.count == 1,
-            let argument = arguments.first
+            arguments.list.count == 1,
+            let argument = arguments.list.first
         else {
                 throw Error.expectedOneArgument(got: arguments.count)
         }
@@ -97,7 +95,7 @@ extension PaginatorTag {
         return bytes
     }
     
-    func buildNavigation(currentPage: Int, totalPages: Int, links: [String : Polymorphic]) -> Node {
+    func buildNavigation(currentPage: Int, totalPages: Int, links: [String : Node]) -> Node {
         var bytes: Bytes = []
         
         let navClass: String
@@ -182,7 +180,6 @@ extension PaginatorTag {
                 linkString += ">\(title)"
             }
             
-            linkString += "</a>"
         } else {
             linkString += "<a><span"
             
