@@ -212,7 +212,7 @@ extension Paginator: NodeRepresentable {
         try meta.set(paginatorName, paginator)
 
         try node.set("meta", meta)
-        try node.set(dataKey, transform?(data ?? []) ?? data?.makeNode(in: nil))
+        try node.set(dataKey, transform?(data ?? []) ?? data?.makeNode(in: context))
 
         return node
     }
