@@ -38,8 +38,8 @@ public final class PaginatorTag: Tag {
         }
         
         guard
-            let currentPage = paginator["current_page"]?.int,
-            let totalPages = paginator["total_pages"]?.int,
+            let currentPage = paginator[Keys.currentPage.key]?.int,
+            let totalPages = paginator[Keys.totalPages.key]?.int,
             let links = paginator["links"]?.object
         else {
                 return nil
