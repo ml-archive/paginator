@@ -12,9 +12,7 @@ class PaginatorTests: XCTestCase {
 
     func testRequestQueryExtension() {
         var request = Request(method: .get, uri: "/?key=value")
-        print("query: \(request.query)")
         request = try! request.addingValues(["hello": "world"])
-        print("query: \(request.query)") //
 
         guard var query = request.query?.object else {
             XCTFail("Query shouldn't be nil")
