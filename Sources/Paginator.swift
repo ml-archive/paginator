@@ -231,14 +231,15 @@ extension Node {
 }
 
 extension Request {
-    public func addingValues(_ queries: [String : String]) throws -> Request {
-        var newQueries = query?.object ?? [:]
-
-        queries.forEach {
-            newQueries[$0.key] = $0.value.makeNode(in: nil)
+    public func addingValues(_ newQueries: [String : String]) throws -> Request {
+        if query == nil {
+            query = [:]
         }
 
-        query = try newQueries.makeNode(in: nil)
+        newQueries.forEach {
+            query![$0.key] = .string($0.value)
+        }
+
         return self
     }
 }
