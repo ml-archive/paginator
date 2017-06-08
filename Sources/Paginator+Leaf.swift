@@ -5,7 +5,7 @@ public final class PaginatorTag: Tag {
     public enum Error: Swift.Error {
         case expectedOneArgument(got: Int)
         case expectedVariable
-        case expectedValidPaginator
+        case expectedValidPaginator(message: String)
     }
     
     fileprivate let useBootstrap4: Bool
@@ -34,15 +34,16 @@ public final class PaginatorTag: Tag {
         }
         
         guard let paginator = value?["meta", "paginator"]?.object else {
-            throw Error.expectedValidPaginator
+            throw Error.expectedValidPaginator(message: "Couldn´t find meta: paginator object")
         }
         
         guard
-            let currentPage = paginator["current_page"]?.int,
-            let totalPages = paginator["total_pages"]?.int,
+            let currentPage = paginator[Keys.currentPage.key]?.int,
+            let totalPages = paginator[Keys.totalPages.key]?.int,
             let links = paginator["links"]?.object
         else {
-                return nil
+            let keys = paginator.map { $0.key }.joined(separator: ", ")
+            throw Error.expectedValidPaginator(message: "Expected the keys \(Keys.currentPage.key), \(Keys.totalPages.key) and links, got: \(keys)")
         }
         
         return buildNavigation(currentPage: currentPage, totalPages: totalPages, links: links)
