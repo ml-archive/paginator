@@ -233,7 +233,7 @@ extension Node {
 extension Request {
     public func addingValues(_ newQueries: [String : String]) throws -> Request {
         if query == nil {
-            query = [:]
+            query = Node.object([:])
         }
 
         newQueries.forEach {
