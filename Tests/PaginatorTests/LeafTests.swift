@@ -634,6 +634,74 @@ class LeafTests: XCTestCase {
         
         XCTAssertEqual(bytes.string, expectedHTML)
     }
+
+    func testRunTagWithQueryParams() {
+        let tag = PaginatorTag()
+        let paginator = buildPaginator(query: "&foo=bar")
+
+        let result = expectNoThrow() {
+            return try run(
+                tag: tag,
+                context: paginator,
+                arguments: [
+                    .variable(path: [], value: paginator)
+                ]
+            )
+
+        }!
+
+        guard result != nil, case .bytes(let bytes) = result! else {
+            XCTFail("Should have returned bytes")
+            return
+        }
+
+        let expectedHTML =
+            "<nav class=\"paginator text-center\">\n" +
+                "<ul class=\"pagination\">\n" +
+                    "<li>" +
+                        "<a href=\"/posts?page=1&foo=bar\" rel=\"prev\" aria-label=\"Previous\">" +
+                            "<span aria-hidden=\"true\">«</span><span class=\"sr-only\">Previous</span>" +
+                        "</a>" +
+                    "</li>\n" +
+                    "<li><a href=\"?page=1&foo=bar\">1</a></li>\n" +
+                    "<li class=\"active\"><a>" +
+                        "<span>2</span><span class=\"sr-only\">(current)</span></a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=3&foo=bar\">3</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=4&foo=bar\">4</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=5&foo=bar\">5</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=6&foo=bar\">6</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=7&foo=bar\">7</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=8&foo=bar\">8</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=9&foo=bar\">9</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"?page=10&foo=bar\">10</a>" +
+                    "</li>\n" +
+                    "<li>" +
+                        "<a href=\"/posts?page=3&foo=bar\" rel=\"next\" aria-label=\"Next\">" +
+                            "<span aria-hidden=\"true\">»</span>" +
+                            "<span class=\"sr-only\">Next</span>" +
+                        "</a>" +
+                    "</li>\n" +
+                "</ul>\n" +
+            "</nav>"
+
+        XCTAssertEqual(bytes.string, expectedHTML)
+    }
     
     func testRunTagFailedTwoArgs() {
         let tag = PaginatorTag()
@@ -650,15 +718,15 @@ class LeafTests: XCTestCase {
 }
 
 extension LeafTests {
-    func buildPaginator(currentPage: Int = 2) -> Node {
+    func buildPaginator(currentPage: Int = 2, query: String = "") -> Node {
         var linksNode = Node([:])
-        
+
         if currentPage > 1 {
-            linksNode["previous"] = "/posts?page=\(currentPage - 1)".makeNode()
+            linksNode["previous"] = "/posts?page=\(currentPage - 1)\(query)".makeNode()
         }
         
         if currentPage < 10 {
-            linksNode["next"] = "/posts?page=\(currentPage + 1)".makeNode()
+            linksNode["next"] = "/posts?page=\(currentPage + 1)\(query)".makeNode()
         }
         
         return Node([
