@@ -36,7 +36,7 @@ class EntityTest: XCTestCase {
         let previousPageComponents = URLComponents(string: paginator.previousPage!)
         let previousPagePath = previousPageComponents?.path
         let previousPageQuery = previousPageComponents?.query
-        let expectedPreviousPageQueryNode = Node(formURLEncoded: "page=1&count=2".bytes)
+        let expectedPreviousPageQueryNode = Node(formURLEncoded: "page=1".bytes)
         let actualPreviousPageQueryNode = Node(formURLEncoded: previousPageQuery!.bytes)
         XCTAssertEqual(expectedPreviousPageQueryNode, actualPreviousPageQueryNode)
         XCTAssertEqual(previousPagePath, "/users")
@@ -45,13 +45,51 @@ class EntityTest: XCTestCase {
         let nextPageComponents = URLComponents(string: paginator.nextPage!)
         let nextPagePath = nextPageComponents?.path
         let nextPageQuery = nextPageComponents?.query
-        let expectedNextPageQueryNode = Node(formURLEncoded: "page=3&count=2".bytes)
+        let expectedNextPageQueryNode = Node(formURLEncoded: "page=3".bytes)
         let actualNextPageQueryNode = Node(formURLEncoded: nextPageQuery!.bytes)
         XCTAssertEqual(expectedNextPageQueryNode, actualNextPageQueryNode)
         XCTAssertEqual(nextPagePath, "/users")
         
         XCTAssertEqual(paginator.totalPages, 3)
         
+        XCTAssertNotNil(paginator.total)
+        XCTAssertEqual(paginator.total, 6)
+    }
+
+    func testBasicWithCount() {
+        let request = try! Request(method: .get, uri: "/users?page=2&count=2")
+
+        //TODO(Brett): add `expect` tools
+        let paginator = try! TestUserEntity.paginator(2, request: request)
+
+        XCTAssertEqual(paginator.baseURI.path, "/users")
+
+        XCTAssertEqual(paginator.perPage, 2)
+        XCTAssertEqual(paginator.currentPage, 2)
+
+        XCTAssertEqual(paginator.pageName, "page")
+        XCTAssertEqual(paginator.dataKey, "data")
+
+        XCTAssertNotNil(paginator.previousPage)
+        let previousPageComponents = URLComponents(string: paginator.previousPage!)
+        let previousPagePath = previousPageComponents?.path
+        let previousPageQuery = previousPageComponents?.query
+        let expectedPreviousPageQueryNode = Node(formURLEncoded: "page=1&count=2".bytes)
+        let actualPreviousPageQueryNode = Node(formURLEncoded: previousPageQuery!.bytes)
+        XCTAssertEqual(expectedPreviousPageQueryNode, actualPreviousPageQueryNode)
+        XCTAssertEqual(previousPagePath, "/users")
+
+        XCTAssertNotNil(paginator.nextPage)
+        let nextPageComponents = URLComponents(string: paginator.nextPage!)
+        let nextPagePath = nextPageComponents?.path
+        let nextPageQuery = nextPageComponents?.query
+        let expectedNextPageQueryNode = Node(formURLEncoded: "page=3&count=2".bytes)
+        let actualNextPageQueryNode = Node(formURLEncoded: nextPageQuery!.bytes)
+        XCTAssertEqual(expectedNextPageQueryNode, actualNextPageQueryNode)
+        XCTAssertEqual(nextPagePath, "/users")
+
+        XCTAssertEqual(paginator.totalPages, 3)
+
         XCTAssertNotNil(paginator.total)
         XCTAssertEqual(paginator.total, 6)
     }
@@ -112,7 +150,7 @@ class EntityTest: XCTestCase {
         XCTAssertNil(links["previous"]?.string)
         
         let actualNextPathComponents = URLComponents(string: (links["next"]?.string)!)
-        let expectedQueryNode = Node(formURLEncoded: "page=2&count=4".bytes)
+        let expectedQueryNode = Node(formURLEncoded: "page=2".bytes)
         let actualQueryNode = Node(formURLEncoded: actualNextPathComponents!.query!.bytes)
         XCTAssertEqual(expectedQueryNode, actualQueryNode)
         XCTAssertEqual(actualNextPathComponents?.path, "/users")

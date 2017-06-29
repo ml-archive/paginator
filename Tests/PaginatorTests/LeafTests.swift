@@ -43,7 +43,7 @@ class LeafTests: XCTestCase {
             "<nav class=\"paginator text-center\">\n" +
                 "<ul class=\"pagination\">\n" +
                     "<li>" +
-                        "<a href=\"/posts?page=1\" rel=\"prev\" aria-label=\"Previous\">" +
+                        "<a href=\"?page=1\" rel=\"prev\" aria-label=\"Previous\">" +
                             "<span aria-hidden=\"true\">«</span><span class=\"sr-only\">Previous</span>" +
                         "</a>" +
                     "</li>\n" +
@@ -76,7 +76,7 @@ class LeafTests: XCTestCase {
                         "<a href=\"?page=10\">10</a>" +
                     "</li>\n" +
                     "<li>" +
-                        "<a href=\"/posts?page=3\" rel=\"next\" aria-label=\"Next\">" +
+                        "<a href=\"?page=3\" rel=\"next\" aria-label=\"Next\">" +
                             "<span aria-hidden=\"true\">»</span>" +
                             "<span class=\"sr-only\">Next</span>" +
                         "</a>" +
@@ -111,7 +111,7 @@ class LeafTests: XCTestCase {
             "<nav class=\"paginator text-center\" aria-label=\"Some Aria Label Pages\">\n" +
                 "<ul class=\"pagination\">\n" +
                     "<li>" +
-                        "<a href=\"/posts?page=1\" rel=\"prev\" aria-label=\"Previous\">" +
+                        "<a href=\"?page=1\" rel=\"prev\" aria-label=\"Previous\">" +
                             "<span aria-hidden=\"true\">«</span><span class=\"sr-only\">Previous</span>" +
                         "</a>" +
                     "</li>\n" +
@@ -144,7 +144,7 @@ class LeafTests: XCTestCase {
                         "<a href=\"?page=10\">10</a>" +
                     "</li>\n" +
                     "<li>" +
-                        "<a href=\"/posts?page=3\" rel=\"next\" aria-label=\"Next\">" +
+                        "<a href=\"?page=3\" rel=\"next\" aria-label=\"Next\">" +
                             "<span aria-hidden=\"true\">»</span>" +
                             "<span class=\"sr-only\">Next</span>" +
                         "</a>" +
@@ -179,7 +179,7 @@ class LeafTests: XCTestCase {
             "<nav class=\"paginator text-center\">\n" +
                 "<ul class=\"pagination\">\n" +
                     "<li>" +
-                        "<a href=\"/posts?page=1\" rel=\"prev\" aria-label=\"Previous\">" +
+                        "<a href=\"?page=1\" rel=\"prev\" aria-label=\"Previous\">" +
                             "<span aria-hidden=\"true\">«</span><span class=\"sr-only\">Previous</span>" +
                         "</a>" +
                     "</li>\n" +
@@ -205,7 +205,7 @@ class LeafTests: XCTestCase {
                     "<li><a href=\"?page=10\">10</a>" +
                     "</li>\n" +
                     "<li>" +
-                        "<a href=\"/posts?page=3\" rel=\"next\" aria-label=\"Next\">" +
+                        "<a href=\"?page=3\" rel=\"next\" aria-label=\"Next\">" +
                             "<span aria-hidden=\"true\">»</span>" +
                             "<span class=\"sr-only\">Next</span>" +
                         "</a>" +
@@ -240,7 +240,7 @@ class LeafTests: XCTestCase {
             "<nav class=\"paginator\">\n" +
                 "<ul class=\"pagination justify-content-center\">\n" +
                     "<li class=\"page-item\">" +
-                        "<a href=\"/posts?page=1\" class=\"page-link\" rel=\"prev\" aria-label=\"Previous\">" +
+                        "<a href=\"?page=1\" class=\"page-link\" rel=\"prev\" aria-label=\"Previous\">" +
                             "<span aria-hidden=\"true\">«</span>" +
                             "<span class=\"sr-only\">Previous</span>" +
                         "</a>" +
@@ -274,7 +274,7 @@ class LeafTests: XCTestCase {
                         "<a href=\"?page=10\" class=\"page-link\">10</a>" +
                     "</li>\n" +
                     "<li class=\"page-item\">" +
-                        "<a href=\"/posts?page=3\" class=\"page-link\" rel=\"next\" aria-label=\"Next\">" +
+                        "<a href=\"?page=3\" class=\"page-link\" rel=\"next\" aria-label=\"Next\">" +
                             "<span aria-hidden=\"true\">»</span>" +
                             "<span class=\"sr-only\">Next</span>" +
                         "</a>" +
@@ -309,7 +309,7 @@ class LeafTests: XCTestCase {
             "<nav class=\"paginator\" aria-label=\"Some Pages\">\n" +
                 "<ul class=\"pagination justify-content-center\">\n" +
                     "<li class=\"page-item\">" +
-                        "<a href=\"/posts?page=1\" class=\"page-link\" rel=\"prev\" aria-label=\"Previous\">" +
+                        "<a href=\"?page=1\" class=\"page-link\" rel=\"prev\" aria-label=\"Previous\">" +
                             "<span aria-hidden=\"true\">«</span>" +
                             "<span class=\"sr-only\">Previous</span>" +
                         "</a>" +
@@ -343,7 +343,7 @@ class LeafTests: XCTestCase {
                         "<a href=\"?page=10\" class=\"page-link\">10</a>" +
                     "</li>\n" +
                     "<li class=\"page-item\">" +
-                        "<a href=\"/posts?page=3\" class=\"page-link\" rel=\"next\" aria-label=\"Next\">" +
+                        "<a href=\"?page=3\" class=\"page-link\" rel=\"next\" aria-label=\"Next\">" +
                             "<span aria-hidden=\"true\">»</span>" +
                             "<span class=\"sr-only\">Next</span>" +
                         "</a>" +
@@ -411,7 +411,7 @@ class LeafTests: XCTestCase {
                         "<a href=\"?page=10\">10</a>" +
                     "</li>\n" +
                     "<li>" +
-                        "<a href=\"/posts?page=2\" rel=\"next\" aria-label=\"Next\">" +
+                        "<a href=\"?page=2\" rel=\"next\" aria-label=\"Next\">" +
                             "<span aria-hidden=\"true\">»</span>" +
                             "<span class=\"sr-only\">Next</span>" +
                         "</a>" +
@@ -443,7 +443,7 @@ class LeafTests: XCTestCase {
             "<nav class=\"paginator text-center\" aria-label=\"Some Pages\">\n" +
                 "<ul class=\"pagination\">\n" +
                     "<li>" +
-                        "<a href=\"/posts?page=9\" rel=\"prev\" aria-label=\"Previous\">" +
+                        "<a href=\"?page=9\" rel=\"prev\" aria-label=\"Previous\">" +
                             "<span aria-hidden=\"true\">«</span>" +
                             "<span class=\"sr-only\">Previous</span>" +
                         "</a>" +
@@ -553,7 +553,7 @@ class LeafTests: XCTestCase {
                         "<a href=\"?page=10\" class=\"page-link\">10</a>" +
                     "</li>\n" +
                     "<li class=\"page-item\">" +
-                        "<a href=\"/posts?page=2\" class=\"page-link\" rel=\"next\" aria-label=\"Next\">" +
+                        "<a href=\"?page=2\" class=\"page-link\" rel=\"next\" aria-label=\"Next\">" +
                             "<span aria-hidden=\"true\">»</span>" +
                             "<span class=\"sr-only\">Next</span>" +
                         "</a>" +
@@ -585,7 +585,7 @@ class LeafTests: XCTestCase {
             "<nav class=\"paginator\" aria-label=\"Some Pages\">\n" +
                 "<ul class=\"pagination justify-content-center\">\n" +
                     "<li class=\"page-item\">" +
-                        "<a href=\"/posts?page=9\" class=\"page-link\" rel=\"prev\" aria-label=\"Previous\">" +
+                        "<a href=\"?page=9\" class=\"page-link\" rel=\"prev\" aria-label=\"Previous\">" +
                             "<span aria-hidden=\"true\">«</span>" +
                             "<span class=\"sr-only\">Previous</span>" +
                         "</a>" +
@@ -637,7 +637,7 @@ class LeafTests: XCTestCase {
 
     func testRunTagWithQueryParams() {
         let tag = PaginatorTag()
-        let paginator = buildPaginator(query: "&foo=bar")
+        let paginator = buildPaginator(query: ["foo": "bar"])
 
         let result = expectNoThrow() {
             return try run(
@@ -659,7 +659,7 @@ class LeafTests: XCTestCase {
             "<nav class=\"paginator text-center\">\n" +
                 "<ul class=\"pagination\">\n" +
                     "<li>" +
-                        "<a href=\"/posts?page=1&foo=bar\" rel=\"prev\" aria-label=\"Previous\">" +
+                        "<a href=\"?page=1&foo=bar\" rel=\"prev\" aria-label=\"Previous\">" +
                             "<span aria-hidden=\"true\">«</span><span class=\"sr-only\">Previous</span>" +
                         "</a>" +
                     "</li>\n" +
@@ -692,7 +692,7 @@ class LeafTests: XCTestCase {
                         "<a href=\"?page=10&foo=bar\">10</a>" +
                     "</li>\n" +
                     "<li>" +
-                        "<a href=\"/posts?page=3&foo=bar\" rel=\"next\" aria-label=\"Next\">" +
+                        "<a href=\"?page=3&foo=bar\" rel=\"next\" aria-label=\"Next\">" +
                             "<span aria-hidden=\"true\">»</span>" +
                             "<span class=\"sr-only\">Next</span>" +
                         "</a>" +
@@ -718,22 +718,34 @@ class LeafTests: XCTestCase {
 }
 
 extension LeafTests {
-    func buildPaginator(currentPage: Int = 2, query: String = "") -> Node {
+    func buildPaginator(currentPage: Int = 2, query: Node = Node([:])) -> Node {
         var linksNode = Node([:])
+        var queryNode = query
+
+        func addToLinksNode(key: String, page: Int) {
+            queryNode["page"] = try! page.makeNode()
+            let path = PaginatorHelper.buildPath(
+                page: page,
+                count: 10,
+                uriQueries: query
+            )
+            linksNode[key] = path!.makeNode()
+        }
 
         if currentPage > 1 {
-            linksNode["previous"] = "/posts?page=\(currentPage - 1)\(query)".makeNode()
+            addToLinksNode(key: "previous", page: currentPage - 1)
         }
-        
+
         if currentPage < 10 {
-            linksNode["next"] = "/posts?page=\(currentPage + 1)\(query)".makeNode()
+            addToLinksNode(key: "next", page: currentPage + 1)
         }
-        
+
         return Node([
             "meta": Node([
                 "paginator": Node([
                     "current_page": try! currentPage.makeNode(),
                     "total_pages": 10,
+                    "queries": queryNode,
                     "links": linksNode
                 ])
             ])

@@ -34,7 +34,13 @@ public class Paginator<EntityType: Entity> {
         let previous = currentPage - 1
         guard previous >= 1 else { return nil }
 
-        return buildPath(page: previous, count: perPage)
+        return PaginatorHelper.buildPath(
+            baseURI: baseURI.path,
+            page: previous,
+            count: perPage,
+            uriQueries: uriQueries,
+            pageName: pageName
+        )
     }
 
     public var nextPage: String? {
@@ -42,7 +48,13 @@ public class Paginator<EntityType: Entity> {
         let next = currentPage + 1
         guard next <= totalPages else { return nil }
 
-        return buildPath(page: next, count: perPage)
+        return PaginatorHelper.buildPath(
+            baseURI: baseURI.path,
+            page: next,
+            count: perPage,
+            uriQueries: uriQueries,
+            pageName: pageName
+        )
     }
 
     public var data: [EntityType]?
@@ -153,22 +165,6 @@ extension Paginator {
     }
 }
 
-extension Paginator {
-    func buildPath(page: Int, count: Int) -> String? {
-        var urlQueriesRaw = uriQueries ?? [:]
-        urlQueriesRaw[pageName] = .number(.int(page))
-        urlQueriesRaw["count"] = .number(.int(count))
-
-        guard let urlQueries = urlQueriesRaw.formEncode() else { return nil }
-
-        return [
-            baseURI.path,
-            "?",
-            urlQueries
-        ].joined()
-    }
-}
-
 extension Paginator: NodeRepresentable {
     public func makeNode(context: Context) throws -> Node {
         return try Node(node: [
@@ -178,6 +174,7 @@ extension Paginator: NodeRepresentable {
                     "per_page": perPage,
                     "current_page": currentPage,
                     "total_pages": totalPages,
+                    "queries": uriQueries,
                     "links": Node(node: [
                         "previous": previousPage,
                         "next": nextPage
