@@ -9,7 +9,6 @@ import Foundation
 class EntityTest: XCTestCase {
     static var allTests = [
         ("testBasic", testBasic),
-        ("testAddingQueries", testAddingQueries),
         ("testMakeNode", testMakeNode),
         ("testEntityQueryExtension", testEntityQueryExtension),
     ]
@@ -58,29 +57,6 @@ class EntityTest: XCTestCase {
         XCTAssertEqual(paginator.totalPages, 3)
         XCTAssertNotNil(paginator.total)
         XCTAssertEqual(paginator.total, 6)
-    }
-    
-    func testAddingQueries() {
-        let request = Request(method: .get, uri: "/users")
-        
-        //TODO(Brett): add `expect` tools
-        let paginator = try! TestUserEntity.paginator(
-            2,
-            request: request.addingValues(["search": "Brett"])
-        )
-        
-        XCTAssertNil(paginator.previousPage)
-        XCTAssertNotNil(paginator.nextPage)
-        
-        let components = URLComponents(string: "/users?count=2&search=Brett&page=2")
-        let query = components?.query
-        let path = components?.path
-        
-        let queryNode = Node(formURLEncoded: query!.bytes, allowEmptyValues: true)
-        let expectedQueryNode = Node(formURLEncoded: "count=2&search=Brett&page=2".bytes, allowEmptyValues: true)
-        
-        assertUnorderedEquals(queryNode, expectedQueryNode)
-        XCTAssertEqual(path, "/users")
     }
     
     func testMakeNode() {

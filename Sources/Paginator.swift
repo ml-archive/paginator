@@ -229,17 +229,3 @@ extension Node {
         }.joined(separator: "&")
     }
 }
-
-extension Request {
-    public func addingValues(_ newQueries: [String : String]) throws -> Request {
-        if query == nil {
-            query = Node.object([:])
-        }
-
-        newQueries.forEach {
-            query![$0.key] = .string($0.value)
-        }
-
-        return self
-    }
-}
