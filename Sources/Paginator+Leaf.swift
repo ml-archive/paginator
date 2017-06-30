@@ -28,7 +28,7 @@ public final class PaginatorTag: Tag {
             arguments.count == 1,
             let argument = arguments.first
         else {
-                throw Error.expectedOneArgument(got: arguments.count)
+            throw Error.expectedOneArgument(got: arguments.count)
         }
         
         guard case .variable(_, let value) = argument else {
@@ -44,10 +44,12 @@ public final class PaginatorTag: Tag {
             let totalPages = paginator["total_pages"]?.int,
             let links = paginator["links"]?.object
         else {
-                return nil
+            return nil
         }
-        
-        return buildNavigation(currentPage: currentPage, totalPages: totalPages, links: links)
+
+        let queries = paginator["queries"] as? Node
+
+        return buildNavigation(currentPage: currentPage, totalPages: totalPages, links: links, queries: queries)
     }
     
     public func shouldRender(
@@ -79,7 +81,11 @@ extension PaginatorTag {
         return buildLink(title: "»", active: false, link: url, disabled: false).bytes
     }
     
-    func buildLinks(currentPage: Int, count: Int) -> Bytes {
+    func buildLinks(
+        currentPage: Int,
+        count: Int,
+        queries: Node?
+    ) -> Bytes {
         var bytes: Bytes = []
         
         if count == 0 {
@@ -87,17 +93,28 @@ extension PaginatorTag {
         }
         
         for i in 1...count {
+            let path = PaginatorHelper.buildPath(
+                page: i,
+                count: count,
+                uriQueries: queries
+            )
+
             if i == currentPage {
                 bytes += buildLink(title: "\(i)", active: true, link: nil, disabled: false).bytes
             } else {
-                bytes += buildLink(title: "\(i)", active: false, link: "?page=\(i)", disabled: false).bytes
+                bytes += buildLink(title: "\(i)", active: false, link: path, disabled: false).bytes
             }
         }
         
         return bytes
     }
     
-    func buildNavigation(currentPage: Int, totalPages: Int, links: [String : Polymorphic]) -> Node {
+    func buildNavigation(
+        currentPage: Int,
+        totalPages: Int,
+        links: [String : Polymorphic],
+        queries: Node?
+    ) -> Node {
         var bytes: Bytes = []
         
         let navClass: String
@@ -121,7 +138,7 @@ extension PaginatorTag {
         
         bytes += buildBackButton(url: links["previous"]?.string)
         
-        bytes += buildLinks(currentPage: currentPage, count: totalPages)
+        bytes += buildLinks(currentPage: currentPage, count: totalPages, queries: queries)
         
         bytes += buildForwardButton(url: links["next"]?.string)
         
@@ -134,7 +151,7 @@ extension PaginatorTag {
         let linkClass: String?
         let liClass: String?
         let activeSpan = "<span class=\"sr-only\">(current)</span>"
-        
+
         if useBootstrap4 {
             linkClass = "page-link"
             liClass = "page-item"
@@ -142,38 +159,38 @@ extension PaginatorTag {
             linkClass = nil
             liClass = nil
         }
-        
+
         var linkString = "<li"
-        
+
         if active || disabled || liClass != nil {
             linkString += " class=\""
-            
+
             if active {
                 linkString += "active"
             }
             if disabled {
                 linkString += "disabled"
             }
-            
+
             if let liClass = liClass {
                 if active || disabled {
                     linkString += " "
                 }
                 linkString += "\(liClass)"
             }
-            
+
             linkString += "\""
         }
-        
+
         linkString += ">"
-        
+
         if let link = link {
             linkString += "<a href=\"\(link)\""
-            
+
             if let linkClass = linkClass {
                 linkString += " class=\"\(linkClass)\""
             }
-            
+
             if title == "«" {
                 linkString += " rel=\"prev\" aria-label=\"Previous\"><span aria-hidden=\"true\">«</span><span class=\"sr-only\">Previous</span>"
             } else if title == "»" {
@@ -181,30 +198,29 @@ extension PaginatorTag {
             } else {
                 linkString += ">\(title)"
             }
-            
-            linkString += "</a>"
+
         } else {
             linkString += "<a><span"
-            
+
             if let linkClass = linkClass {
                 linkString += " class=\"\(linkClass)\""
             }
-            
+
             if title == "«" {
                 linkString += " aria-label=\"Previous\" aria-hidden=\"true\">«</span><span class=\"sr-only\">Previous</span>"
             } else if title == "»" {
                 linkString += " aria-label=\"Next\" aria-hidden=\"true\">»</span><span class=\"sr-only\">Next</span>"
             } else {
                 linkString += ">\(title)</span>"
-                
+
                 if active {
                     linkString += activeSpan
                 }
             }
         }
-        
+
         linkString += "</a></li>\n"
-        
+
         return linkString
     }
 }
