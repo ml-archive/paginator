@@ -46,7 +46,14 @@ public final class PaginatorTag: Tag {
             throw Error.expectedValidPaginator(message: "Expected the keys \(Keys.currentPage.key), \(Keys.totalPages.key) and links, got: \(keys)")
         }
         
-        return buildNavigation(currentPage: currentPage, totalPages: totalPages, links: links)
+        let queries = paginator["queries"]
+
+        return buildNavigation(
+            currentPage: currentPage,
+            totalPages: totalPages,
+            links: links,
+            queries: queries
+        )
     }
     
     public func shouldRender(
@@ -78,7 +85,11 @@ extension PaginatorTag {
         return buildLink(title: "»", active: false, link: url, disabled: false).bytes
     }
     
-    func buildLinks(currentPage: Int, count: Int) -> Bytes {
+    func buildLinks(
+        currentPage: Int,
+        count: Int,
+        queries: Node?
+    ) -> Bytes {
         var bytes: Bytes = []
         
         if count == 0 {
@@ -86,17 +97,38 @@ extension PaginatorTag {
         }
         
         for i in 1...count {
+            let path = PaginatorHelper.buildPath(
+                page: i,
+                count: count,
+                uriQueries: queries
+            )
+
             if i == currentPage {
-                bytes += buildLink(title: "\(i)", active: true, link: nil, disabled: false).bytes
+                bytes += buildLink(
+                    title: "\(i)",
+                    active: true,
+                    link: nil,
+                    disabled: false
+                ).bytes
             } else {
-                bytes += buildLink(title: "\(i)", active: false, link: "?page=\(i)", disabled: false).bytes
+                bytes += buildLink(
+                    title: "\(i)",
+                    active: false,
+                    link: path,
+                    disabled: false
+                ).bytes
             }
         }
         
         return bytes
     }
     
-    func buildNavigation(currentPage: Int, totalPages: Int, links: [String : Node]) -> Node {
+    func buildNavigation(
+        currentPage: Int,
+        totalPages: Int,
+        links: [String : Node],
+        queries: Node?
+    ) -> Node {
         var bytes: Bytes = []
         
         let navClass: String
@@ -120,7 +152,7 @@ extension PaginatorTag {
         
         bytes += buildBackButton(url: links["previous"]?.string)
         
-        bytes += buildLinks(currentPage: currentPage, count: totalPages)
+        bytes += buildLinks(currentPage: currentPage, count: totalPages, queries: queries)
         
         bytes += buildForwardButton(url: links["next"]?.string)
         

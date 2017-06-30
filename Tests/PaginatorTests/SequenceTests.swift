@@ -19,7 +19,7 @@ class SequenceTests: XCTestCase {
     }
     
     func testBasic() {
-        let request = Request(method: .get, uri: "/users?page=2")
+        let request = Request(method: .get, uri: "/users?page=2&count=15")
         
         //TODO(Brett): add `expect` tools
         let paginator = try! TestUserEntity.all().paginator(2, request: request)
@@ -92,12 +92,10 @@ class SequenceTests: XCTestCase {
         XCTAssertNil(links["previous"]?.string)
         
         let actualNextPathComponents = URLComponents(string: (links["next"]?.string)!)
-        let expectedQueryNode = Node(formURLEncoded: "page=2&count=4".bytes, allowEmptyValues: true)
+        let expectedQueryNode = Node(formURLEncoded: "page=2".bytes, allowEmptyValues: true)
         let actualQueryNode = Node(formURLEncoded: actualNextPathComponents!.query!.bytes, allowEmptyValues: true)
 
         assertUnorderedEquals(actualQueryNode, expectedQueryNode)
         XCTAssertEqual(actualNextPathComponents?.path, "/users")
     }
-    
 }
-
