@@ -9,7 +9,6 @@ import Foundation
 class SequenceTests: XCTestCase {
     static var allTests = [
         ("testBasic", testBasic),
-        ("testAddingQueries", testAddingQueries),
         ("testMakeNode", testMakeNode),
         ]
     
@@ -20,7 +19,7 @@ class SequenceTests: XCTestCase {
     }
     
     func testBasic() {
-        let request = Request(method: .get, uri: "/users?page=2")
+        let request = Request(method: .get, uri: "/users?page=2&count=15")
         
         //TODO(Brett): add `expect` tools
         let paginator = try! TestUserEntity.all().paginator(2, request: request)
@@ -60,28 +59,6 @@ class SequenceTests: XCTestCase {
         XCTAssertEqual(paginator.total, 6)
     }
     
-    func testAddingQueries() {
-        let request = Request(method: .get, uri: "/users")
-        
-        //TODO(Brett): add `expect` tools
-        let paginator = try! TestUserEntity.all().paginator(
-            2,
-            request: request.addingValues(["search": "Brett"])
-        )
-        XCTAssertNil(paginator.previousPage)
-        XCTAssertNotNil(paginator.nextPage)
-        
-        let components = URLComponents(string: "/users?count=2&search=Brett&page=2")
-        let query = components?.query
-        let path = components?.path
-        
-        let queryNode = Node(formURLEncoded: query!.bytes, allowEmptyValues: true)
-        let expectedQueryNode = Node(formURLEncoded: "count=2&search=Brett&page=2".bytes, allowEmptyValues: true)
-        
-        assertUnorderedEquals(queryNode, expectedQueryNode)
-        XCTAssertEqual(path, "/users")
-    }
-    
     func testMakeNode() {
         let request = Request(method: .get, uri: "/users")
         let paginator = try! TestUserEntity.all().paginator(4, request: request)
@@ -115,12 +92,10 @@ class SequenceTests: XCTestCase {
         XCTAssertNil(links["previous"]?.string)
         
         let actualNextPathComponents = URLComponents(string: (links["next"]?.string)!)
-        let expectedQueryNode = Node(formURLEncoded: "page=2&count=4".bytes, allowEmptyValues: true)
+        let expectedQueryNode = Node(formURLEncoded: "page=2".bytes, allowEmptyValues: true)
         let actualQueryNode = Node(formURLEncoded: actualNextPathComponents!.query!.bytes, allowEmptyValues: true)
 
         assertUnorderedEquals(actualQueryNode, expectedQueryNode)
         XCTAssertEqual(actualNextPathComponents?.path, "/users")
     }
-    
 }
-

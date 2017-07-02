@@ -11,8 +11,7 @@ class PaginatorTests: XCTestCase {
     ]
 
     func testRequestQueryExtension() {
-        var request = Request(method: .get, uri: "/?key=value")
-        request = try! request.addingValues(["hello": "world"])
+        let request = Request(method: .get, uri: "/?key=value")
 
         guard var query = request.query?.object else {
             XCTFail("Query shouldn't be nil")
@@ -21,7 +20,6 @@ class PaginatorTests: XCTestCase {
         
         let expect: [String: Node] = [
             "key": "value",
-            "hello": "world"
         ]
         
         expect.forEach {

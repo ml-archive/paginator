@@ -35,7 +35,13 @@ public class Paginator<EntityType: Entity> where EntityType: NodeConvertible {
         let previous = currentPage - 1
         guard previous >= 1 else { return nil }
 
-        return buildPath(page: previous, count: perPage)
+        return PaginatorHelper.buildPath(
+            baseURI: baseURI.path,
+            page: previous,
+            count: perPage,
+            uriQueries: uriQueries,
+            pageName: pageName
+        )
     }
 
     public var nextPage: String? {
@@ -43,7 +49,13 @@ public class Paginator<EntityType: Entity> where EntityType: NodeConvertible {
         let next = currentPage + 1
         guard next <= totalPages else { return nil }
 
-        return buildPath(page: next, count: perPage)
+        return PaginatorHelper.buildPath(
+            baseURI: baseURI.path,
+            page: next,
+            count: perPage,
+            uriQueries: uriQueries,
+            pageName: pageName
+        )
     }
 
     public var data: [EntityType]?
@@ -154,26 +166,11 @@ extension Paginator {
     }
 }
 
-extension Paginator {
-    func buildPath(page: Int, count: Int) -> String? {
-        var urlQueriesRaw = uriQueries ?? [:]
-        urlQueriesRaw[pageName] = .number(.int(page))
-        urlQueriesRaw["count"] = .number(.int(count))
-
-        guard let urlQueries = urlQueriesRaw.formEncode() else { return nil }
-
-        return [
-            baseURI.path,
-            "?",
-            urlQueries
-        ].joined()
-    }
-}
-
 enum Keys {
     case perPage
     case currentPage
     case totalPages
+    case queries
 
     internal var key: String {
         let convention = Database.default?.keyNamingConvention ?? .camelCase
@@ -187,6 +184,8 @@ enum Keys {
 
         case .totalPages:
             return convention == .camelCase ? "totalPages" : "total_pages"
+        case .queries:
+            return "queries"
         }
     }
 
@@ -201,6 +200,7 @@ extension Paginator: NodeRepresentable {
         try paginator.set(Keys.perPage.key, perPage)
         try paginator.set(Keys.currentPage.key, currentPage)
         try paginator.set(Keys.totalPages.key, totalPages)
+        try paginator.set(Keys.queries.key, uriQueries)
 
         var links = Node.object([:])
         try links.set("previous", previousPage)
@@ -227,19 +227,5 @@ extension Node {
         return dict.map {
             [$0.key, $0.value.string ?? ""].joined(separator: "=")
         }.joined(separator: "&")
-    }
-}
-
-extension Request {
-    public func addingValues(_ newQueries: [String : String]) throws -> Request {
-        if query == nil {
-            query = Node.object([:])
-        }
-
-        newQueries.forEach {
-            query![$0.key] = .string($0.value)
-        }
-
-        return self
     }
 }
