@@ -224,8 +224,14 @@ extension Node {
             return nil
         }
 
-        return dict.map {
-            [$0.key, $0.value.string ?? ""].joined(separator: "=")
-        }.joined(separator: "&")
+        let result = dict.flatMap { key, value -> [String] in
+            if let valueArray = value.array {
+                return valueArray.map{ [key, $0.string ?? ""].joined(separator: "=") }
+            } else {
+                return [[key,value.string ?? ""].joined(separator: "=")]
+            }
+         }
+
+        return result.joined(separator: "&")
     }
 }
