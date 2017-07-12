@@ -8,7 +8,7 @@ struct PaginatorHelper {
         uriQueries: Node?,
         pageName: String = "page"
     ) -> String? {
-        var urlQueriesRaw = uriQueries ?? [:]
+        var urlQueriesRaw = (uriQueries == nil || uriQueries == Node.null) ? [:] : uriQueries!
         urlQueriesRaw[pageName] = .number(.int(page))
         if urlQueriesRaw["count"]?.string != nil {
             urlQueriesRaw["count"] = .number(.int(count))
