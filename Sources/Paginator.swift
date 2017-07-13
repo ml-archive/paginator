@@ -226,12 +226,32 @@ extension Node {
 
         let result = dict.flatMap { key, value -> [String] in
             if let valueArray = value.array {
-                return valueArray.map{ [key, $0.string?.replacingOccurrences(of: "&", with: "%26").replacingOccurrences(of: " ", with: "+") ?? ""].joined(separator: "=") }
+                return valueArray.map{ [key, $0.string?.wwwFormUrlEncoded() ?? ""].joined(separator: "=") }
             } else {
-                return [[key,value.string?.replacingOccurrences(of: "&", with: "%26").replacingOccurrences(of: " ", with: "+") ?? ""].joined(separator: "=")]
+                return [[key,value.string?.wwwFormUrlEncoded() ?? ""].joined(separator: "=")]
             }
          }
 
         return result.joined(separator: "&")
+    }
+}
+
+extension String {
+    func wwwFormUrlEncoded()->String {
+        
+        guard (self != "") else { return self }
+        
+        var newStr = self
+        
+        let entities = [
+            " "    : "+",
+            "&"     : "%26"
+        ]
+        
+        for (character,value) in entities {
+            newStr = newStr.replacingOccurrences(of: character, with: value)
+        }
+        
+        return newStr
     }
 }
