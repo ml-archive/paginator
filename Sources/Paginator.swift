@@ -226,9 +226,9 @@ extension Node {
 
         let result = dict.flatMap { key, value -> [String] in
             if let valueArray = value.array {
-                return valueArray.map{ [key, $0.string ?? ""].joined(separator: "=") }
+                return valueArray.map{ [key, $0.string?.replacingOccurrences(of: "&", with: "%26").replacingOccurrences(of: " ", with: "+") ?? ""].joined(separator: "=") }
             } else {
-                return [[key,value.string ?? ""].joined(separator: "=")]
+                return [[key,value.string?.replacingOccurrences(of: "&", with: "%26").replacingOccurrences(of: " ", with: "+") ?? ""].joined(separator: "=")]
             }
          }
 
