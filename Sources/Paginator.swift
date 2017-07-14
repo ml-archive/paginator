@@ -245,7 +245,8 @@ extension String {
         
         let entities = [
             " "    : "+",
-            "&"     : "%26"
+            "&"     : "%26",
+            "/"     : "%2F"
         ]
         
         for (character,value) in entities {
