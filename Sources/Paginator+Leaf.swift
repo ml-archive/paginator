@@ -10,10 +10,12 @@ public final class PaginatorTag: Tag {
     
     fileprivate let useBootstrap4: Bool
     fileprivate let paginationLabel: String?
+    fileprivate let visiblePages: Int?
     
-    public init(useBootstrap4: Bool = false, paginationLabel: String? = nil) {
+    public init(useBootstrap4: Bool = false, paginationLabel: String? = nil, visiblePages: Int? = nil) {
         self.useBootstrap4 = useBootstrap4
         self.paginationLabel = paginationLabel
+        self.visiblePages = visiblePages
     }
     
     public let name = "paginator"
@@ -96,27 +98,50 @@ extension PaginatorTag {
             return bytes
         }
         
-        for i in 1...count {
-            let path = PaginatorHelper.buildPath(
-                page: i,
-                count: count,
-                uriQueries: queries
-            )
+        let visible = visiblePages ?? 8
+        var pageOrder: [Int] = []
+        
+        pageOrder.append(currentPage)
+        for i in 1...(visible/2) {
+            
+            if (currentPage + i) <= count {
+                pageOrder.append(currentPage + i)
+            }
+            if (currentPage - i) > 0 {
+                pageOrder.append(currentPage - i)
+            }
+            
+        }
+        pageOrder.sort()
+        
+        if pageOrder.count < visible {
+            
+            let missing = visible - pageOrder.count
+            for _ in 1...missing {
+                
+                if pageOrder.first! == 1 {
+                    // append element
+                    pageOrder.append(pageOrder.last! + 1)
+                } else {
+                    // prepend element
+                    pageOrder.insert(pageOrder.first! - 1, at: 0)
+                }
+            }
+            
+        } else if pageOrder.count > visible {
+            if visible % 2 == 0 {
+                pageOrder.removeFirst() 
+            }   
+        }
 
+        
+        for i in pageOrder {
+            let path = PaginatorHelper.buildPath(page: i, count: count, uriQueries: queries)
+            
             if i == currentPage {
-                bytes += buildLink(
-                    title: "\(i)",
-                    active: true,
-                    link: nil,
-                    disabled: false
-                ).bytes
+                bytes += buildLink(title: "\(i)", active: true, link: nil, disabled: false).bytes
             } else {
-                bytes += buildLink(
-                    title: "\(i)",
-                    active: false,
-                    link: path,
-                    disabled: false
-                ).bytes
+                bytes += buildLink(title: "\(i)", active: false, link: path, disabled: false).bytes
             }
         }
         

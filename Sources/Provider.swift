@@ -12,15 +12,17 @@ public final class PaginatorProvider: Vapor.Provider {
             return
         }
         
-        renderer.stem.register(PaginatorTag(useBootstrap4: useBootstrap4, paginationLabel: paginationLabel))
+        renderer.stem.register(PaginatorTag(useBootstrap4: useBootstrap4, paginationLabel: paginationLabel, visiblePages: visiblePages))
     }
     
     fileprivate let useBootstrap4: Bool
     fileprivate let paginationLabel: String?
+    fileprivate let visiblePages: Int?
     
-    public init(useBootstrap4: Bool = false, paginationLabel: String? = nil) {
+    public init(useBootstrap4: Bool = false, paginationLabel: String? = nil, visiblePages: Int?) {
         self.useBootstrap4 = useBootstrap4
         self.paginationLabel = paginationLabel
+        self.visiblePages = visiblePages
     }
     
     /**
@@ -32,17 +34,21 @@ public final class PaginatorProvider: Vapor.Provider {
          
          {
             "useBootstrap4": true,
-            "paginatorLabel": "Blog Post Pages"
+            "paginatorLabel": "Blog Post Pages",
+            "visiblePages": 8
          }
      */
     public init(config: Config) throws {
         
         var useBootstrap4Value = false
         var paginatorLabelValue: String? = nil
+        var visiblePagesValue: Int? = nil
+
         
         
         if let paginatorConfig = config["paginator"]?.object {
             paginatorLabelValue = paginatorConfig["paginatorLabel"]?.string
+            visiblePagesValue = paginatorConfig["visiblePages"]?.int
             if let bootstrap4 = paginatorConfig["useBootstrap4"]?.bool {
                 useBootstrap4Value = bootstrap4
             }
@@ -50,6 +56,7 @@ public final class PaginatorProvider: Vapor.Provider {
         
         useBootstrap4 = useBootstrap4Value
         paginationLabel = paginatorLabelValue
+        visiblePages = visiblePagesValue
     }
     public func afterInit(_ drop: Droplet) {}
     public func beforeRun(_: Droplet) {}

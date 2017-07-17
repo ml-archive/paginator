@@ -4,6 +4,7 @@
 
 *.xcodeproj
 Packages/
+.DS_Store
 
 ## Build generated
 build/
