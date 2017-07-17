@@ -101,39 +101,42 @@ extension PaginatorTag {
         let visible = visiblePages ?? 8
         var pageOrder: [Int] = []
         
-        pageOrder.append(currentPage)
-        for i in 1...(visible/2) {
-            
-            if (currentPage + i) <= count {
-                pageOrder.append(currentPage + i)
-            }
-            if (currentPage - i) > 0 {
-                pageOrder.append(currentPage - i)
-            }
-            
-        }
-        pageOrder.sort()
-        
-        if pageOrder.count < visible {
-            
-            let missing = visible - pageOrder.count
-            for _ in 1...missing {
+        if (count > visible) {
+            pageOrder.append(currentPage)
+            for i in 1...(visible/2) {
                 
-                if pageOrder.first! == 1 {
-                    // append element
-                    pageOrder.append(pageOrder.last! + 1)
-                } else {
-                    // prepend element
-                    pageOrder.insert(pageOrder.first! - 1, at: 0)
+                if (currentPage + i) <= count {
+                    pageOrder.append(currentPage + i)
                 }
+                if (currentPage - i) > 0 {
+                    pageOrder.append(currentPage - i)
+                }
+                
             }
+            pageOrder.sort()
             
-        } else if pageOrder.count > visible {
-            if visible % 2 == 0 {
-                pageOrder.removeFirst() 
-            }   
+            if pageOrder.count < visible {
+                
+                let missing = visible - pageOrder.count
+                for _ in 1...missing {
+                    
+                    if pageOrder.first! == 1 {
+                        // append element
+                        pageOrder.append(pageOrder.last! + 1)
+                    } else {
+                        // prepend element
+                        pageOrder.insert(pageOrder.first! - 1, at: 0)
+                    }
+                }
+                
+            } else if pageOrder.count > visible {
+                if visible % 2 == 0 {
+                    pageOrder.removeFirst() 
+                }   
+            }
+        } else {
+            pageOrder = Array(1...count)
         }
-
         
         for i in pageOrder {
             let path = PaginatorHelper.buildPath(page: i, count: count, uriQueries: queries)
