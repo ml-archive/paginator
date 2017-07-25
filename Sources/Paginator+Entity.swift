@@ -1,7 +1,7 @@
 import HTTP
 import Fluent
 
-extension Entity where Self: NodeConvertible {
+extension Entity where Self: NodeRepresentable {
     /**
         Constructs a paginator object.
      
@@ -38,7 +38,7 @@ extension Entity where Self: NodeConvertible {
     }
 }
 
-extension Query where E: NodeConvertible {
+extension Query where E: NodeRepresentable {
     /**
         Constructs a paginator object.
     
@@ -75,7 +75,7 @@ extension Query where E: NodeConvertible {
     }
 }
 
-extension Sequence where Iterator.Element: Entity, Iterator.Element: NodeConvertible {
+extension Sequence where Iterator.Element: Entity, Iterator.Element: NodeRepresentable {
     public func paginator(
         _ perPage: Int,
         page currentPage: Int = 1,

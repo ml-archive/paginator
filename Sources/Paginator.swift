@@ -5,7 +5,7 @@ import Vapor
 import Fluent
 import FluentProvider
 
-public class Paginator<EntityType: Entity> where EntityType: NodeConvertible {
+public class Paginator<EntityType: Entity> where EntityType: NodeRepresentable {
     public var currentPage: Int
     public var perPage: Int
 
