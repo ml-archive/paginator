@@ -1,6 +1,5 @@
 import XCTest
 
-import HTTP
 import FluentProvider
 import Foundation
 
