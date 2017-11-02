@@ -656,50 +656,98 @@ class LeafTests: XCTestCase {
             return
         }
 
-        let expectedHTML =
-            "<nav class=\"paginator text-center\">\n" +
-                "<ul class=\"pagination\">\n" +
-                    "<li>" +
-                        "<a href=\"?page=1&foo=bar\" rel=\"prev\" aria-label=\"Previous\">" +
-                            "<span aria-hidden=\"true\">«</span><span class=\"sr-only\">Previous</span>" +
-                        "</a>" +
-                    "</li>\n" +
-                    "<li><a href=\"?page=1&foo=bar\">1</a></li>\n" +
-                    "<li class=\"active\"><a>" +
-                        "<span>2</span><span class=\"sr-only\">(current)</span></a>" +
-                    "</li>\n" +
-                    "<li>" +
-                        "<a href=\"?page=3&foo=bar\">3</a>" +
-                    "</li>\n" +
-                    "<li>" +
-                        "<a href=\"?page=4&foo=bar\">4</a>" +
-                    "</li>\n" +
-                    "<li>" +
-                        "<a href=\"?page=5&foo=bar\">5</a>" +
-                    "</li>\n" +
-                    "<li>" +
-                        "<a href=\"?page=6&foo=bar\">6</a>" +
-                    "</li>\n" +
-                    "<li>" +
-                        "<a href=\"?page=7&foo=bar\">7</a>" +
-                    "</li>\n" +
-                    "<li>" +
-                        "<a href=\"?page=8&foo=bar\">8</a>" +
-                    "</li>\n" +
-                    "<li>" +
-                        "<a href=\"?page=9&foo=bar\">9</a>" +
-                    "</li>\n" +
-                    "<li>" +
-                        "<a href=\"?page=10&foo=bar\">10</a>" +
-                    "</li>\n" +
-                    "<li>" +
-                        "<a href=\"?page=3&foo=bar\" rel=\"next\" aria-label=\"Next\">" +
-                            "<span aria-hidden=\"true\">»</span>" +
-                            "<span class=\"sr-only\">Next</span>" +
-                        "</a>" +
-                    "</li>\n" +
-                "</ul>\n" +
-            "</nav>"
+        let expectedHTML: String
+        #if os(Linux)
+            expectedHTML =
+                "<nav class=\"paginator text-center\">\n" +
+                    "<ul class=\"pagination\">\n" +
+                        "<li>" +
+                            "<a href=\"?foo=bar&page=1\" rel=\"prev\" aria-label=\"Previous\">" +
+                                "<span aria-hidden=\"true\">«</span><span class=\"sr-only\">Previous</span>" +
+                            "</a>" +
+                        "</li>\n" +
+                        "<li><a href=\"?foo=bar&page=1\">1</a></li>\n" +
+                        "<li class=\"active\"><a>" +
+                            "<span>2</span><span class=\"sr-only\">(current)</span></a>" +
+                        "</li>\n" +
+                        "<li>" +
+                            "<a href=\"?foo=bar&page=3\">3</a>" +
+                        "</li>\n" +
+                        "<li>" +
+                            "<a href=\"?foo=bar&page=4\">4</a>" +
+                        "</li>\n" +
+                        "<li>" +
+                            "<a href=\"?foo=bar&page=5\">5</a>" +
+                        "</li>\n" +
+                        "<li>" +
+                            "<a href=\"?foo=bar&page=6\">6</a>" +
+                        "</li>\n" +
+                        "<li>" +
+                            "<a href=\"?foo=bar&page=7\">7</a>" +
+                        "</li>\n" +
+                        "<li>" +
+                            "<a href=\"?foo=bar&page=8\">8</a>" +
+                        "</li>\n" +
+                        "<li>" +
+                            "<a href=\"?foo=bar&page=9\">9</a>" +
+                        "</li>\n" +
+                        "<li>" +
+                            "<a href=\"?foo=bar&page=10\">10</a>" +
+                        "</li>\n" +
+                        "<li>" +
+                            "<a href=\"?foo=bar&page=3\" rel=\"next\" aria-label=\"Next\">" +
+                                "<span aria-hidden=\"true\">»</span>" +
+                                "<span class=\"sr-only\">Next</span>" +
+                            "</a>" +
+                        "</li>\n" +
+                    "</ul>\n" +
+                "</nav>"
+        #else
+            expectedHTML =
+                "<nav class=\"paginator text-center\">\n" +
+                    "<ul class=\"pagination\">\n" +
+                        "<li>" +
+                            "<a href=\"?page=1&foo=bar\" rel=\"prev\" aria-label=\"Previous\">" +
+                                "<span aria-hidden=\"true\">«</span><span class=\"sr-only\">Previous</span>" +
+                            "</a>" +
+                        "</li>\n" +
+                        "<li><a href=\"?page=1&foo=bar\">1</a></li>\n" +
+                        "<li class=\"active\"><a>" +
+                            "<span>2</span><span class=\"sr-only\">(current)</span></a>" +
+                        "</li>\n" +
+                        "<li>" +
+                            "<a href=\"?page=3&foo=bar\">3</a>" +
+                        "</li>\n" +
+                        "<li>" +
+                            "<a href=\"?page=4&foo=bar\">4</a>" +
+                        "</li>\n" +
+                        "<li>" +
+                            "<a href=\"?page=5&foo=bar\">5</a>" +
+                        "</li>\n" +
+                        "<li>" +
+                            "<a href=\"?page=6&foo=bar\">6</a>" +
+                        "</li>\n" +
+                        "<li>" +
+                            "<a href=\"?page=7&foo=bar\">7</a>" +
+                        "</li>\n" +
+                        "<li>" +
+                            "<a href=\"?page=8&foo=bar\">8</a>" +
+                        "</li>\n" +
+                        "<li>" +
+                            "<a href=\"?page=9&foo=bar\">9</a>" +
+                        "</li>\n" +
+                        "<li>" +
+                            "<a href=\"?page=10&foo=bar\">10</a>" +
+                        "</li>\n" +
+                        "<li>" +
+                            "<a href=\"?page=3&foo=bar\" rel=\"next\" aria-label=\"Next\">" +
+                                "<span aria-hidden=\"true\">»</span>" +
+                                "<span class=\"sr-only\">Next</span>" +
+                            "</a>" +
+                        "</li>\n" +
+                    "</ul>\n" +
+                "</nav>"
+        #endif
 
         XCTAssertEqual(bytes.makeString(), expectedHTML)
     }
