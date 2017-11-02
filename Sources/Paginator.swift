@@ -63,14 +63,14 @@ public class Paginator<EntityType: Entity> where EntityType: NodeRepresentable {
     var query: Query<EntityType>
     var transform: (([EntityType]) throws -> Node)?
 
-    init(
+    public init(
         query: Query<EntityType>,
         currentPage: Int = 1,
         perPage: Int,
-        paginatorName: String,
-        pageName: String,
-        dataKey: String,
-        transform: (([EntityType]) throws -> Node)?,
+        paginatorName: String = "paginator",
+        pageName: String = "page",
+        dataKey: String = "data",
+        transform: (([EntityType]) throws -> Node)? = nil,
         request: Request
     ) throws {
         self.query = query
