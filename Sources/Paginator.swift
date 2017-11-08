@@ -5,6 +5,7 @@ import Vapor
 import Fluent
 import FluentProvider
 
+
 public class Paginator<EntityType: Entity> where EntityType: NodeRepresentable {
     public var currentPage: Int
     public var perPage: Int
@@ -17,6 +18,7 @@ public class Paginator<EntityType: Entity> where EntityType: NodeRepresentable {
     public var paginatorName: String
     public var pageName: String
     public var dataKey: String
+    public var defaultPaginatorKey = "paginator"
 
     public var totalPages: Int? {
         guard let total = total else {
@@ -67,16 +69,16 @@ public class Paginator<EntityType: Entity> where EntityType: NodeRepresentable {
         query: Query<EntityType>,
         currentPage: Int = 1,
         perPage: Int,
-        paginatorName: String = "paginator",
+        paginatorName: String? = nil,
         pageName: String = "page",
         dataKey: String = "data",
         transform: (([EntityType]) throws -> Node)? = nil,
         request: Request
-    ) throws {
+        ) throws {
         self.query = query
         self.currentPage = currentPage
         self.perPage = perPage
-        self.paginatorName = paginatorName
+        self.paginatorName = paginatorName ?? defaultPaginatorKey
         self.pageName = pageName
         self.dataKey = dataKey
         self.transform = transform
