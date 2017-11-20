@@ -100,11 +100,12 @@ extension PaginatorTag {
         let contains = (currentPage...count).contains(currentPage + 10)
 
         let totalPages: Int
-        let firstPage: Int
+        var firstPage: Int
 
         if(contains) {
             totalPages = currentPage + 10
             firstPage = currentPage + 1
+
         } else {
 
             let pagesLeft = count - currentPage
@@ -112,7 +113,10 @@ extension PaginatorTag {
             firstPage = currentPage - (10 - pagesLeft)
             totalPages = count
 
+        }
 
+        if(firstPage == 0) {
+            firstPage = 1
         }
 
 
