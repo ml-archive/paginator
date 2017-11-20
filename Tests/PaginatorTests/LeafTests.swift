@@ -88,6 +88,9 @@ class LeafTests: XCTestCase {
         
         XCTAssertEqual(bytes.makeString(), expectedHTML)
     }
+
+
+
     
     func testRunTagWithAriaLabel() throws {
         let tag = PaginatorTag(paginationLabel: "Some Aria Label Pages")
@@ -736,7 +739,7 @@ extension LeafTests {
             queryNode["page"] = page.makeNode(in: nil)
             let path = PaginatorHelper.buildPath(
                 page: page,
-                count: 10,
+                count: 1000,
                 uriQueries: query
             )
             linksNode[key] = path!.makeNode(in: nil)

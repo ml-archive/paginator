@@ -97,14 +97,14 @@ extension PaginatorTag {
             return bytes
         }
 
-        let contains = (currentPage...count).contains(currentPage + 10)
-
         let totalPages: Int
         var firstPage: Int
 
+        let contains = (currentPage...count).contains(currentPage + 10)
+
         if(contains) {
             totalPages = currentPage + 10
-            firstPage = currentPage + 1
+            firstPage = currentPage
 
         } else {
 
@@ -119,7 +119,6 @@ extension PaginatorTag {
             firstPage = 1
         }
 
-
         for i in firstPage...totalPages {
             let path = PaginatorHelper.buildPath(
                 page: i,
@@ -127,7 +126,7 @@ extension PaginatorTag {
                 uriQueries: queries
             )
 
-            if i == currentPage && currentPage != 0 {
+            if i == currentPage {
                 bytes += buildLink(
                     title: "\(i)",
                     active: true,
@@ -279,4 +278,5 @@ extension PaginatorTag.Error: Equatable {
         }
     }
 }
+
 
