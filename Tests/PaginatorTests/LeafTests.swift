@@ -84,6 +84,7 @@ class LeafTests: XCTestCase {
                     "</li>\n" +
                 "</ul>\n" +
             "</nav>"
+
         
         XCTAssertEqual(bytes.makeString(), expectedHTML)
     }

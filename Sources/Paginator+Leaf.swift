@@ -1,5 +1,6 @@
 import Core
 import Leaf
+import HTTP
 
 public final class PaginatorTag: Tag {
     public enum Error: Swift.Error {
@@ -96,16 +97,33 @@ extension PaginatorTag {
             return bytes
         }
 
-        let pageSize = count <= 10 ? count : 10
+        let contains = (currentPage...count).contains(currentPage + 10)
 
-        for i in 1...pageSize {
+        let totalPages: Int
+        let firstPage: Int
+
+        if(contains) {
+            totalPages = currentPage + 10
+            firstPage = currentPage + 1
+        } else {
+
+            let pagesLeft = count - currentPage
+
+            firstPage = currentPage - (10 - pagesLeft)
+            totalPages = count
+
+
+        }
+
+
+        for i in firstPage...totalPages {
             let path = PaginatorHelper.buildPath(
                 page: i,
                 count: count,
                 uriQueries: queries
             )
 
-            if i == currentPage {
+            if i == currentPage && currentPage != 0 {
                 bytes += buildLink(
                     title: "\(i)",
                     active: true,
