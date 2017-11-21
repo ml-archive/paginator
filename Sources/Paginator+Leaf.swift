@@ -99,21 +99,21 @@ extension PaginatorTag {
         let totalPages: Int
         var firstPage: Int
 
-        let contains = (currentPage...count).contains(currentPage + 9)
+        let contains = (currentPage...count).contains(currentPage + 10)
 
         if(contains) {
-            totalPages = currentPage + 0
+            totalPages = currentPage + 10
             firstPage = currentPage
 
         } else {
 
             let pagesLeft = count - currentPage
 
-            if(pagesLeft < 9)
+            if(pagesLeft < 10)
             {
                 firstPage = 1
             } else {
-                firstPage = currentPage - (9 - pagesLeft)
+                firstPage = currentPage - (10 - pagesLeft)
             }
 
             totalPages = count
@@ -283,3 +283,4 @@ extension PaginatorTag.Error: Equatable {
         }
     }
 }
+
