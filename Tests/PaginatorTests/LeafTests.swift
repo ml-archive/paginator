@@ -90,8 +90,6 @@ class LeafTests: XCTestCase {
     }
 
 
-
-    
     func testRunTagWithAriaLabel() throws {
         let tag = PaginatorTag(paginationLabel: "Some Aria Label Pages")
         let paginator = try buildPaginator()
@@ -739,7 +737,7 @@ extension LeafTests {
             queryNode["page"] = page.makeNode(in: nil)
             let path = PaginatorHelper.buildPath(
                 page: page,
-                count: 1000,
+                count: 10,
                 uriQueries: query
             )
             linksNode[key] = path!.makeNode(in: nil)

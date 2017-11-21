@@ -1,6 +1,5 @@
 import Core
 import Leaf
-import HTTP
 
 public final class PaginatorTag: Tag {
     public enum Error: Swift.Error {
@@ -110,7 +109,13 @@ extension PaginatorTag {
 
             let pagesLeft = count - currentPage
 
-            firstPage = currentPage - (10 - pagesLeft)
+            if(pagesLeft == 0)
+            {
+                firstPage = 1
+            } else {
+                firstPage = currentPage - (10 - pagesLeft)
+            }
+
             totalPages = count
 
         }
@@ -278,5 +283,3 @@ extension PaginatorTag.Error: Equatable {
         }
     }
 }
-
-
