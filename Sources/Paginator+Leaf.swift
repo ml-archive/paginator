@@ -109,7 +109,7 @@ extension PaginatorTag {
 
             let pagesLeft = count - currentPage
 
-            if(pagesLeft == 0)
+            if(pagesLeft < 10)
             {
                 firstPage = 1
             } else {
