@@ -5,7 +5,7 @@ function_body_length:
 variable_name:
   min_length:
     warning: 2
-line_length: 80
+line_length: 100
 disabled_rules:
   - opening_brace
 colon:
