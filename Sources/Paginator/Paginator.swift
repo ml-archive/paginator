@@ -94,7 +94,6 @@ public extension QueryBuilder where Result: Model, Result.Database == Database {
     ) throws -> Future<P> where
         P: PaginatableByModel,
         P.Data == Result,
-//        P.Q == QueryBuilder<Result.Database, Result>,
         P.C == Result,
         P.PaginationMeta == P.R
     {
@@ -121,6 +120,28 @@ public extension Array where Iterator.Element: Codable {
             return P.init(data: results, paginationMeta: data)
         }
     }
+}
+
+// MARK: Types of content inside pagination
+
+public protocol PaginatableByModel {
+    associatedtype C: Model
+    associatedtype R
+
+    static func paginate(
+        query: QueryBuilder<C.Database, C>,
+        on req: Request
+    ) throws -> Future<([C], R)>
+}
+
+public protocol PaginatableByCodable {
+    associatedtype C: Codable
+    associatedtype R
+
+    static func paginate(
+        query: [C],
+        on req: Request
+    ) throws -> Future<([C], R)>
 }
 
 
@@ -185,26 +206,6 @@ public struct OffsetQueryParams: Decodable, Reflectable {
         let params = try req.query.decode(OffsetQueryParams.self)
         return Future.transform(to: params, on: req)
     }
-}
-
-public protocol PaginatableByModel {
-    associatedtype C: Model
-    associatedtype R
-
-    static func paginate(
-        query: QueryBuilder<C.Database, C>,
-        on req: Request
-    ) throws -> Future<([C], R)>
-}
-
-public protocol PaginatableByCodable {
-    associatedtype C: Codable
-    associatedtype R
-
-    static func paginate(
-        query: [C],
-        on req: Request
-    ) throws -> Future<([C], R)>
 }
 
 public extension OffsetPaginator {
