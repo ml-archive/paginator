@@ -55,8 +55,8 @@ public struct OffsetMetaData: Codable {
 }
 
 public struct OffsetQueryParams: Decodable, Reflectable {
-    let perPage: Int?
-    let page: Int?
+    public let perPage: Int?
+    public let page: Int?
 
     static public func decode(req: Request) throws -> Future<OffsetQueryParams> {
         let params = try req.query.decode(OffsetQueryParams.self)
