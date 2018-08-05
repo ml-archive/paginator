@@ -34,13 +34,13 @@ public struct OffsetMetaData: Codable {
         let next: String?
     }
 
-    let currentPage: Int
-    let perPage: Int
-    let total: Int
-    let totalPages: Int
+    public let currentPage: Int
+    public let perPage: Int
+    public let total: Int
+    public let totalPages: Int
     let links: Links
 
-    init(currentPage: Int, perPage: Int, total: Int, on req: Request) throws {
+    public init(currentPage: Int, perPage: Int, total: Int, on req: Request) throws {
         self.currentPage = currentPage
         self.perPage = perPage
         self.total = total
