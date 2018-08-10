@@ -2,22 +2,20 @@ import Fluent
 import Vapor
 
 public protocol QueryBuilderPaginatable {
-    associatedtype ResultObject: Model
     associatedtype PaginatableMetaData
 
-    static func paginate(
-        query: QueryBuilder<ResultObject.Database, ResultObject>,
+    static func paginate<D: Database, Result>(
+        query: QueryBuilder<D, Result>,
         on req: Request
-    ) throws -> Future<([ResultObject], PaginatableMetaData)>
+    ) throws -> Future<([Result], PaginatableMetaData)>
 }
 
-public extension QueryBuilder where Result: Model, Result.Database == Database {
+public extension QueryBuilder {
     public func paginate<P: Paginator>(
         for req: Request
     ) throws -> Future<P> where
         P: QueryBuilderPaginatable,
         P.Object == Result,
-        P.ResultObject == Result,
         P.PaginatorMetaData == P.PaginatableMetaData
     {
         return try P.paginate(query: self, on: req).map { args -> P in

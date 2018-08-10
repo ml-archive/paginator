@@ -1,11 +1,19 @@
 import Fluent
 import Vapor
 
-extension OffsetPaginator: QueryBuilderPaginatable where Object: Model {
-    public static func paginate(
-        query: QueryBuilder<Object.Database, Object>,
+extension OffsetPaginator: QueryBuilderPaginatable {
+    public static func paginate<D: Database, Result>(
+        query: QueryBuilder<D, Result>,
         on req: Request
-    ) throws -> Future<([Object], OffsetMetaData)> {
+    ) throws -> Future<([Result], OffsetMetaData)> {
+        return try paginate(count: query.count(), query: query, on: req)
+    }
+
+    public static func paginate<D: Database, Result>(
+        count: Future<Int>,
+        query: QueryBuilder<D, Result>,
+        on req: Request
+    ) throws -> Future<([Result], OffsetMetaData)> {
         let config: OffsetPaginatorConfig = (try? req.make()) ?? .default
         return try OffsetQueryParams.decode(req: req)
             .flatMap { params in
@@ -14,18 +22,16 @@ extension OffsetPaginator: QueryBuilderPaginatable where Object: Model {
                 let lower = (page - 1) * perPage
                 let upper = (lower + perPage) - 1
 
-                return query.count()
-                    .flatMap { count in
-                        let data = try OffsetMetaData(
-                            currentPage: page,
-                            perPage: perPage,
-                            total: count,
-                            on: req
-                        )
-                        return query.range(lower: lower, upper: upper).all()
-                            .map { ($0, data) }
-                    }
+                return count.flatMap { count in
+                    let data = try OffsetMetaData(
+                        currentPage: page,
+                        perPage: perPage,
+                        total: count,
+                        on: req
+                    )
+                    return query.range(lower: lower, upper: upper).all()
+                        .map { ($0, data) }
+                }
             }
     }
 }
-
