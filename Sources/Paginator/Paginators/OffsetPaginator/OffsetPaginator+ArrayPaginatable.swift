@@ -1,6 +1,7 @@
 import Vapor
 
 extension OffsetPaginator: ArrayPaginatable {
+    // This shouldn't be called directly - please use the extension on Array instead.
     public static func paginate(
         query: [Object],
         on req: Request

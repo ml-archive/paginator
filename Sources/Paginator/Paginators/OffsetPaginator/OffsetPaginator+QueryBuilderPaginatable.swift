@@ -2,6 +2,7 @@ import Fluent
 import Vapor
 
 extension OffsetPaginator: QueryBuilderPaginatable {
+    // This shouldn't be called directly - please use the extension on QueryBuilder instead.
     public static func paginate<D: Database, Result>(
         query: QueryBuilder<D, Result>,
         count: Future<Int>,
