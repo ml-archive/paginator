@@ -1,7 +1,7 @@
 import Fluent
 import Vapor
 
-public protocol QueryBuilderPaginatable {
+public protocol QueryBuilderPaginatable: Paginatable {
     associatedtype PaginatableMetaData
 
     static func paginate<D: Database, Result>(

@@ -1,7 +1,6 @@
 import Vapor
 
-public protocol ArrayPaginatable {
-    associatedtype ResultObject: Codable
+public protocol ArrayPaginatable: Paginatable {
     associatedtype PaginatableMetaData
 
     static func paginate(
