@@ -40,24 +40,6 @@ public extension QueryBuilder {
 extension QueryBuilder: Transformable {
     public typealias TransformableQuery = QueryBuilder<Database, Result>
     public typealias TransformableQueryResult = Result
-
-    public func transform<T: Codable>(
-        on req: Request,
-        _ transform: @escaping (TransformableQueryResult) throws -> T
-    ) throws -> TransformingQuery<TransformableQuery, TransformableQueryResult, T> {
-        let newTransform: (TransformableQueryResult) throws -> Future<T> = { result in
-            return try req.future(transform(result))
-        }
-
-        return self.transform(on: req, newTransform)
-    }
-
-    func transform<T: Codable>(
-        on req: Request,
-        _ transform: @escaping (TransformableQueryResult) throws -> Future<T>
-    ) -> TransformingQuery<TransformableQuery, TransformableQueryResult, T> {
-        return TransformingQuery(query: self, transform: transform)
-    }
 }
 
 public extension TransformingQuery {
@@ -87,9 +69,10 @@ public extension TransformingQuery {
             query: self.query,
             count: self.query.count(),
             on: req
-        ).flatMap { args -> Future<P> in
+        )
+        .flatMap { args -> Future<P> in
             let (results, data) = args
-            return try results.map(self.transform).flatten(on: req).map { results in
+            return try self.transform(results).map { results in
                 return try P.init(data: results, meta: data)
             }
         }

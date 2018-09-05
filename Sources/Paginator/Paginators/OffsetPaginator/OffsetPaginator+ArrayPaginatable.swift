@@ -1,8 +1,10 @@
 import Vapor
 
 extension OffsetPaginator: ArrayPaginatable {
+    public typealias Query = [Object]
+
     // This shouldn't be called directly - please use the extension on Array instead.
-    public static func paginate(
+    public static func paginate<Object>(
         query: [Object],
         on req: Request
     ) throws -> EventLoopFuture<([Object], OffsetMetaData)> {
