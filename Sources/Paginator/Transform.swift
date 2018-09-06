@@ -1,48 +1,57 @@
 import Vapor
 
-// MARK: Convenience for transformation
+public struct TransformingQuery<Query, Result, TransformedResult: Codable> {
+    let source: Query
+    let transform: ([Result]) throws -> Future<[TransformedResult]>
+}
 
-public extension Future where T: Paginator {
-    public func transform<C: Paginator>(
-        transform: @escaping ([T.Object]) -> [C.Object]
-    ) -> Future<C> where T.PaginatorMetaData == C.PaginatorMetaData {
-        return self.map { paginator in
-            let transformed = paginator.data.map { transform($0) }
-            return try C.init(data: transformed ?? [], meta: paginator.metaData())
+public protocol Transformable {
+    associatedtype TransformableQuery
+    associatedtype TransformableQueryResult
+
+    func transform<T: Codable>(
+        on req: Request,
+        _ transform: @escaping (TransformableQueryResult) throws -> T
+    ) throws -> TransformingQuery<TransformableQuery, TransformableQueryResult, T>
+
+    func transform<T: Codable>(
+        on req: Request,
+        _ transform: @escaping (TransformableQueryResult) throws -> Future<T>
+    ) throws -> TransformingQuery<TransformableQuery, TransformableQueryResult, T>
+
+    func transform<T: Codable>(
+        on req: Request,
+        _ transform: @escaping ([TransformableQueryResult]) throws -> Future<[T]>
+    ) throws -> TransformingQuery<TransformableQuery, TransformableQueryResult, T>
+}
+
+public extension Transformable {
+    public func transform<T: Codable>(
+        on req: Request,
+        _ transform: @escaping (TransformableQueryResult) throws -> T
+    ) throws -> TransformingQuery<TransformableQuery, TransformableQueryResult, T> {
+        let newTransform: (TransformableQueryResult) throws -> Future<T> = { result in
+            return try req.future(transform(result))
         }
+
+        return try self.transform(on: req, newTransform)
     }
 
-    public func transform<C: Paginator>(
-        transform: @escaping ([T.Object]) throws -> Future<[C.Object]>
-    ) -> Future<C> where T.PaginatorMetaData == C.PaginatorMetaData {
-        return self
-            .flatMap { paginator in
-                try transform(paginator.data ?? [])
-                    .map { try C.init(data: $0, meta: paginator.metaData()) }
-            }
+    public func transform<T: Codable>(
+        on req: Request,
+        _ transform: @escaping (TransformableQueryResult) throws -> Future<T>
+    ) -> TransformingQuery<Self, Self.TransformableQueryResult, T> {
+        let newTransform: ([TransformableQueryResult]) throws -> Future<[T]> = { result in
+            try result.map { try transform($0) }.flatten(on: req)
+        }
+
+        return TransformingQuery(source: self, transform: newTransform)
     }
 
-    public func transform<C: Paginator>(
-        transform: @escaping (T.Object) -> C.Object
-    ) -> Future<C> where T.PaginatorMetaData == C.PaginatorMetaData {
-        return self.map { paginator in
-            let transformed = paginator.data?.map { transform($0) }
-            return try C.init(data: transformed ?? [], meta: paginator.metaData())
-        }
-    }
-
-    public func transform<C: Paginator>(
-        transform: @escaping (T.Object) throws -> Future<C.Object>, on req: Request
-    ) -> Future<C> where T.PaginatorMetaData == C.PaginatorMetaData {
-        return self.flatMap { paginator in
-            let transformed = try paginator.data?
-                .map { try transform($0) }
-                .flatten(on: req)
-                ?? Future.transform(to: [], on: req)
-
-            return transformed.map {
-                try C.init(data: $0, meta: paginator.metaData())
-            }
-        }
+    public func transform<T: Codable>(
+        on req: Request,
+        _ transform: @escaping ([TransformableQueryResult]) throws -> Future<[T]>
+    ) -> TransformingQuery<Self, Self.TransformableQueryResult, T> {
+        return TransformingQuery(source: self, transform: transform)
     }
 }
