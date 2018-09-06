@@ -4,7 +4,7 @@ import Vapor
 extension OffsetPaginator: QueryBuilderPaginatable {
     // This shouldn't be called directly - please use the extension on QueryBuilder instead.
     public static func paginate<D: Database, Result>(
-        query: QueryBuilder<D, Result>,
+        source: QueryBuilder<D, Result>,
         count: Future<Int>,
         on req: Request
     ) throws -> Future<([Result], OffsetMetaData)> {
@@ -23,7 +23,7 @@ extension OffsetPaginator: QueryBuilderPaginatable {
                         total: count,
                         on: req
                     )
-                    return query
+                    return source
                         .range(lower: lower, upper: upper)
                         .all()
                         .map { ($0, data) }

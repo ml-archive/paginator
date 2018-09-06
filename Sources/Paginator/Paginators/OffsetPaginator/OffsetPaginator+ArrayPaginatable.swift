@@ -5,13 +5,13 @@ extension OffsetPaginator: ArrayPaginatable {
 
     // This shouldn't be called directly - please use the extension on Array instead.
     public static func paginate<Object>(
-        query: [Object],
+        source: [Object],
+        count: Int,
         on req: Request
     ) throws -> EventLoopFuture<([Object], OffsetMetaData)> {
         let config: OffsetPaginatorConfig = (try? req.make()) ?? .default
         return try OffsetQueryParams.decode(req: req)
             .map { params in
-                let count = query.count
                 let perPage = params.perPage ?? config.perPage
                 let totalPages = Int(ceil(Double(count) / Double(perPage)))
 
@@ -34,7 +34,7 @@ extension OffsetPaginator: ArrayPaginatable {
                     return ([], data)
                 }
 
-                return (Array(query[lower...upper]), data)
+                return (Array(source[lower...upper]), data)
             }
     }
 }

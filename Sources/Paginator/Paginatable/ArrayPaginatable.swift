@@ -4,9 +4,19 @@ public protocol ArrayPaginatable: Paginatable {
     associatedtype PaginatableMetaData
 
     static func paginate<Object>(
-        query: [Object],
+        source: [Object],
+        count: Int,
         on req: Request
     ) throws -> Future<([Object], PaginatableMetaData)>
+}
+
+public extension ArrayPaginatable {
+    static func paginate<Object>(
+        source: [Object],
+        on req: Request
+    ) throws -> Future<([Object], PaginatableMetaData)> {
+        return try self.paginate(source: source, count: source.count, on: req)
+    }
 }
 
 public extension Array where Iterator.Element: Codable {
@@ -18,7 +28,19 @@ public extension Array where Iterator.Element: Codable {
         P.ResultObject == Iterator.Element,
         P.PaginatorMetaData == P.PaginatableMetaData
     {
-        return try P.paginate(query: self, on: req).map { args -> P in
+        return try self.paginate(count: self.count, for: req)
+    }
+
+    public func paginate<P: Paginator>(
+        count: Int,
+        for req: Request
+    ) throws -> Future<P> where
+        P: ArrayPaginatable,
+        P.Object == Iterator.Element,
+        P.ResultObject == Iterator.Element,
+        P.PaginatorMetaData == P.PaginatableMetaData
+    {
+        return try P.paginate(source: self, count: count, on: req).map { args -> P in
             let (results, data) = args
             return try P.init(data: results, meta: data)
         }
@@ -39,7 +61,19 @@ public extension TransformingQuery {
         TransformedResult == P.Object,
         Query == Array<Result>
     {
-        return try P.paginate(query: self.query, on: req).flatMap { args -> Future<P> in
+        return try self.paginate(count: self.source.count, for: req)
+    }
+
+    public func paginate<P: Paginator>(
+        count: Int,
+        for req: Request
+    ) throws -> Future<P> where
+        P: ArrayPaginatable,
+        P.PaginatorMetaData == P.PaginatableMetaData,
+        TransformedResult == P.Object,
+        Query == Array<Result>
+    {
+        return try P.paginate(source: self.source, count: count, on: req).flatMap { args -> Future<P> in
             let (results, data) = args
             return try self.transform(results).map { results in
                 return try P.init(data: results, meta: data)

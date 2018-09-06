@@ -6,7 +6,7 @@ public protocol Paginatable: Codable {
     associatedtype PaginatableMetaData
 
     static func paginate(
-        query: Query,
+        source: Query,
         on req: Request
     ) throws -> Future<([ResultObject], PaginatableMetaData)>
 }

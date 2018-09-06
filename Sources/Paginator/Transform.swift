@@ -1,7 +1,7 @@
 import Vapor
 
 public struct TransformingQuery<Query, Result, TransformedResult: Codable> {
-    let query: Query
+    let source: Query
     let transform: ([Result]) throws -> Future<[TransformedResult]>
 }
 
@@ -45,13 +45,13 @@ public extension Transformable {
             try result.map { try transform($0) }.flatten(on: req)
         }
 
-        return TransformingQuery(query: self, transform: newTransform)
+        return TransformingQuery(source: self, transform: newTransform)
     }
 
     public func transform<T: Codable>(
         on req: Request,
         _ transform: @escaping ([TransformableQueryResult]) throws -> Future<[T]>
     ) -> TransformingQuery<Self, Self.TransformableQueryResult, T> {
-        return TransformingQuery(query: self, transform: transform)
+        return TransformingQuery(source: self, transform: transform)
     }
 }

@@ -5,7 +5,7 @@ public protocol QueryBuilderPaginatable: Paginatable {
     associatedtype PaginatableMetaData
 
     static func paginate<D: Database, Result>(
-        query: QueryBuilder<D, Result>,
+        source: QueryBuilder<D, Result>,
         count: Future<Int>,
         on req: Request
     ) throws -> Future<([Result], PaginatableMetaData)>
@@ -30,7 +30,7 @@ public extension QueryBuilder {
         P.Object == Result,
         P.PaginatorMetaData == P.PaginatableMetaData
     {
-        return try P.paginate(query: self, count: self.count(), on: req).map { args -> P in
+        return try P.paginate(source: self, count: count, on: req).map { args -> P in
             let (results, data) = args
             return try P.init(data: results, meta: data)
         }
@@ -52,7 +52,7 @@ public extension TransformingQuery {
         TransformedResult == P.Object,
         P.PaginatorMetaData == P.PaginatableMetaData
     {
-        return try self.paginate(count: self.query.count(), for: req)
+        return try self.paginate(count: self.source.count(), for: req)
     }
 
     public func paginate<P: Paginator, T>(
@@ -66,8 +66,8 @@ public extension TransformingQuery {
         P.PaginatorMetaData == P.PaginatableMetaData
     {
         return try P.paginate(
-            query: self.query,
-            count: self.query.count(),
+            source: self.source,
+            count: count,
             on: req
         )
         .flatMap { args -> Future<P> in
