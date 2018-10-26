@@ -1,5 +1,5 @@
 <nav class="paginator">
-    <ul class="pagination justify-content-center">
+    <ul class="pagination justify-content-center table-responsive">
 
         <li class="#if(previous == nil) { disabled } page-item">
             <a #if(previous) { href="#(previous.url)" } class="page-link" rel="prev" aria-label="Previous">
@@ -13,8 +13,8 @@
             <li class="disabled page-item"><a href="#" class="page-link">...</a></li>
         }
         
-        #for(page in middle) {
-            <li class="page-item #if(current.page == page.page) { active }"><a href="#(page.url)" class="page-link">#(page.page)</a></li>
+        #for(control in middle) {
+            <li class="page-item #if(current.page == control.page) { active }"><a href="#(page.url)" class="page-link">#(control.page)</a></li>
         }
 
         #if(right) {
