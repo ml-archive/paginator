@@ -20,7 +20,7 @@ jobs:
           no_output_timeout: 1800
           command: |
             swift package generate-xcodeproj --enable-code-coverage
-            xcodebuild -scheme NStack-Package -enableCodeCoverage YES test | xcpretty
+            xcodebuild -scheme Paginator-Package -enableCodeCoverage YES test | xcpretty
       - run:
           name: Report coverage to Codecov
           command: |
