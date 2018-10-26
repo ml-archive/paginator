@@ -34,6 +34,7 @@ public struct OffsetMetaData: Codable {
         let next: String?
     }
 
+    internal let url: URL
     public let currentPage: Int
     public let perPage: Int
     public let total: Int
@@ -41,14 +42,15 @@ public struct OffsetMetaData: Codable {
     let links: Links
 
     public init(currentPage: Int, perPage: Int, total: Int, on req: Request) throws {
+        self.url = req.http.url
         self.currentPage = currentPage
         self.perPage = perPage
         self.total = total
         self.totalPages = Int(ceil(Double(total) / Double(perPage)))
-        let nav = try OffsetMetaData.links(
+        let nav = try OffsetMetaData.nextAndPreviousLinks(
             currentPage: currentPage,
             totalPages: totalPages,
-            on: req
+            url: url
         )
         self.links = Links(previous: nav.previous, next: nav.next)
     }
