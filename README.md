@@ -116,7 +116,7 @@ Then in your `MyLeafFile.leaf` you could do something like:
 #offsetPaginator()
 ```
 
-Calling the Leaf tag for `OffsetPaginator` will automaticaly generate the Bootstrap 4 HTML for showing the pagination controls:
+Calling the Leaf tag for `OffsetPaginator` will automatically generate the Bootstrap 4 HTML for showing the pagination controls:
 
 ```html
 <nav class="paginator">
