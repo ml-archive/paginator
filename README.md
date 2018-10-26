@@ -38,10 +38,10 @@ Next, copy/paste the `Resources/Views/Paginator` folder into your project in ord
 
 ## Getting started 🚀
 
-First make sure that you've imported Submissions everywhere it's needed:
+First make sure that you've imported Paginator everywhere it's needed:
 
 ```swift
-import Sugar
+import Paginator
 ```
 
 ### Adding the Leaf tag
@@ -116,7 +116,7 @@ Then in your `MyLeafFile.leaf` you could do something like:
 #offsetPaginator()
 ```
 
-Calling the leaf tag for `OffsetPaginator` will automaticaly generate the Bootstrap 4 HTML for showing the pagination controls:
+Calling the Leaf tag for `OffsetPaginator` will automaticaly generate the Bootstrap 4 HTML for showing the pagination controls:
 
 ```html
 <nav class="paginator">
