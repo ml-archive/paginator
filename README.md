@@ -1,4 +1,4 @@
-# Paginator 📄
+# Paginator 🗂
 [![Swift Version](https://img.shields.io/badge/Swift-4.2-brightgreen.svg)](http://swift.org)
 [![Vapor Version](https://img.shields.io/badge/Vapor-3-30B6FC.svg)](http://vapor.codes)
 [![Circle CI](https://circleci.com/gh/nodes-vapor/paginator/tree/master.svg?style=shield)](https://circleci.com/gh/nodes-vapor/paginator)
