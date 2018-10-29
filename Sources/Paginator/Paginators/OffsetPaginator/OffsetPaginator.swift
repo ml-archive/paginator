@@ -46,7 +46,7 @@ public struct OffsetMetaData: Codable {
         self.currentPage = currentPage
         self.perPage = perPage
         self.total = total
-        self.totalPages = Int(ceil(Double(total) / Double(perPage)))
+        self.totalPages = max(1, Int(ceil(Double(total) / Double(perPage))))
         let nav = try OffsetMetaData.nextAndPreviousLinks(
             currentPage: currentPage,
             totalPages: totalPages,
