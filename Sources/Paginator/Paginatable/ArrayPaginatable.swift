@@ -59,7 +59,7 @@ public extension TransformingQuery {
         P: ArrayPaginatable,
         P.PaginatorMetaData == P.PaginatableMetaData,
         TransformedResult == P.Object,
-        Query == Array<Result>
+        Query == [Result]
     {
         return try self.paginate(count: self.source.count, for: req)
     }
@@ -71,9 +71,14 @@ public extension TransformingQuery {
         P: ArrayPaginatable,
         P.PaginatorMetaData == P.PaginatableMetaData,
         TransformedResult == P.Object,
-        Query == Array<Result>
+        Query == [Result]
     {
-        return try P.paginate(source: self.source, count: count, on: req).flatMap { args -> Future<P> in
+        return try P.paginate(
+            source: self.source,
+            count: count,
+            on: req
+        )
+        .flatMap { args -> Future<P> in
             let (results, data) = args
             return try self.transform(results).map { results in
                 return try P.init(data: results, meta: data)

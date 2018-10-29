@@ -31,4 +31,3 @@ extension OffsetPaginator: QueryBuilderPaginatable {
             }
     }
 }
-

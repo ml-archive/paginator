@@ -54,14 +54,14 @@ public struct OffsetPaginatorControlData: Codable {
 
         var middle: [Control]
         if metaData.totalPages > 2 {
-            let b = OffsetPaginatorControlData.bounds(
+            let bounds = OffsetPaginatorControlData.bounds(
                 left: left,
                 right: right,
                 current: metaData.currentPage,
                 total: metaData.totalPages
             )
 
-            let range = b.lower...b.upper
+            let range = bounds.lower...bounds.upper
             let middleLinks = try metaData.links(in: range)
             middle = zip(range, middleLinks).map { (page, url) in
                 Control(url: url, page: page)
@@ -87,7 +87,7 @@ public struct OffsetPaginatorControlData: Codable {
     }
 }
 
-fileprivate let userInfoKey = "offsetPaginatorControlData"
+private let userInfoKey = "offsetPaginatorControlData"
 
 public enum TagContextPaginatorError: Error {
     case paginatorNotPassedInToRender
