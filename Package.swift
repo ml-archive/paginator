@@ -1,11 +1,18 @@
+// swift-tools-version:4.2
 import PackageDescription
 
 let package = Package(
     name: "Paginator",
+    products: [
+        .library(name: "Paginator", targets: ["Paginator"]),
+    ],
     dependencies: [
-        .Package(url: "https://github.com/vapor/fluent.git", majorVersion: 2),
-        .Package(url: "https://github.com/vapor/vapor.git", majorVersion: 2),
-        .Package(url: "https://github.com/vapor/leaf-provider.git", majorVersion: 1),
-        .Package(url: "https://github.com/vapor/fluent-provider.git", majorVersion: 1)
+        .package(url: "https://github.com/vapor/fluent.git", from: "3.0.0"),
+        .package(url: "https://github.com/vapor/vapor.git", from: "3.0.0"),
+        .package(url: "https://github.com/nodes-vapor/sugar.git", from: "3.0.0-beta"),
+    ],
+    targets: [
+        .target(name: "Paginator", dependencies: ["Fluent", "Vapor", "Sugar"]),
+        .testTarget(name: "PaginatorTests", dependencies: ["Paginator"]),
     ]
 )
