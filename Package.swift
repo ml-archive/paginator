@@ -9,7 +9,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/vapor/fluent.git", from: "3.0.0"),
         .package(url: "https://github.com/vapor/vapor.git", from: "3.0.0"),
-        .package(url: "https://github.com/nodes-vapor/sugar.git", from: "3.0.0-beta"),
+        .package(url: "https://github.com/cb1674/sugar.git", from: "3.0.1"),
     ],
     targets: [
         .target(name: "Paginator", dependencies: ["Fluent", "Vapor", "Sugar"]),
