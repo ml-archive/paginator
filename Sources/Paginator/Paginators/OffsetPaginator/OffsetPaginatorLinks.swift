@@ -22,7 +22,7 @@ public extension OffsetMetaData {
     }
 
     public func links(
-        in range: ClosedRange<Int>
+        in range: CountableClosedRange<Int>
     ) throws -> [String] {
         return try range.map { try link(for: $0) }
     }

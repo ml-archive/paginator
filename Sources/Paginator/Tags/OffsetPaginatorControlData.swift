@@ -61,7 +61,7 @@ public struct OffsetPaginatorControlData: Codable {
                 total: metaData.totalPages
             )
 
-            let range = bounds.lower...bounds.upper
+            let range: CountableClosedRange = bounds.lower...bounds.upper
             let middleLinks = try metaData.links(in: range)
             middle = zip(range, middleLinks).map { (page, url) in
                 Control(url: url, page: page)
