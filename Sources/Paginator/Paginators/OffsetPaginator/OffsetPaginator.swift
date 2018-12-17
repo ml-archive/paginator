@@ -62,6 +62,6 @@ public struct OffsetQueryParams: Decodable, Reflectable {
 
     static public func decode(req: Request) throws -> Future<OffsetQueryParams> {
         let params = try req.query.decode(OffsetQueryParams.self)
-        return Future.transform(to: params, on: req)
+        return req.future(params)
     }
 }

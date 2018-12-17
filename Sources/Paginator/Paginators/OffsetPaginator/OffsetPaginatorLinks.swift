@@ -38,7 +38,7 @@ public extension OffsetMetaData {
             let pageName = try OffsetQueryParams.reflectProperty(forKey: \.page)?.path.last,
             var components = URLComponents(url: url, resolvingAgainstBaseURL: false)
         else {
-            throw Abort.init(.internalServerError)
+            throw Abort(.internalServerError)
         }
 
         var queryItems = components.queryItems?.filter { $0.name != pageName } ?? []
@@ -46,7 +46,7 @@ public extension OffsetMetaData {
         components.queryItems = queryItems
 
         guard let url = components.url?.absoluteString else {
-            throw Abort.init(.internalServerError)
+            throw Abort(.internalServerError)
         }
 
         return url
