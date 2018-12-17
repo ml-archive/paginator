@@ -15,7 +15,7 @@ public final class OffsetPaginatorTag: TagRenderer {
         }
     }
 
-    public func render(tag: TagContext) throws -> EventLoopFuture<TemplateData> {
+    public func render(tag: TagContext) throws -> Future<TemplateData> {
         try tag.requireNoBody()
         let controlData = try tag.requireOffsetPaginatorControlData()
         return try render(tag, controlData)

@@ -8,7 +8,7 @@ extension OffsetPaginator: ArrayPaginatable {
         source: [Object],
         count: Int,
         on req: Request
-    ) throws -> EventLoopFuture<([Object], OffsetMetaData)> {
+    ) throws -> Future<([Object], OffsetMetaData)> {
         let config: OffsetPaginatorConfig = (try? req.make()) ?? .default
         return try OffsetQueryParams.decode(req: req)
             .map { params in
