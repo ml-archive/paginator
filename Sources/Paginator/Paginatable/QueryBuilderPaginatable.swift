@@ -19,7 +19,7 @@ public extension QueryBuilder {
         P.Object == Result,
         P.PaginatorMetaData == P.PaginatableMetaData
     {
-        return try self.paginate(count: self.count(), for: req)
+        return try paginate(count: count(), for: req)
     }
 
     public func paginate<P: Paginator>(
@@ -30,10 +30,7 @@ public extension QueryBuilder {
         P.Object == Result,
         P.PaginatorMetaData == P.PaginatableMetaData
     {
-        return try P.paginate(source: self, count: count, on: req).map { args -> P in
-            let (results, data) = args
-            return try P(data: results, meta: data)
-        }
+        return try P.paginate(source: self, count: count, on: req).map(P.init)
     }
 }
 
@@ -65,16 +62,10 @@ public extension TransformingQuery {
         TransformedResult == P.Object,
         P.PaginatorMetaData == P.PaginatableMetaData
     {
-        return try P.paginate(
-            source: self.source,
-            count: count,
-            on: req
-        )
-        .flatMap { args -> Future<P> in
-            let (results, data) = args
-            return try self.transform(results).map { results in
-                return try P(data: results, meta: data)
+        return try P
+            .paginate(source: self.source, count: count, on: req)
+            .flatMap { (results, metadata) -> Future<P> in
+                try self.transform(results).map { try P(data: $0, meta: metadata) }
             }
-        }
     }
 }

@@ -78,9 +78,8 @@ public extension TransformingQuery {
             count: count,
             on: req
         )
-        .flatMap { args -> Future<P> in
-            let (results, data) = args
-            return try self.transform(results).map { results in
+        .flatMap { results, data -> Future<P> in
+            try self.transform(results).map { results in
                 return try P(data: results, meta: data)
             }
         }
