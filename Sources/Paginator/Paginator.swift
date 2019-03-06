@@ -1,5 +1,4 @@
 import Fluent
-import Sugar
 import Vapor
 
 public protocol Paginator: Content {
