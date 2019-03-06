@@ -1,4 +1,3 @@
-import Sugar
 import TemplateKit
 
 public final class OffsetPaginatorTag: TagRenderer {
