@@ -89,6 +89,10 @@ router.get("galaxies") { (req: Request) -> Future<OffsetPaginator<Galaxy>> in
 To use Paginator together with Leaf, you can do the following:
 
 ```swift
+struct GalaxyList: Codable {
+    let galaxies: [Galaxy]
+}
+
 router.get("galaxies") { (req: Request) -> Response in
     let paginator: Future<OffsetPaginator<Galaxy>> = Galaxy.query(on: req).paginate(on: req)
     return paginator.flatMap(to: Response.self) { paginator in
