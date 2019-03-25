@@ -95,7 +95,8 @@ router.get("galaxies") { (req: Request) -> Response in
         return try req.view().render(
             "MyLeafFile", 
             GalaxyList(galaxies: paginator.data ?? []), 
-            userInfo: try paginator.userInfo()
+            userInfo: try paginator.userInfo(),
+            on: req
         )
         .encode(for: req)
     }
