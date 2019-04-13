@@ -7,7 +7,7 @@ extension OffsetPaginator: RawSQLBuilderPaginatable {
         source: RawSQLBuilder<D, Result>,
         count: Future<Int>,
         on req: Request
-        ) throws -> Future<([Result], OffsetMetaData)> {
+    ) throws -> Future<([Result], OffsetMetaData)> {
         let config: OffsetPaginatorConfig = (try? req.make()) ?? .default
         return try OffsetQueryParams.decode(req: req)
             .flatMap { params in
@@ -15,12 +15,7 @@ extension OffsetPaginator: RawSQLBuilderPaginatable {
                 let perPage = params.perPage ?? config.perPage
                 let lower = (page - 1) * perPage
                 
-                source.sqlRawBuilder.sql.append("""
-                    
-                    LIMIT \(perPage)
-                    OFFSET \(lower)
-                    """
-                )
+                source.sqlRawBuilder.sql.append("\nLIMIT \(perPage)\nOFFSET \(lower)")
                 return count.flatMap { count in
                     let data = try OffsetMetaData(
                         currentPage: page,
