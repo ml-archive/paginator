@@ -112,13 +112,18 @@ Note: the count query is expected to have a result with one column named `count`
 To use Paginator together with Leaf, you can do the following:
 
 ```swift
+struct GalaxyList: Codable {
+    let galaxies: [Galaxy]
+}
+
 router.get("galaxies") { (req: Request) -> Response in
     let paginator: Future<OffsetPaginator<Galaxy>> = Galaxy.query(on: req).paginate(on: req)
     return paginator.flatMap(to: Response.self) { paginator in
         return try req.view().render(
-            "MyLeafFile",
-            GalaxyList(galaxies: paginator.data ?? []),
-            userInfo: try paginator.userInfo()
+            "MyLeafFile", 
+            GalaxyList(galaxies: paginator.data ?? []), 
+            userInfo: try paginator.userInfo(),
+            on: req
         )
         .encode(for: req)
     }
