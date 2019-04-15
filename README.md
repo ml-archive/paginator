@@ -84,6 +84,29 @@ router.get("galaxies") { (req: Request) -> Future<OffsetPaginator<Galaxy>> in
 }
 ```
 
+### `RawSQL`
+
+For convenience, Paginator also comes with support for paginating raw SQL queries for complex expressions not compatible with Fluent
+
+Simple example using PostgreSQL:
+```swift
+router.get("galaxies") { (req: Request) -> Future<OffsetPaginator<Galaxy>> in
+    return req.withPooledConnection(to: .psql) { conn -> Future<OffsetPaginator<Galaxy>> in
+        let rawBuilder = RawSQLBuilder<PostgreSQLDatabase, Galaxy>(
+            query: """
+                SELECT *
+                FROM public."Galaxy"
+            """, countQuery: """
+                SELECT COUNT(*) as "count"
+                FROM public."Galaxy"
+            """, connection: conn)
+        return try rawBuilder.paginate(for: req)
+    }
+}
+```
+
+Note: the count query is expected to have a result with one column named `count` and with the total columns value in the first row
+
 ## Leaf tags
 
 To use Paginator together with Leaf, you can do the following:
@@ -93,8 +116,8 @@ router.get("galaxies") { (req: Request) -> Response in
     let paginator: Future<OffsetPaginator<Galaxy>> = Galaxy.query(on: req).paginate(on: req)
     return paginator.flatMap(to: Response.self) { paginator in
         return try req.view().render(
-            "MyLeafFile", 
-            GalaxyList(galaxies: paginator.data ?? []), 
+            "MyLeafFile",
+            GalaxyList(galaxies: paginator.data ?? []),
             userInfo: try paginator.userInfo()
         )
         .encode(for: req)
