@@ -24,8 +24,8 @@ public struct OffsetPaginator<Object: Codable>: Paginator {
 }
 
 public extension OffsetPaginator {
-    public typealias ResultObject = Object
-    public typealias PaginatableMetaData = OffsetMetaData
+    typealias ResultObject = Object
+    typealias PaginatableMetaData = OffsetMetaData
 }
 
 public struct OffsetMetaData: Codable {

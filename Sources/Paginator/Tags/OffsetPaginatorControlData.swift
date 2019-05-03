@@ -95,7 +95,7 @@ public enum TagContextPaginatorError: Error {
 }
 
 public extension OffsetPaginator {
-    public func userInfo() throws -> [AnyHashable: Any] {
+    func userInfo() throws -> [AnyHashable: Any] {
         guard let metaData = self.metaData() else {
             throw TagContextPaginatorError.paginatorDoesNotContainMetaData
         }
@@ -105,7 +105,7 @@ public extension OffsetPaginator {
 }
 
 public extension TagContext {
-    public func requireOffsetPaginatorControlData() throws -> OffsetPaginatorControlData {
+    func requireOffsetPaginatorControlData() throws -> OffsetPaginatorControlData {
         guard
             let metaData = self.context.userInfo[userInfoKey] as? OffsetPaginatorControlData
         else {

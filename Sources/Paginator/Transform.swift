@@ -26,7 +26,7 @@ public protocol Transformable {
 }
 
 public extension Transformable {
-    public func transform<T: Codable>(
+    func transform<T: Codable>(
         on req: Request,
         _ transform: @escaping (TransformableQueryResult) throws -> T
     ) throws -> TransformingQuery<TransformableQuery, TransformableQueryResult, T> {
@@ -37,7 +37,7 @@ public extension Transformable {
         return try self.transform(on: req, newTransform)
     }
 
-    public func transform<T: Codable>(
+    func transform<T: Codable>(
         on req: Request,
         _ transform: @escaping (TransformableQueryResult) throws -> Future<T>
     ) -> TransformingQuery<Self, Self.TransformableQueryResult, T> {
@@ -48,7 +48,7 @@ public extension Transformable {
         return TransformingQuery(source: self, transform: newTransform)
     }
 
-    public func transform<T: Codable>(
+    func transform<T: Codable>(
         on req: Request,
         _ transform: @escaping ([TransformableQueryResult]) throws -> Future<[T]>
     ) -> TransformingQuery<Self, Self.TransformableQueryResult, T> {
