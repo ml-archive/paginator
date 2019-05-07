@@ -12,7 +12,7 @@ public protocol QueryBuilderPaginatable: Paginatable {
 }
 
 public extension QueryBuilder {
-    public func paginate<P: Paginator>(
+    func paginate<P: Paginator>(
         for req: Request
     ) throws -> Future<P> where
         P: QueryBuilderPaginatable,
@@ -22,7 +22,7 @@ public extension QueryBuilder {
         return try paginate(count: count(), for: req)
     }
 
-    public func paginate<P: Paginator>(
+    func paginate<P: Paginator>(
         count: Future<Int>,
         for req: Request
     ) throws -> Future<P> where
@@ -40,7 +40,7 @@ extension QueryBuilder: Transformable {
 }
 
 public extension TransformingQuery {
-    public func paginate<P: Paginator, T>(
+    func paginate<P: Paginator, T>(
         for req: Request
     ) throws -> Future<P> where
         T: QuerySupporting,
@@ -52,7 +52,7 @@ public extension TransformingQuery {
         return try self.paginate(count: self.source.count(), for: req)
     }
 
-    public func paginate<P: Paginator, T>(
+    func paginate<P: Paginator, T>(
         count: Future<Int>,
         for req: Request
     ) throws -> Future<P> where

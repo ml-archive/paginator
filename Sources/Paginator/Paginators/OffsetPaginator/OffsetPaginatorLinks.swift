@@ -1,7 +1,7 @@
 import Vapor
 
 public extension OffsetMetaData {
-    public static func nextAndPreviousLinks(
+    static func nextAndPreviousLinks(
         currentPage: Int,
         totalPages: Int,
         url: URL
@@ -21,13 +21,13 @@ public extension OffsetMetaData {
         return (previous, next)
     }
 
-    public func links(
+    func links(
         in range: CountableClosedRange<Int>
     ) throws -> [String] {
         return try range.map { try link(for: $0) }
     }
 
-    public func link(
+    func link(
         for page: Int
     ) throws -> String {
         return try OffsetMetaData.link(url: self.url, page: page)
