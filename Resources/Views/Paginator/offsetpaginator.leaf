@@ -14,7 +14,7 @@
         }
         
         #for(control in middle) {
-            <li class="page-item #if(current.page == control.page) { active }"><a href="#(page.url)" class="page-link">#(control.page)</a></li>
+            <li class="page-item #if(current.page == control.page) { active }"><a href="#(control.url)" class="page-link">#(control.page)</a></li>
         }
 
         #if(right) {
