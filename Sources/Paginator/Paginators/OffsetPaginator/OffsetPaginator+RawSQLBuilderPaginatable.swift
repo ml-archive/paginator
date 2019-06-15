@@ -3,7 +3,7 @@ import Vapor
 
 extension OffsetPaginator: RawSQLBuilderPaginatable {
     // This shouldn't be called directly - please use the extension on QueryBuilder instead.
-    static func paginate<D: Database, Result>(
+    public static func paginate<D: Database, Result>(
         source: RawSQLBuilder<D, Result>,
         count: Future<Int>,
         on req: Request
