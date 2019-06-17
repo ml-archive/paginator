@@ -2,7 +2,7 @@ import Fluent
 import Vapor
 import SQL
 
-protocol RawSQLBuilderPaginatable: Paginatable {
+public protocol RawSQLBuilderPaginatable: Paginatable {
     associatedtype PaginatableMetaData
     
     static func paginate<D: Database, Result>(
@@ -12,7 +12,7 @@ protocol RawSQLBuilderPaginatable: Paginatable {
     ) throws -> Future<([Result], PaginatableMetaData)>
 }
 
-class RawSQLBuilder<Database, Result> where
+public class RawSQLBuilder<Database, Result> where
     Database: DatabaseKit.Database,
     Database.Connection: SQLConnectable,
     Result: Decodable
@@ -24,7 +24,7 @@ class RawSQLBuilder<Database, Result> where
         let count: Int
     }
     
-    init(query: String, countQuery: String?, connection: Database.Connection) {
+    public init(query: String, countQuery: String?, connection: Database.Connection) {
         self.sqlRawBuilder = connection.raw(query)
         
         guard let countQuery = countQuery else {
@@ -36,7 +36,7 @@ class RawSQLBuilder<Database, Result> where
     }
 }
 
-extension RawSQLBuilder {
+public extension RawSQLBuilder {
     func count(for req: Request) throws -> EventLoopFuture<Int> {
         guard let sqlRawCountBuilder = sqlRawCountBuilder else {
             throw Abort(HTTPStatus.internalServerError, reason: "Cannot compute count")
@@ -73,11 +73,11 @@ extension RawSQLBuilder {
 }
 
 extension RawSQLBuilder: Transformable {
-    typealias TransformableQuery = RawSQLBuilder<Database, Result>
-    typealias TransformableQueryResult = Result
+    public typealias TransformableQuery = RawSQLBuilder<Database, Result>
+    public typealias TransformableQueryResult = Result
 }
 
-extension TransformingQuery {
+public extension TransformingQuery {
     func paginate<P: Paginator, Database>(
         for req: Request
     ) throws -> Future<P> where
