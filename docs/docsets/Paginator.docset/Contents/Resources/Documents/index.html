@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Paginator  Reference</title>
+    <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="js/jquery.min.js" defer></script>
+    <script src="js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a title="Paginator  Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="index.html">Paginator Docs</a> (5% documented)</p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="index.html">Paginator Reference</a>
+        <img id="carat" src="img/carat.png" />
+        Paginator  Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Classes/OffsetPaginatorTag.html">OffsetPaginatorTag</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/RawSQLBuilder.html">RawSQLBuilder</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Enums/TagContextPaginatorError.html">TagContextPaginatorError</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Extensions/Array.html">Array</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Extensions/QueryBuilder.html">QueryBuilder</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Extensions/TagContext.html">TagContext</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Protocols/ArrayPaginatable.html">ArrayPaginatable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/Paginatable.html">Paginatable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/Paginator.html">Paginator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/QueryBuilderPaginatable.html">QueryBuilderPaginatable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/RawSQLBuilderPaginatable.html">RawSQLBuilderPaginatable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/Transformable.html">Transformable</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Structs/OffsetMetaData.html">OffsetMetaData</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/OffsetPaginator.html">OffsetPaginator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/OffsetPaginatorConfig.html">OffsetPaginatorConfig</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs.html#/s:9Paginator06OffsetA11ControlDataV">OffsetPaginatorControlData</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/OffsetQueryParams.html">OffsetQueryParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/TransformingQuery.html">TransformingQuery</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            
+            <h1 id='paginator' class='heading'>Paginator 🗂</h1>
+
+<p><a href="http://swift.org"><img src="https://img.shields.io/badge/Swift-4.1-brightgreen.svg" alt="Swift Version"></a>
+<a href="http://vapor.codes"><img src="https://img.shields.io/badge/Vapor-3-30B6FC.svg" alt="Vapor Version"></a>
+<a href="https://circleci.com/gh/nodes-vapor/paginator"><img src="https://circleci.com/gh/nodes-vapor/paginator/tree/master.svg?style=shield" alt="Circle CI"></a>
+<a href="https://codebeat.co/projects/github-com-nodes-vapor-paginator-master"><img src="https://codebeat.co/badges/292edd79-f237-4df5-8d6b-9ef748148d80" alt="codebeat badge"></a>
+<a href="https://codecov.io/gh/nodes-vapor/paginator"><img src="https://codecov.io/gh/nodes-vapor/paginator/branch/master/graph/badge.svg" alt="codecov"></a>
+<a href="http://clayallsopp.github.io/readme-score?url=https://github.com/nodes-vapor/paginator"><img src="http://readme-score-api.herokuapp.com/score.svg?url=https://github.com/nodes-vapor/paginator" alt="Readme Score"></a>
+<a href="https://raw.githubusercontent.com/nodes-vapor/paginator/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="GitHub license"></a></p>
+
+<p><img src="https://raw.githubusercontent.com/nodes-vapor/paginator/master/assets/demo.gif" alt="GIF of paginator"></p>
+
+<p>This package currently offers support for offset pagination on <code>Array</code> and <code>QueryBuilder</code>.</p>
+<h2 id='installation' class='heading'>📦 Installation</h2>
+
+<p>Add <code><a href="Protocols/Paginator.html">Paginator</a></code> to the package dependencies (in your <code>Package.swift</code> file):</p>
+<pre class="highlight swift"><code><span class="nv">dependencies</span><span class="p">:</span> <span class="p">[</span>
+    <span class="o">...</span><span class="p">,</span>
+    <span class="o">.</span><span class="nf">package</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="s">"https://github.com/nodes-vapor/paginator.git"</span><span class="p">,</span> <span class="nv">from</span><span class="p">:</span> <span class="s">"3.0.0-rc"</span><span class="p">)</span>
+<span class="p">]</span>
+</code></pre>
+
+<p>as well as to your target (e.g. <q>App</q>):</p>
+<pre class="highlight swift"><code><span class="nv">targets</span><span class="p">:</span> <span class="p">[</span>
+    <span class="o">...</span>
+    <span class="o">.</span><span class="nf">target</span><span class="p">(</span>
+        <span class="nv">name</span><span class="p">:</span> <span class="s">"App"</span><span class="p">,</span>
+        <span class="nv">dependencies</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span> <span class="s">"Paginator"</span> <span class="o">...</span><span class="p">]</span>
+    <span class="p">),</span>
+    <span class="o">...</span>
+<span class="p">]</span>
+</code></pre>
+
+<p>Next, copy/paste the <code>Resources/Views/Paginator</code> folder into your project in order to be able to use the provided Leaf tags. These files can be changed as explained in the <a href="#leaf-tags">Leaf Tags</a> section, however it&rsquo;s recommended to copy this folder to your project anyway. This makes it easier for you to keep track of updates and your project will work if you decide later on to not use your own customized leaf files.</p>
+<h2 id='getting-started' class='heading'>Getting started 🚀</h2>
+
+<p>First make sure that you&rsquo;ve imported Paginator everywhere it&rsquo;s needed:</p>
+<pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">Paginator</span>
+</code></pre>
+<h3 id='adding-the-leaf-tag' class='heading'>Adding the Leaf tag</h3>
+
+<p>In order to do pagination in Leaf, please make sure to add the Leaf tag:</p>
+<pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">configure</span><span class="p">(</span><span class="n">_</span> <span class="nv">config</span><span class="p">:</span> <span class="k">inout</span> <span class="kt">Config</span><span class="p">,</span> <span class="n">_</span> <span class="nv">env</span><span class="p">:</span> <span class="k">inout</span> <span class="kt">Environment</span><span class="p">,</span> <span class="n">_</span> <span class="nv">services</span><span class="p">:</span> <span class="k">inout</span> <span class="kt">Services</span><span class="p">)</span> <span class="k">throws</span> <span class="p">{</span>
+    <span class="n">services</span><span class="o">.</span><span class="n">register</span> <span class="p">{</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="kt">LeafTagConfig</span> <span class="k">in</span>
+        <span class="k">var</span> <span class="nv">tags</span> <span class="o">=</span> <span class="kt">LeafTagConfig</span><span class="o">.</span><span class="nf">default</span><span class="p">()</span>
+        <span class="n">tags</span><span class="o">.</span><span class="nf">use</span><span class="p">([</span>
+            <span class="s">"offsetPaginator"</span><span class="p">:</span> <span class="kt">OffsetPaginatorTag</span><span class="p">(</span><span class="nv">templatePath</span><span class="p">:</span> <span class="s">"Paginator/offsetpaginator"</span><span class="p">)</span>
+        <span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">tags</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+
+<p>If you want to fully customize the way the pagination control are being generated, you are free to override the template path.</p>
+<h3 id='code-querybuilder-code' class='heading'><code>QueryBuilder</code></h3>
+
+<p>To return a paginated result from <code>QueryBuilder</code>, you can do the following:</p>
+<pre class="highlight swift"><code><span class="n">router</span><span class="o">.</span><span class="nf">get</span><span class="p">(</span><span class="s">"galaxies"</span><span class="p">)</span> <span class="p">{</span> <span class="p">(</span><span class="nv">req</span><span class="p">:</span> <span class="kt">Request</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Future</span><span class="o">&lt;</span><span class="kt">OffsetPaginator</span><span class="o">&lt;</span><span class="kt">Galaxy</span><span class="o">&gt;&gt;</span> <span class="k">in</span>
+    <span class="k">return</span> <span class="kt">Galaxy</span><span class="o">.</span><span class="nf">query</span><span class="p">(</span><span class="nv">on</span><span class="p">:</span> <span class="n">req</span><span class="p">)</span><span class="o">.</span><span class="nf">paginate</span><span class="p">(</span><span class="nv">on</span><span class="p">:</span> <span class="n">req</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre>
+<h3 id='code-array-code' class='heading'><code>Array</code></h3>
+
+<p>For convenience, Paginator also comes with support for paginating <code>Array</code>:</p>
+<pre class="highlight swift"><code><span class="n">router</span><span class="o">.</span><span class="nf">get</span><span class="p">(</span><span class="s">"galaxies"</span><span class="p">)</span> <span class="p">{</span> <span class="p">(</span><span class="nv">req</span><span class="p">:</span> <span class="kt">Request</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Future</span><span class="o">&lt;</span><span class="kt">OffsetPaginator</span><span class="o">&lt;</span><span class="kt">Galaxy</span><span class="o">&gt;&gt;</span> <span class="k">in</span>
+    <span class="k">let</span> <span class="nv">galaxies</span> <span class="o">=</span> <span class="p">[</span><span class="kt">Galaxy</span><span class="p">(),</span> <span class="kt">Galaxy</span><span class="p">(),</span> <span class="kt">Galaxy</span><span class="p">()]</span>
+    <span class="k">return</span> <span class="n">galaxies</span><span class="o">.</span><span class="nf">paginate</span><span class="p">(</span><span class="nv">on</span><span class="p">:</span> <span class="n">req</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre>
+<h3 id='code-rawsql-code' class='heading'><code>RawSQL</code></h3>
+
+<p>For convenience, Paginator also comes with support for paginating raw SQL queries for complex expressions not compatible with Fluent</p>
+
+<p>Simple example using PostgreSQL:</p>
+<pre class="highlight swift"><code><span class="n">router</span><span class="o">.</span><span class="nf">get</span><span class="p">(</span><span class="s">"galaxies"</span><span class="p">)</span> <span class="p">{</span> <span class="p">(</span><span class="nv">req</span><span class="p">:</span> <span class="kt">Request</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Future</span><span class="o">&lt;</span><span class="kt">OffsetPaginator</span><span class="o">&lt;</span><span class="kt">Galaxy</span><span class="o">&gt;&gt;</span> <span class="k">in</span>
+    <span class="k">return</span> <span class="n">req</span><span class="o">.</span><span class="nf">withPooledConnection</span><span class="p">(</span><span class="nv">to</span><span class="p">:</span> <span class="o">.</span><span class="n">psql</span><span class="p">)</span> <span class="p">{</span> <span class="n">conn</span> <span class="o">-&gt;</span> <span class="kt">Future</span><span class="o">&lt;</span><span class="kt">OffsetPaginator</span><span class="o">&lt;</span><span class="kt">Galaxy</span><span class="o">&gt;&gt;</span> <span class="k">in</span>
+        <span class="k">let</span> <span class="nv">rawBuilder</span> <span class="o">=</span> <span class="kt">RawSQLBuilder</span><span class="o">&lt;</span><span class="kt">PostgreSQLDatabase</span><span class="p">,</span> <span class="kt">Galaxy</span><span class="o">&gt;</span><span class="p">(</span>
+            <span class="nv">query</span><span class="p">:</span> <span class="s">"""
+                SELECT *
+                FROM public."</span><span class="kt">Galaxy</span><span class="s">"
+            """</span><span class="p">,</span> <span class="nv">countQuery</span><span class="p">:</span> <span class="s">"""
+                SELECT COUNT(*) as "</span><span class="n">count</span><span class="s">"
+                FROM public."</span><span class="kt">Galaxy</span><span class="s">"
+            """</span><span class="p">,</span> <span class="nv">connection</span><span class="p">:</span> <span class="n">conn</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">try</span> <span class="n">rawBuilder</span><span class="o">.</span><span class="nf">paginate</span><span class="p">(</span><span class="nv">for</span><span class="p">:</span> <span class="n">req</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+
+<p>Note: the count query is expected to have a result with one column named <code>count</code> and with the total columns value in the first row</p>
+<h2 id='leaf-tags' class='heading'>Leaf tags</h2>
+
+<p>To use Paginator together with Leaf, you can do the following:</p>
+<pre class="highlight swift"><code><span class="kd">struct</span> <span class="kt">GalaxyList</span><span class="p">:</span> <span class="kt">Codable</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">galaxies</span><span class="p">:</span> <span class="p">[</span><span class="kt">Galaxy</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="n">router</span><span class="o">.</span><span class="nf">get</span><span class="p">(</span><span class="s">"galaxies"</span><span class="p">)</span> <span class="p">{</span> <span class="p">(</span><span class="nv">req</span><span class="p">:</span> <span class="kt">Request</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Response</span> <span class="k">in</span>
+    <span class="k">let</span> <span class="nv">paginator</span><span class="p">:</span> <span class="kt">Future</span><span class="o">&lt;</span><span class="kt">OffsetPaginator</span><span class="o">&lt;</span><span class="kt">Galaxy</span><span class="o">&gt;&gt;</span> <span class="o">=</span> <span class="kt">Galaxy</span><span class="o">.</span><span class="nf">query</span><span class="p">(</span><span class="nv">on</span><span class="p">:</span> <span class="n">req</span><span class="p">)</span><span class="o">.</span><span class="nf">paginate</span><span class="p">(</span><span class="nv">on</span><span class="p">:</span> <span class="n">req</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">paginator</span><span class="o">.</span><span class="nf">flatMap</span><span class="p">(</span><span class="nv">to</span><span class="p">:</span> <span class="kt">Response</span><span class="o">.</span><span class="k">self</span><span class="p">)</span> <span class="p">{</span> <span class="n">paginator</span> <span class="k">in</span>
+        <span class="k">return</span> <span class="k">try</span> <span class="n">req</span><span class="o">.</span><span class="nf">view</span><span class="p">()</span><span class="o">.</span><span class="nf">render</span><span class="p">(</span>
+            <span class="s">"MyLeafFile"</span><span class="p">,</span> 
+            <span class="kt">GalaxyList</span><span class="p">(</span><span class="nv">galaxies</span><span class="p">:</span> <span class="n">paginator</span><span class="o">.</span><span class="n">data</span> <span class="p">??</span> <span class="p">[]),</span> 
+            <span class="nv">userInfo</span><span class="p">:</span> <span class="k">try</span> <span class="n">paginator</span><span class="o">.</span><span class="nf">userInfo</span><span class="p">(),</span>
+            <span class="nv">on</span><span class="p">:</span> <span class="n">req</span>
+        <span class="p">)</span>
+        <span class="o">.</span><span class="nf">encode</span><span class="p">(</span><span class="nv">for</span><span class="p">:</span> <span class="n">req</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+
+<blockquote>
+<p>Please note how the Paginator data is being passed in using <code>userInfo</code> on the <code>render</code> call. Forgetting to pass this in will result in an error being thrown.</p>
+</blockquote>
+
+<p>Then in your <code>MyLeafFile.leaf</code> you could do something like:</p>
+<pre class="highlight html"><code><span class="nt">&lt;ul&gt;</span>
+    #for(galaxy in galaxies) {
+        <span class="nt">&lt;li&gt;</span>#(galaxy.name)<span class="nt">&lt;/li&gt;</span>
+    }
+<span class="nt">&lt;/ul&gt;</span>
+
+#offsetPaginator()
+</code></pre>
+
+<p>Calling the Leaf tag for <code><a href="Structs/OffsetPaginator.html">OffsetPaginator</a></code> will automatically generate the Bootstrap 4 HTML for showing the pagination controls:</p>
+<pre class="highlight html"><code><span class="nt">&lt;nav</span> <span class="na">class=</span><span class="s">"paginator"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;ul</span> <span class="na">class=</span><span class="s">"pagination justify-content-center table-responsive"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">"page-item"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"/admin/users?page=16"</span> <span class="na">class=</span><span class="s">"page-link"</span> <span class="na">rel=</span><span class="s">"prev"</span> <span class="na">aria-label=</span><span class="s">"Previous"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;span</span> <span class="na">aria-hidden=</span><span class="s">"true"</span><span class="nt">&gt;</span>«<span class="nt">&lt;/span&gt;</span>
+                <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"sr-only"</span><span class="nt">&gt;</span>Previous<span class="nt">&lt;/span&gt;</span>
+            <span class="nt">&lt;/a&gt;</span>
+        <span class="nt">&lt;/li&gt;</span>
+        <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">"page-item "</span><span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">"/admin/users?page=1"</span> <span class="na">class=</span><span class="s">"page-link"</span><span class="nt">&gt;</span>1<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">"disabled page-item"</span><span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">"#"</span> <span class="na">class=</span><span class="s">"page-link"</span><span class="nt">&gt;</span>...<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">"page-item "</span><span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">""</span> <span class="na">class=</span><span class="s">"page-link"</span><span class="nt">&gt;</span>12<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">"page-item "</span><span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">""</span> <span class="na">class=</span><span class="s">"page-link"</span><span class="nt">&gt;</span>13<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">"page-item "</span><span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">""</span> <span class="na">class=</span><span class="s">"page-link"</span><span class="nt">&gt;</span>14<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">"page-item "</span><span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">""</span> <span class="na">class=</span><span class="s">"page-link"</span><span class="nt">&gt;</span>15<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">"page-item "</span><span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">""</span> <span class="na">class=</span><span class="s">"page-link"</span><span class="nt">&gt;</span>16<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">"page-item  active "</span><span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">""</span> <span class="na">class=</span><span class="s">"page-link"</span><span class="nt">&gt;</span>17<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">"page-item "</span><span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">"/admin/users?page=18"</span> <span class="na">class=</span><span class="s">"page-link"</span><span class="nt">&gt;</span>18<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">"page-item"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"/admin/users?page=18"</span> <span class="na">class=</span><span class="s">"page-link"</span> <span class="na">rel=</span><span class="s">"next"</span> <span class="na">aria-label=</span><span class="s">"Next"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;span</span> <span class="na">aria-hidden=</span><span class="s">"true"</span><span class="nt">&gt;</span>»<span class="nt">&lt;/span&gt;</span>
+                <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"sr-only"</span><span class="nt">&gt;</span>Next<span class="nt">&lt;/span&gt;</span>
+            <span class="nt">&lt;/a&gt;</span>
+        <span class="nt">&lt;/li&gt;</span>
+    <span class="nt">&lt;/ul&gt;</span>
+<span class="nt">&lt;/nav&gt;</span>
+</code></pre>
+<h2 id='configuration' class='heading'>Configuration</h2>
+
+<p>The <code><a href="Structs/OffsetPaginator.html">OffsetPaginator</a></code> has a configuration file (<code><a href="Structs/OffsetPaginatorConfig.html">OffsetPaginatorConfig</a></code>) that can be overwritten if needed. This can be done in <code>configure.swift</code>:</p>
+<pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">configure</span><span class="p">(</span><span class="n">_</span> <span class="nv">config</span><span class="p">:</span> <span class="k">inout</span> <span class="kt">Config</span><span class="p">,</span> <span class="n">_</span> <span class="nv">env</span><span class="p">:</span> <span class="k">inout</span> <span class="kt">Environment</span><span class="p">,</span> <span class="n">_</span> <span class="nv">services</span><span class="p">:</span> <span class="k">inout</span> <span class="kt">Services</span><span class="p">)</span> <span class="k">throws</span> <span class="p">{</span>
+    <span class="c1">// ..</span>
+    <span class="n">services</span><span class="o">.</span><span class="nf">register</span><span class="p">(</span><span class="kt">OffsetPaginatorConfig</span><span class="p">(</span>
+        <span class="nv">perPage</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">defaultPage</span><span class="p">:</span> <span class="mi">1</span>
+    <span class="p">))</span>
+<span class="p">}</span>
+</code></pre>
+<h2 id='credits' class='heading'>🏆 Credits</h2>
+
+<p>This package is developed and maintained by the Vapor team at <a href="https://www.nodesagency.com">Nodes</a>.
+The package owner for this project is <a href="https://github.com/siemensikkema/">Siemen</a>.</p>
+<h2 id='license' class='heading'>📄 License</h2>
+
+<p>This package is open-sourced software licensed under the <a href="http://opensource.org/licenses/MIT">MIT license</a></p>
+
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2019 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2019-08-01)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.10.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>
