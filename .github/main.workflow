@@ -7,12 +7,12 @@ action "Swift 4.2" {
   uses = "nodes-vapor/github-actions/actions/vapor/swift-4-2@develop"
 }
 
-workflow "SwiftLint" {
+workflow "Lint" {
   on = "push"
-  resolves = ["swiftlint"]
+  resolves = ["SwiftLint"]
 }
 
-action "swiftlint" {
+action "SwiftLint" {
   uses = "norio-nomura/action-swiftlint@master"
   secrets = ["GITHUB_TOKEN"]
 }
