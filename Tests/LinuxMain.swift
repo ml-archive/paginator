@@ -1,8 +1,8 @@
 import XCTest
 
-@testable import PaginatorTests
+import PaginatorTests
 
-XCTMain([
-    testCase(PaginatorTests.allTests),
-    testCase(OffsetMetaDataTests.allTests),
-])
+var tests = [XCTestCaseEntry]()
+tests += PaginatorTests.__allTests()
+
+XCTMain(tests)
