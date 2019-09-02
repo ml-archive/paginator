@@ -28,6 +28,10 @@ public extension OffsetPaginator {
     typealias PaginatableMetaData = OffsetMetaData
 }
 
+public enum OffsetMetaDataError: Error {
+    case invalidParameters
+}
+
 public struct OffsetMetaData: Codable {
     struct Links: Codable {
         let previous: String?
@@ -46,7 +50,19 @@ public struct OffsetMetaData: Codable {
         self.currentPage = currentPage
         self.perPage = perPage
         self.total = total
-        self.totalPages = max(1, Int(ceil(Double(total) / Double(perPage))))
+
+        if perPage == 0 {
+            
+            if total == 0 {
+                self.totalPages = 0
+            } else {
+                throw OffsetMetaDataError.invalidParameters
+            }
+            
+        } else {
+            self.totalPages = max(1, Int(ceil(Double(total) / Double(perPage))))
+        }
+
         let nav = try OffsetMetaData.nextAndPreviousLinks(
             currentPage: currentPage,
             totalPages: totalPages,
