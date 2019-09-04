@@ -48,7 +48,8 @@ public extension RawSQLBuilder {
     }
     
     func paginate<P: Paginator>(
-        for req: Request
+        for req: Request,
+        type: P.Type = P.self
     ) throws -> Future<P> where
         P: RawSQLBuilderPaginatable,
         P.Object == Result,
@@ -59,7 +60,8 @@ public extension RawSQLBuilder {
     
     func paginate<P: Paginator>(
         count: Future<Int>,
-        for req: Request
+        for req: Request,
+        type: P.Type = P.self
     ) throws -> Future<P> where
         P: RawSQLBuilderPaginatable,
         P.Object == Result,
@@ -79,7 +81,8 @@ extension RawSQLBuilder: Transformable {
 
 public extension TransformingQuery {
     func paginate<P: Paginator, Database>(
-        for req: Request
+        for req: Request,
+        type: P.Type = P.self
     ) throws -> Future<P> where
         P: RawSQLBuilderPaginatable,
         Query: RawSQLBuilder<Database, Result>,
@@ -91,7 +94,8 @@ public extension TransformingQuery {
     
     func paginate<P: Paginator, Database>(
         count: Future<Int>,
-        for req: Request
+        for req: Request,
+        type: P.Type = P.self
     ) throws -> Future<P> where
         P: RawSQLBuilderPaginatable,
         Query: RawSQLBuilder<Database, Result>,

@@ -21,7 +21,8 @@ public extension ArrayPaginatable {
 
 public extension Array where Iterator.Element: Codable {
     func paginate<P: Paginator>(
-        for req: Request
+        for req: Request,
+        type: P.Type = P.self
     ) throws -> Future<P> where
         P: ArrayPaginatable,
         P.Object == Iterator.Element,
@@ -33,7 +34,8 @@ public extension Array where Iterator.Element: Codable {
 
     func paginate<P: Paginator>(
         count: Int,
-        for req: Request
+        for req: Request,
+        type: P.Type = P.self
     ) throws -> Future<P> where
         P: ArrayPaginatable,
         P.Object == Iterator.Element,
@@ -54,7 +56,8 @@ extension Array: Transformable where Iterator.Element: Codable {
 
 public extension TransformingQuery {
     func paginate<P: Paginator>(
-        for req: Request
+        for req: Request,
+        type: P.Type = P.self
     ) throws -> Future<P> where
         P: ArrayPaginatable,
         P.PaginatorMetaData == P.PaginatableMetaData,
@@ -66,7 +69,8 @@ public extension TransformingQuery {
 
     func paginate<P: Paginator>(
         count: Int,
-        for req: Request
+        for req: Request,
+        type: P.Type = P.self
     ) throws -> Future<P> where
         P: ArrayPaginatable,
         P.PaginatorMetaData == P.PaginatableMetaData,
