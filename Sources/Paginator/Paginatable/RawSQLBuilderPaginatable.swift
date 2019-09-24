@@ -34,6 +34,18 @@ public class RawSQLBuilder<Database, Result> where
         
         self.sqlRawCountBuilder = connection.raw(countQuery)
     }
+    
+    public func bind(_ encodable: Encodable) -> Self {
+        _ = sqlRawBuilder.bind(encodable)
+        _ = sqlRawCountBuilder?.bind(encodable)
+        return self
+    }
+    
+    public func binds(_ encodables: [Encodable]) -> Self {
+        _ = sqlRawBuilder.binds(encodables)
+        _ = sqlRawCountBuilder?.binds(encodables)
+        return self
+    }
 }
 
 public extension RawSQLBuilder {
