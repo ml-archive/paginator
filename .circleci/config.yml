@@ -11,6 +11,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
+            export HOMEBREW_NO_AUTO_UPDATE=1
             brew tap vapor/homebrew-tap
             brew install cmysql
             brew install ctls
