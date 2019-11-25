@@ -11,3 +11,4 @@ bower_components/
 CMakeLists.txt
 Package.pins
 Package.resolved
+.swiftpm
