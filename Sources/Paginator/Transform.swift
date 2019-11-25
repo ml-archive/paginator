@@ -1,8 +1,8 @@
 import Vapor
 
 public struct TransformingQuery<Query, Result, TransformedResult: Codable> {
-    let source: Query
-    let transform: ([Result]) throws -> Future<[TransformedResult]>
+    public let source: Query
+    public let transform: ([Result]) throws -> Future<[TransformedResult]>
 }
 
 public protocol Transformable {

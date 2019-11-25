@@ -42,9 +42,8 @@ public extension Array where Iterator.Element: Codable {
         P.ResultObject == Iterator.Element,
         P.PaginatorMetaData == P.PaginatableMetaData
     {
-        return try P.paginate(source: self, count: count, on: req).map { args -> P in
-            let (results, data) = args
-            return try P(data: results, meta: data)
+        return try P.paginate(source: self, count: count, on: req).map { results, data in
+            try P(data: results, meta: data)
         }
     }
 }
@@ -84,7 +83,7 @@ public extension TransformingQuery {
         )
         .flatMap { results, data -> Future<P> in
             try self.transform(results).map { results in
-                return try P(data: results, meta: data)
+                try P(data: results, meta: data)
             }
         }
     }

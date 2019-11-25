@@ -81,3 +81,39 @@ public struct OffsetQueryParams: Decodable, Reflectable {
         return req.future(params)
     }
 }
+
+extension OffsetPaginator {
+    public static func offsetMetaData<T>(
+        count: Int,
+        on req: Request,
+        closure: @escaping (OffsetMetaData) -> Future<T>
+    ) -> Future<(T, OffsetMetaData)> {
+        return .flatMap(on: req) {
+            try OffsetQueryParams.decode(req: req)
+                .flatMap { params in
+                    let config: OffsetPaginatorConfig = (try? req.make()) ?? .default
+
+                    let page = params.page ?? config.defaultPage
+                    let perPage = params.perPage ?? config.perPage
+
+                    let metadata = try OffsetMetaData(
+                        currentPage: page,
+                        perPage: perPage,
+                        total: count,
+                        on: req
+                    )
+                    return closure(metadata).map { ($0, metadata) }
+                }
+        }
+    }
+}
+
+extension OffsetMetaData {
+    public var lower: Int {
+        return (currentPage - 1) * perPage
+    }
+
+    public var upper: Int {
+        return min((lower + perPage), total) - 1
+    }
+}

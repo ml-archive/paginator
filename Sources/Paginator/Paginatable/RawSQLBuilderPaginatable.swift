@@ -79,9 +79,8 @@ public extension RawSQLBuilder {
         P.Object == Result,
         P.PaginatorMetaData == P.PaginatableMetaData
     {
-        return try P.paginate(source: self, count: count, on: req).map { args -> P in
-            let (results, data) = args
-            return try P(data: results, meta: data)
+        return try P.paginate(source: self, count: count, on: req).map { results, data -> P in
+            try P(data: results, meta: data)
         }
     }
 }
@@ -116,10 +115,9 @@ public extension TransformingQuery {
     {
         return try P
             .paginate(source: self.source, count: count, on: req)
-            .flatMap { args -> Future<P> in
-                let (results, data) = args
-                return try self.transform(results).map { results in
-                    return try P(data: results, meta: data)
+            .flatMap { results, data in
+                try self.transform(results).map { results in
+                    try P(data: results, meta: data)
                 }
         }
     }

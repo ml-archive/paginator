@@ -8,26 +8,12 @@ extension OffsetPaginator: QueryBuilderPaginatable {
         count: Future<Int>,
         on req: Request
     ) throws -> Future<([Result], OffsetMetaData)> {
-        let config: OffsetPaginatorConfig = (try? req.make()) ?? .default
-        return try OffsetQueryParams.decode(req: req)
-            .flatMap { params in
-                let page = params.page ?? config.defaultPage
-                let perPage = params.perPage ?? config.perPage
-                let lower = (page - 1) * perPage
-                let upper = (lower + perPage) - 1
-
-                return count.flatMap { count in
-                    let data = try OffsetMetaData(
-                        currentPage: page,
-                        perPage: perPage,
-                        total: count,
-                        on: req
-                    )
-                    return source
-                        .range(lower: lower, upper: upper)
-                        .all()
-                        .map { ($0, data) }
-                }
+        return count.flatMap { count in
+            try offsetMetaData(count: count, on: req) { metadata in
+                source
+                    .range(lower: metadata.lower, upper: metadata.upper)
+                    .all()
             }
+        }
     }
 }
