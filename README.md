@@ -1,5 +1,5 @@
 # Paginator 🗂
-[![Swift Version](https://img.shields.io/badge/Swift-4.1-brightgreen.svg)](http://swift.org)
+[![Swift Version](https://img.shields.io/badge/Swift-5.1-brightgreen.svg)](http://swift.org)
 [![Vapor Version](https://img.shields.io/badge/Vapor-3-30B6FC.svg)](http://vapor.codes)
 [![Circle CI](https://circleci.com/gh/nodes-vapor/paginator/tree/master.svg?style=shield)](https://circleci.com/gh/nodes-vapor/paginator)
 [![codebeat badge](https://codebeat.co/badges/292edd79-f237-4df5-8d6b-9ef748148d80)](https://codebeat.co/projects/github-com-nodes-vapor-paginator-master)
@@ -17,7 +17,7 @@ Add `Paginator` to the package dependencies (in your `Package.swift` file):
 ```swift
 dependencies: [
     ...,
-    .package(url: "https://github.com/nodes-vapor/paginator.git", from: "3.0.0-rc")
+    .package(url: "https://github.com/nodes-vapor/paginator.git", from: "3.0.0")
 ]
 ```
 
