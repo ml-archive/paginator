@@ -8,8 +8,8 @@ extension OffsetPaginator: ArrayPaginatable {
         source: [Object],
         count: Int,
         on req: Request
-    ) throws -> Future<([Object], OffsetMetaData)> {
-        return try offsetMetaData(count: count, on: req) { metadata in
+    ) -> Future<([Object], OffsetMetaData)> {
+        return offsetMetaData(count: count, on: req) { metadata in
             Future.map(on: req) {
                 guard
                     metadata.currentPage <= metadata.totalPages,
