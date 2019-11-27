@@ -7,9 +7,9 @@ extension OffsetPaginator: QueryBuilderPaginatable {
         source: QueryBuilder<D, Result>,
         count: Future<Int>,
         on req: Request
-    ) throws -> Future<([Result], OffsetMetaData)> {
+    ) -> Future<([Result], OffsetMetaData)> {
         return count.flatMap { count in
-            try offsetMetaData(count: count, on: req) { metadata in
+            offsetMetaData(count: count, on: req) { metadata in
                 source
                     .range(lower: metadata.lower, upper: metadata.upper)
                     .all()
