@@ -1,25 +1,14 @@
 import Vapor
 
-public struct OffsetPaginator<Object: Codable>: Paginator {
+public struct OffsetPaginator<Object: Codable> {
     public typealias PaginatorMetaData = OffsetMetaData
 
-    public let data: [Object]?
-    let meta: OffsetMetaData
+    public let data: [Object]
+    public let offsetMetaData: OffsetMetaData
 
-    public init(data: [Object], meta: OffsetMetaData?) throws {
-        guard let meta = meta else {
-            throw Abort(
-                .internalServerError,
-                reason: "Expected meta data for paginator was not provided."
-            )
-        }
-
+    public init(data: [Object], offsetMetaData: OffsetMetaData) {
         self.data = data
-        self.meta = meta
-    }
-
-    public func metaData() -> OffsetMetaData? {
-        return meta
+        self.offsetMetaData = offsetMetaData
     }
 }
 
@@ -45,8 +34,13 @@ public struct OffsetMetaData: Codable {
     public let totalPages: Int
     let links: Links
 
+    @available(*, deprecated, message: "use init(currentPage:perPage:total:url:)")
     public init(currentPage: Int, perPage: Int, total: Int, on req: Request) throws {
-        self.url = req.http.url
+        try self.init(currentPage: currentPage, perPage: perPage, total: total, url: req.http.url)
+    }
+
+    public init(currentPage: Int, perPage: Int, total: Int, url: URL) throws {
+        self.url = url
         self.currentPage = currentPage
         self.perPage = perPage
         self.total = total
@@ -82,38 +76,9 @@ public struct OffsetQueryParams: Decodable, Reflectable {
     }
 }
 
-extension OffsetPaginator {
-    public static func offsetMetaData<T>(
-        count: Int,
-        on req: Request,
-        closure: @escaping (OffsetMetaData) -> Future<T>
-    ) -> Future<(T, OffsetMetaData)> {
-        return .flatMap(on: req) {
-            try OffsetQueryParams.decode(req: req)
-                .flatMap { params in
-                    let config: OffsetPaginatorConfig = (try? req.make()) ?? .default
-
-                    let page = params.page ?? config.defaultPage
-                    let perPage = params.perPage ?? config.perPage
-
-                    let metadata = try OffsetMetaData(
-                        currentPage: page,
-                        perPage: perPage,
-                        total: count,
-                        on: req
-                    )
-                    return closure(metadata).map { ($0, metadata) }
-                }
-        }
-    }
-}
-
 extension OffsetMetaData {
-    public var lower: Int {
-        return (currentPage - 1) * perPage
-    }
-
-    public var upper: Int {
-        return min((lower + perPage), total) - 1
+    public var range: Range<Int> {
+        let lower = (currentPage - 1) * perPage
+        return lower..<min(lower + perPage, total)
     }
 }

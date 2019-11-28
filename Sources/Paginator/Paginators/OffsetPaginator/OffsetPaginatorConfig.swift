@@ -12,6 +12,6 @@ public struct OffsetPaginatorConfig: Service {
 
 extension OffsetPaginatorConfig {
     public static var `default`: OffsetPaginatorConfig {
-        return .init(perPage: 25, defaultPage: 1)
+        .init(perPage: 25, defaultPage: 1)
     }
 }
