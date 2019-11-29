@@ -12,7 +12,7 @@ let package = Package(
         .package(url: "https://github.com/vapor/sql.git", from: "2.3.2"),
     ],
     targets: [
-        .target(name: "Paginator", dependencies: ["Fluent", "Vapor", "SQL"]),
+        .target(name: "Paginator", dependencies: ["Fluent", "SQL", "Vapor"]),
         .testTarget(name: "PaginatorTests", dependencies: ["Paginator"]),
     ]
 )

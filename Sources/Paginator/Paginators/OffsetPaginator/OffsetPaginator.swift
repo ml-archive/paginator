@@ -77,12 +77,17 @@ public struct OffsetQueryParameters: Decodable, Reflectable {
 }
 
 public struct OffsetParameters {
-    public let perPage: Int
     public let page: Int
+    public let perPage: Int
 
-    init(queryParameters: OffsetQueryParameters, config: OffsetPaginatorConfig) {
-        self.perPage = queryParameters.perPage ?? config.perPage
+    public init(page: Int, perPage: Int) {
+        self.page = page
+        self.perPage = perPage
+    }
+
+    public init(config: OffsetPaginatorConfig, queryParameters: OffsetQueryParameters) {
         self.page = queryParameters.page ?? config.defaultPage
+        self.perPage = queryParameters.perPage ?? config.perPage
     }
 }
 
