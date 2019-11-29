@@ -104,12 +104,18 @@ public extension OffsetPaginatable {
         on request: Request,
         transformer: Transformer<Element, Output>
     ) -> EventLoopFuture<OffsetPaginator<Output>> {
-        EventLoopFuture.flatMap(on: request) {
-            try request.content.decode(OffsetQueryParameters.self)
-        }.map {
-            OffsetParameters(queryParameters: $0, config: (try? request.make()) ?? .default)
-        }.flatMap {
+        request.offsetParameters().flatMap {
             self.paginate(parameters: $0, url: request.http.url, transformer: transformer)
+        }
+    }
+}
+
+extension Request {
+    public func offsetParameters() -> EventLoopFuture<OffsetParameters> {
+        EventLoopFuture.flatMap(on: self) {
+            try self.content.decode(OffsetQueryParameters.self)
+        }.map {
+            OffsetParameters(config: (try? self.make()) ?? .default, queryParameters: $0)
         }
     }
 }
