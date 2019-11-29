@@ -1,4 +1,4 @@
-// swift-tools-version:4.1
+// swift-tools-version:5.1
 import PackageDescription
 
 let package = Package(
@@ -7,8 +7,8 @@ let package = Package(
         .library(name: "Paginator", targets: ["Paginator"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/vapor/fluent.git", from: "3.0.0"),
-        .package(url: "https://github.com/vapor/vapor.git", from: "3.0.0"),
+        .package(url: "https://github.com/vapor/fluent.git", from: "3.2.0"),
+        .package(url: "https://github.com/vapor/vapor.git", from: "3.3.0"),
         .package(url: "https://github.com/vapor/sql.git", from: "2.3.2"),
     ],
     targets: [
