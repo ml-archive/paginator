@@ -81,13 +81,24 @@ public struct OffsetParameters {
     public let perPage: Int
 
     public init(page: Int, perPage: Int) {
-        self.page = page
-        self.perPage = perPage
+        if page < 1 {
+            self.page = 1
+        } else {
+            self.page = page
+        }
+
+        if perPage < 1 {
+            self.perPage = 1
+        } else {
+            self.perPage = perPage
+        }
     }
 
     public init(config: OffsetPaginatorConfig, queryParameters: OffsetQueryParameters) {
-        self.page = queryParameters.page ?? config.defaultPage
-        self.perPage = queryParameters.perPage ?? config.perPage
+        let page = queryParameters.page ?? config.defaultPage
+        let perPage = queryParameters.perPage ?? config.perPage
+
+        self.init(page: page, perPage: perPage)
     }
 }
 

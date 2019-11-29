@@ -3,15 +3,7 @@ import Vapor
 @testable import Paginator
 
 class OffsetMetadataTests: XCTestCase {
-    
-    static var allTests : [(String, (OffsetMetadataTests) -> () throws -> Void)] {
-        return [
-            ("testInit", testInit),
-            ("testZeroInit", testZeroInit),
-            ("testZeroPerPageInit", testZeroPerPageInit),
-        ]
-    }
-    
+
     func testInit() throws {
         
         let app = try Application()
@@ -70,17 +62,85 @@ class OffsetMetadataTests: XCTestCase {
         let url: URL = URL(string: "https://www.google.com")!
         XCTAssertThrowsError(try OffsetMetadata(currentPage: 0, perPage: 0, total: 10, url: url))
     }
-/*
-    func testNextAndPreviousLinksFirstPage() {
+
+    func testInvalidPageInitNoRequest() throws {
+        let url: URL = URL(string: "https://www.google.com")!
+        XCTAssertThrowsError(try OffsetMetadata(currentPage: 11, perPage: 10, total: 10, url: url))
+    }
+
+    func testNextAndPreviousLinksFirstPage() throws {
         let current = 1
         let total = 10
         let url: URL = URL(string: "https://www.google.com")!
 
-        let links = OffsetMetadata.nextAndPreviousLinks(
+        let links = try OffsetMetadata.nextAndPreviousLinks(
             currentPage: current,
             totalPages: total,
             url: url
         )
+
+        XCTAssert(links as Any is (String?, String?))
+        XCTAssertEqual(links.previous, nil)
+        XCTAssertEqual(
+            links.next,
+            url.absoluteString + "?page=2"
+        )
     }
-*/
+
+    func testNextAndPreviousLinksLastPage() throws {
+        let current = 10
+        let total = 10
+        let url: URL = URL(string: "https://www.google.com")!
+
+        let links = try OffsetMetadata.nextAndPreviousLinks(
+            currentPage: current,
+            totalPages: total,
+            url: url
+        )
+
+        XCTAssert(links as Any is (String?, String?))
+        XCTAssertEqual(links.next, nil)
+        XCTAssertEqual(
+            links.previous,
+            url.absoluteString + "?page=9"
+        )
+    }
+
+    func testNextAndPreviousLinksMiddlePage() throws {
+        let current = 5
+        let total = 10
+        let url: URL = URL(string: "https://www.google.com")!
+
+        let links = try OffsetMetadata.nextAndPreviousLinks(
+            currentPage: current,
+            totalPages: total,
+            url: url
+        )
+
+        XCTAssert(links as Any is (String?, String?))
+        XCTAssertEqual(
+            links.next,
+            url.absoluteString + "?page=6"
+        )
+        XCTAssertEqual(
+            links.previous,
+            url.absoluteString + "?page=4"
+        )
+    }
+
+    func testNextAndPreviousLinksInvalidPage() throws {
+        let current = 11
+        let total = 10
+        let url: URL = URL(string: "https://www.google.com")!
+
+        let links = try OffsetMetadata.nextAndPreviousLinks(
+            currentPage: current,
+            totalPages: total,
+            url: url
+        )
+
+        XCTAssert(links as Any is (String?, String?))
+        XCTAssertEqual(links.next, nil)
+        XCTAssertEqual(links.previous, nil)
+    }
  }
