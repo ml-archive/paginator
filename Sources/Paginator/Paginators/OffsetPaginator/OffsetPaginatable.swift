@@ -110,10 +110,10 @@ public extension OffsetPaginatable {
     }
 }
 
-extension Request {
-    public func offsetParameters() -> EventLoopFuture<OffsetParameters> {
-        EventLoopFuture.flatMap(on: self) {
-            try self.content.decode(OffsetQueryParameters.self)
+public extension Request {
+    func offsetParameters() -> EventLoopFuture<OffsetParameters> {
+        EventLoopFuture.map(on: self) {
+            try self.query.decode(OffsetQueryParameters.self)
         }.map {
             OffsetParameters(config: (try? self.make()) ?? .default, queryParameters: $0)
         }
