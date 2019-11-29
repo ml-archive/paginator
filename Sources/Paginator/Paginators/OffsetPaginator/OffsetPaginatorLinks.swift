@@ -1,6 +1,6 @@
 import Vapor
 
-public extension OffsetMetaData {
+public extension OffsetMetadata {
     static func nextAndPreviousLinks(
         currentPage: Int,
         totalPages: Int,
@@ -30,12 +30,12 @@ public extension OffsetMetaData {
     func link(
         for page: Int
     ) throws -> String {
-        try OffsetMetaData.link(url: self.url, page: page)
+        try OffsetMetadata.link(url: self.url, page: page)
     }
 
     private static func link(url: URL, page: Int) throws -> String {
         guard
-            let pageName = try OffsetQueryParams.reflectProperty(forKey: \.page)?.path.last,
+            let pageName = try OffsetQueryParameters.reflectProperty(forKey: \.page)?.path.last,
             var components = URLComponents(url: url, resolvingAgainstBaseURL: false)
         else {
             throw Abort(.internalServerError)

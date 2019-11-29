@@ -39,30 +39,30 @@ public struct OffsetPaginatorControlData: Codable {
     private let right: Bool
     private let middle: [Control]
 
-    init(offsetMetaData: OffsetMetaData) throws {
-        current = Control(url: offsetMetaData.url.absoluteString, page: offsetMetaData.currentPage)
-        previous = offsetMetaData.links.previous.map { Control(url: $0, page: offsetMetaData.currentPage - 1) }
-        next = offsetMetaData.links.next.map { Control(url: $0, page: offsetMetaData.currentPage + 1) }
-        first = Control(url: try offsetMetaData.link(for: 1), page: 1)
+    init(metadata: OffsetMetadata) throws {
+        current = Control(url: metadata.url.absoluteString, page: metadata.currentPage)
+        previous = metadata.links.previous.map { Control(url: $0, page: metadata.currentPage - 1) }
+        next = metadata.links.next.map { Control(url: $0, page: metadata.currentPage + 1) }
+        first = Control(url: try metadata.link(for: 1), page: 1)
 
-        let check = try offsetMetaData.link(for: offsetMetaData.totalPages)
-        last = first.url == check ? nil : Control(url: check, page: offsetMetaData.totalPages)
+        let check = try metadata.link(for: metadata.totalPages)
+        last = first.url == check ? nil : Control(url: check, page: metadata.totalPages)
 
-        let showDots = offsetMetaData.totalPages > 9
-        left = showDots && offsetMetaData.currentPage >= 5
-        right = showDots && offsetMetaData.currentPage <= offsetMetaData.totalPages - 5
+        let showDots = metadata.totalPages > 9
+        left = showDots && metadata.currentPage >= 5
+        right = showDots && metadata.currentPage <= metadata.totalPages - 5
 
         var middle: [Control]
-        if offsetMetaData.totalPages > 2 {
+        if metadata.totalPages > 2 {
             let bounds = OffsetPaginatorControlData.bounds(
                 left: left,
                 right: right,
-                current: offsetMetaData.currentPage,
-                total: offsetMetaData.totalPages
+                current: metadata.currentPage,
+                total: metadata.totalPages
             )
 
             let range: CountableClosedRange = bounds.lower...bounds.upper
-            let middleLinks = try offsetMetaData.links(in: range)
+            let middleLinks = try metadata.links(in: range)
             middle = zip(range, middleLinks).map { (page, url) in
                 Control(url: url, page: page)
             }
@@ -95,18 +95,18 @@ public enum TagContextPaginatorError: Error {
 
 public extension OffsetPaginator {
     func userInfo() throws -> [AnyHashable: Any] {
-        try [userInfoKey: OffsetPaginatorControlData(offsetMetaData: offsetMetaData)]
+        try [userInfoKey: OffsetPaginatorControlData(metadata: metadata)]
     }
 }
 
 public extension TagContext {
     func requireOffsetPaginatorControlData() throws -> OffsetPaginatorControlData {
         guard
-            let metaData = self.context.userInfo[userInfoKey] as? OffsetPaginatorControlData
+            let metadata = self.context.userInfo[userInfoKey] as? OffsetPaginatorControlData
         else {
             throw TagContextPaginatorError.paginatorNotPassedInToRender
         }
 
-        return metaData
+        return metadata
     }
 }
