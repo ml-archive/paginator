@@ -4,45 +4,12 @@ import Vapor
 
 class OffsetMetadataTests: XCTestCase {
 
-    func testInit() throws {
-        
-        let app = try Application()
-        let req = Request(using: app)
-        
-        let metadata = try OffsetMetadata(currentPage: 0, perPage: 10, total: 200, on: req)
-        
-        XCTAssertEqual(metadata.currentPage, 0)
-        XCTAssertEqual(metadata.perPage, 10)
-        XCTAssertEqual(metadata.total, 200)
-        XCTAssertEqual(metadata.totalPages, 20)
-    }
-    
-    func testZeroInit() throws {
-        
-        let app = try Application()
-        let req = Request(using: app)
-        
-        let metadata = try OffsetMetadata(currentPage: 0, perPage: 0, total: 0, on: req)
-        
-        XCTAssertEqual(metadata.currentPage, 0)
-        XCTAssertEqual(metadata.perPage, 0)
-        XCTAssertEqual(metadata.total, 0)
-        XCTAssertEqual(metadata.totalPages, 0)
-    }
-    
-    func testZeroPerPageInit() throws {
-        
-        let app = try Application()
-        let req = Request(using: app)
-
-        XCTAssertThrowsError(try OffsetMetadata(currentPage: 0, perPage: 0, total: 10, on: req))
-    }
-
     func testInitNoRequest() throws {
         let url: URL = URL(string: "https://www.google.com")!
-        let metadata = try OffsetMetadata(currentPage: 0, perPage: 10, total: 200, url: url)
+        let params = OffsetParameters(page: 1, perPage: 10)
+        let metadata = try OffsetMetadata(parameters: params, total: 200, url: url)
 
-        XCTAssertEqual(metadata.currentPage, 0)
+        XCTAssertEqual(metadata.currentPage, 1)
         XCTAssertEqual(metadata.perPage, 10)
         XCTAssertEqual(metadata.total, 200)
         XCTAssertEqual(metadata.totalPages, 20)
@@ -50,22 +17,49 @@ class OffsetMetadataTests: XCTestCase {
 
     func testZeroInitNoRequest() throws {
         let url: URL = URL(string: "https://www.google.com")!
-        let metadata = try OffsetMetadata(currentPage: 0, perPage: 0, total: 0, url: url)
+        let params = OffsetParameters(page: 1, perPage: 10)
+        let metadata = try OffsetMetadata(parameters: params, total: 0, url: url)
 
-        XCTAssertEqual(metadata.currentPage, 0)
-        XCTAssertEqual(metadata.perPage, 0)
+        XCTAssertEqual(metadata.currentPage, 1)
+        XCTAssertEqual(metadata.perPage, 10)
         XCTAssertEqual(metadata.total, 0)
-        XCTAssertEqual(metadata.totalPages, 0)
+        XCTAssertEqual(metadata.totalPages, 1)
     }
 
     func testZeroPerPageInitNoRequest() throws {
         let url: URL = URL(string: "https://www.google.com")!
-        XCTAssertThrowsError(try OffsetMetadata(currentPage: 0, perPage: 0, total: 10, url: url))
+        let params = OffsetParameters(page: 1, perPage: 0)
+
+        let metadata = try OffsetMetadata(parameters: params, total: 0, url: url)
+
+        XCTAssertEqual(metadata.currentPage, 1)
+        XCTAssertEqual(metadata.perPage, 1)
+        XCTAssertEqual(metadata.total, 0)
+        XCTAssertEqual(metadata.totalPages, 1)
+    }
+
+    func testPageZeroInitNoRequest() throws {
+        let url: URL = URL(string: "https://www.google.com")!
+        let params = OffsetParameters(page: 0, perPage: 0)
+
+        let metadata = try OffsetMetadata(parameters: params, total: 0, url: url)
+
+        XCTAssertEqual(metadata.currentPage, 1)
+        XCTAssertEqual(metadata.perPage, 1)
+        XCTAssertEqual(metadata.total, 0)
+        XCTAssertEqual(metadata.totalPages, 1)
     }
 
     func testInvalidPageInitNoRequest() throws {
         let url: URL = URL(string: "https://www.google.com")!
-        XCTAssertThrowsError(try OffsetMetadata(currentPage: 11, perPage: 10, total: 10, url: url))
+        let params = OffsetParameters(page: 11, perPage: 10)
+
+        let metadata = try OffsetMetadata(parameters: params, total: 100, url: url)
+
+        XCTAssertEqual(metadata.currentPage, 10)
+        XCTAssertEqual(metadata.perPage, 10)
+        XCTAssertEqual(metadata.total, 100)
+        XCTAssertEqual(metadata.totalPages, 10)
     }
 
     func testNextAndPreviousLinksFirstPage() throws {
@@ -129,7 +123,7 @@ class OffsetMetadataTests: XCTestCase {
     }
 
     func testNextAndPreviousLinksInvalidPage() throws {
-        let current = 11
+        let current = 15
         let total = 10
         let url: URL = URL(string: "https://www.google.com")!
 
@@ -141,6 +135,9 @@ class OffsetMetadataTests: XCTestCase {
 
         XCTAssert(links as Any is (String?, String?))
         XCTAssertEqual(links.next, nil)
-        XCTAssertEqual(links.previous, nil)
+        XCTAssertEqual(
+            links.previous,
+            url.absoluteString + "?page=\(total)"
+        )
     }
  }

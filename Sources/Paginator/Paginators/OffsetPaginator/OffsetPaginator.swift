@@ -34,34 +34,20 @@ public struct OffsetMetadata: Codable {
     public let totalPages: Int
     let links: Links
 
-    @available(*, deprecated, message: "use init(currentPage:perPage:total:url:)")
-    public init(currentPage: Int, perPage: Int, total: Int, on req: Request) throws {
-        try self.init(currentPage: currentPage, perPage: perPage, total: total, url: req.http.url)
-    }
-
-    public init(currentPage: Int, perPage: Int, total: Int, url: URL) throws {
+    public init(parameters: OffsetParameters, total: Int, url: URL) throws {
         self.url = url
-        self.currentPage = currentPage
-        self.perPage = perPage
+        self.perPage = parameters.perPage
         self.total = total
 
-        if perPage == 0 {
-            
-            if total == 0 {
-                self.totalPages = 0
-            } else {
-                throw OffsetMetadataError.invalidParameters
-            }
-            
-        } else {
-            self.totalPages = max(1, Int(ceil(Double(total) / Double(perPage))))
-        }
+        self.totalPages = max(1, Int(ceil(Double(total) / Double(perPage))))
+        self.currentPage = min(parameters.page, totalPages)
 
         let nav = try OffsetMetadata.nextAndPreviousLinks(
-            currentPage: currentPage,
-            totalPages: totalPages,
-            url: url
+            currentPage: self.currentPage,
+            totalPages: self.totalPages,
+            url: self.url
         )
+
         self.links = Links(previous: nav.previous, next: nav.next)
     }
 }
@@ -69,11 +55,6 @@ public struct OffsetMetadata: Codable {
 public struct OffsetQueryParameters: Decodable, Reflectable {
     public let perPage: Int?
     public let page: Int?
-
-    static public func decode(req: Request) throws -> Future<OffsetQueryParameters> {
-        let params = try req.query.decode(OffsetQueryParameters.self)
-        return req.future(params)
-    }
 }
 
 public struct OffsetParameters {
@@ -81,17 +62,8 @@ public struct OffsetParameters {
     public let perPage: Int
 
     public init(page: Int, perPage: Int) {
-        if page < 1 {
-            self.page = 1
-        } else {
-            self.page = page
-        }
-
-        if perPage < 1 {
-            self.perPage = 1
-        } else {
-            self.perPage = perPage
-        }
+        self.page = max(1, page)
+        self.perPage = max(1, perPage)
     }
 
     public init(config: OffsetPaginatorConfig, queryParameters: OffsetQueryParameters) {
