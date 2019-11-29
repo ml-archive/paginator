@@ -66,14 +66,4 @@ class OffsetParametersTests: XCTestCase {
         XCTAssertTrue(params.page > 0)
         XCTAssertTrue(params.perPage > 0)
     }
-
-    func testInvalidConfigAndEmptyQueryParameterInit() throws {
-        let config = OffsetPaginatorConfig(perPage: -10, defaultPage: -1)
-        let queryParameters = OffsetQueryParameters(perPage: nil, page: nil)
-
-        let params = OffsetParameters(config: config, queryParameters: queryParameters)
-
-        XCTAssertTrue(params.page > 0)
-        XCTAssertTrue(params.perPage > 0)
-    }
 }
