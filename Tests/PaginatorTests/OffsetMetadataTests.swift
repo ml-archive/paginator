@@ -140,4 +140,53 @@ class OffsetMetadataTests: XCTestCase {
             url.absoluteString + "?page=\(total)"
         )
     }
+
+    func testMetadataLink() throws {
+        let url: URL = URL(string: "https://www.google.com")!
+        let params = OffsetParameters(page: 0, perPage: 0)
+        let page = 3
+
+        let metadata = try OffsetMetadata(parameters: params, total: 0, url: url)
+        let link = try metadata.link(for: page)
+        XCTAssertEqual(
+            link,
+            url.absoluteString + "?page=\(page)"
+        )
+    }
+
+    func testMetadataLinks() throws {
+        let url: URL = URL(string: "https://www.google.com")!
+        let params = OffsetParameters(page: 0, perPage: 0)
+        let pageRange: CountableClosedRange<Int> = 3...7
+
+        let metadata = try OffsetMetadata(parameters: params, total: 0, url: url)
+        let links = try metadata.links(in: pageRange)
+
+        XCTAssertEqual(links.count, pageRange.count)
+
+        XCTAssertEqual(
+            links[0],
+            url.absoluteString + "?page=3"
+        )
+
+        XCTAssertEqual(
+            links[1],
+            url.absoluteString + "?page=4"
+        )
+
+        XCTAssertEqual(
+            links[2],
+            url.absoluteString + "?page=5"
+        )
+
+        XCTAssertEqual(
+            links[3],
+            url.absoluteString + "?page=6"
+        )
+
+        XCTAssertEqual(
+            links[4],
+            url.absoluteString + "?page=7"
+        )
+    }
  }
