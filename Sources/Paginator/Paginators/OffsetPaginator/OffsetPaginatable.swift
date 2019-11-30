@@ -78,8 +78,7 @@ public extension OffsetPaginatable {
                 try OffsetPaginator(
                     data: data,
                     metadata: .init(
-                        currentPage: parameters.page,
-                        perPage: parameters.perPage,
+                        parameters: parameters,
                         total: count,
                         url: url
                     )
