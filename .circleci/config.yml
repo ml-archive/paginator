@@ -45,7 +45,7 @@ jobs:
           name: Build and Run Tests
           no_output_timeout: 1800
           command: |
-            swift test --enable-test-discovery
+            swift test
       - run:
           name: Restoring Package File
           command: mv res Package.swift
