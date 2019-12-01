@@ -73,8 +73,7 @@ class OffsetMetadataTests: XCTestCase {
             url: url
         )
 
-        XCTAssert(links as Any is (String?, String?))
-        XCTAssertEqual(links.previous, nil)
+        XCTAssertNil(links.previous)
         XCTAssertEqual(
             links.next,
             url.absoluteString + "?page=2"
@@ -92,8 +91,7 @@ class OffsetMetadataTests: XCTestCase {
             url: url
         )
 
-        XCTAssert(links as Any is (String?, String?))
-        XCTAssertEqual(links.next, nil)
+        XCTAssertNil(links.next)
         XCTAssertEqual(
             links.previous,
             url.absoluteString + "?page=9"
@@ -111,7 +109,6 @@ class OffsetMetadataTests: XCTestCase {
             url: url
         )
 
-        XCTAssert(links as Any is (String?, String?))
         XCTAssertEqual(
             links.next,
             url.absoluteString + "?page=6"
@@ -133,8 +130,7 @@ class OffsetMetadataTests: XCTestCase {
             url: url
         )
 
-        XCTAssert(links as Any is (String?, String?))
-        XCTAssertEqual(links.next, nil)
+        XCTAssertNil(links.next)
         XCTAssertEqual(
             links.previous,
             url.absoluteString + "?page=\(total)"

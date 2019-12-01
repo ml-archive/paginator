@@ -33,7 +33,7 @@ class OffsetQueryParametersTests: XCTestCase {
 
     // and extremes
     func testInitExtremePositivePage() {
-        let extreme: Int = Int.max
+        let extreme = Int.max
 
         let params = OffsetQueryParameters(perPage: 10, page: extreme)
         XCTAssertEqual(params.perPage, 10)
@@ -41,7 +41,7 @@ class OffsetQueryParametersTests: XCTestCase {
     }
 
     func testInitExtremePositivePerPage() {
-        let extreme: Int = Int.max
+        let extreme = Int.max
 
         let params = OffsetQueryParameters(perPage: extreme, page: 1)
         XCTAssertEqual(params.perPage, extreme)
@@ -49,7 +49,7 @@ class OffsetQueryParametersTests: XCTestCase {
     }
 
     func testInitExtremeNegativePage() {
-        let extreme: Int = Int.min
+        let extreme = Int.min
 
         let params = OffsetQueryParameters(perPage: 10, page: extreme)
         XCTAssertEqual(params.perPage, 10)
@@ -63,5 +63,4 @@ class OffsetQueryParametersTests: XCTestCase {
         XCTAssertEqual(params.perPage, extreme)
         XCTAssertEqual(params.page, 1)
     }
-
 }
