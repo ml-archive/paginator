@@ -10,7 +10,7 @@ public protocol OffsetPaginatable {
 extension EventLoopFuture: OffsetPaginatable where T: Collection, T.Index == Int {
     public typealias Element = T.Element
     public func makeOffsetPaginationDataSource() -> OffsetPaginationDataSource<T.Element> {
-        .init(
+        return .init(
             results: { range in self.map { Array($0[range.clamped(to: 0..<$0.count)]) } },
             totalCount: { self.map { $0.count } }
         )
@@ -20,7 +20,7 @@ extension EventLoopFuture: OffsetPaginatable where T: Collection, T.Index == Int
 extension QueryBuilder: OffsetPaginatable {
     /// Make an OffsetPaginationDataSource from the query builder.
     public func makeOffsetPaginationDataSource() -> OffsetPaginationDataSource<Result> {
-        .init(
+        return .init(
             results: { range in
                 self.range(range).all()
             },
@@ -31,7 +31,7 @@ extension QueryBuilder: OffsetPaginatable {
 
 extension OffsetPaginationDataSource: OffsetPaginatable {
     public func makeOffsetPaginationDataSource() -> OffsetPaginationDataSource<Element> {
-        self
+        return self
     }
 }
 
@@ -92,7 +92,7 @@ public extension OffsetPaginatable where Element: Codable {
         parameters: OffsetParameters,
         url: URL
     ) -> Future<OffsetPaginator<Element>> {
-        paginate(parameters: parameters, url: url, transformer: .init())
+        return paginate(parameters: parameters, url: url, transformer: .init())
     }
 }
 
@@ -103,7 +103,7 @@ public extension OffsetPaginatable {
         on request: Request,
         transformer: Transformer<Element, Output>
     ) -> EventLoopFuture<OffsetPaginator<Output>> {
-        request.offsetParameters().flatMap {
+        return request.offsetParameters().flatMap {
             self.paginate(parameters: $0, url: request.http.url, transformer: transformer)
         }
     }
@@ -111,7 +111,7 @@ public extension OffsetPaginatable {
 
 public extension Request {
     func offsetParameters() -> EventLoopFuture<OffsetParameters> {
-        EventLoopFuture.map(on: self) {
+        return EventLoopFuture.map(on: self) {
             try self.query.decode(OffsetQueryParameters.self)
         }.map {
             OffsetParameters(config: (try? self.make()) ?? .default, queryParameters: $0)
@@ -121,6 +121,6 @@ public extension Request {
 
 public extension OffsetPaginatable where Element: Codable {
     func paginate(on request: Request) -> EventLoopFuture<OffsetPaginator<Element>> {
-        self.paginate(on: request, transformer: .init())
+        return paginate(on: request, transformer: .init())
     }
 }

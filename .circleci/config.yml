@@ -2,7 +2,7 @@ version: 2
 jobs:
   MacOS:
     macos:
-      xcode: "11.2.1"
+      xcode: "10.1.0" # swift 4.2.1
     steps:
       - checkout
       - restore_cache:
@@ -32,7 +32,7 @@ jobs:
             - .build
   Linux:
     docker:
-      - image: nodesvapor/vapor-ci:swift-5.1
+      - image: nodesvapor/vapor-ci:swift-4.2
     steps:
       - checkout
       - restore_cache:

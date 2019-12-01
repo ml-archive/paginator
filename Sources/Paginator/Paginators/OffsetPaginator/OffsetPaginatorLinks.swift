@@ -24,13 +24,13 @@ public extension OffsetMetadata {
     func links(
         in range: CountableClosedRange<Int>
     ) throws -> [String] {
-        try range.map { try link(for: $0) }
+        return try range.map { try link(for: $0) }
     }
 
     func link(
         for page: Int
     ) throws -> String {
-        try OffsetMetadata.link(url: self.url, page: page)
+        return try OffsetMetadata.link(url: self.url, page: page)
     }
 
     private static func link(url: URL, page: Int) throws -> String {

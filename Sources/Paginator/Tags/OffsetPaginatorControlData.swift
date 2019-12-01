@@ -95,7 +95,7 @@ public enum TagContextPaginatorError: Error {
 
 public extension OffsetPaginator {
     func userInfo() throws -> [AnyHashable: Any] {
-        try [userInfoKey: OffsetPaginatorControlData(metadata: metadata)]
+        return try [userInfoKey: OffsetPaginatorControlData(metadata: metadata)]
     }
 }
 
