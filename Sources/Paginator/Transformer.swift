@@ -3,10 +3,6 @@ import NIO
 public struct Transformer<Input, Output> {
     let transform: (EventLoopFuture<[Input]>) -> EventLoopFuture<[Output]>
 
-    init(_ transform: @escaping (EventLoopFuture<[Input]>) -> EventLoopFuture<[Output]>) {
-        self.transform = transform
-    }
-
     public init(_ transform: @escaping ([Input]) throws -> [Output]) {
         self.transform = { input in
             input.map(transform)
