@@ -73,16 +73,17 @@ public extension OffsetPaginatable {
     ) -> Future<OffsetPaginator<Output>> {
         let source = makeOffsetPaginationDataSource()
         return transformer.transform(source.results(parameters.range))
-            .and(source.totalCount())
-            .map { data, count in
-                try OffsetPaginator(
-                    data: data,
-                    metadata: .init(
-                        parameters: parameters,
-                        total: count,
-                        url: url
+            .flatMap { results in
+                source.totalCount().map { count in
+                    try OffsetPaginator(
+                        data: results,
+                        metadata: .init(
+                            parameters: parameters,
+                            total: count,
+                            url: url
+                        )
                     )
-                )
+                }
             }
     }
 }
