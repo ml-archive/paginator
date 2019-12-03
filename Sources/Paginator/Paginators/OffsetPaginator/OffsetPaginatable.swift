@@ -47,7 +47,7 @@ extension OffsetPaginationDataSource where Element: Decodable {
         self.results = { range in
             let resultBuilderCopy = resultBuilder.copy()
             resultBuilderCopy.sql.append(
-                "\nLIMIT \(range.lowerBound - range.upperBound)\nOFFSET \(range.lowerBound)"
+                "\nLIMIT \(range.upperBound - range.lowerBound)\nOFFSET \(range.lowerBound)"
             )
             return resultBuilder.all(decoding: Element.self)
         }
