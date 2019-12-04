@@ -165,7 +165,6 @@ class OffsetPaginatableTests: XCTestCase {
         )
 
         let request = Request(using: container)
-
         request.http.url = URL(
             string: "/?page=\(requestParamPage)&perPage=\(requestParamPerPage)"
         )!
