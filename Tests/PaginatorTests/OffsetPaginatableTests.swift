@@ -133,4 +133,45 @@ class OffsetPaginatableTests: XCTestCase {
         XCTAssertEqual(paginator.data.first?.id, self.paginatable[8].id)
         XCTAssertNotNil(paginator.data.first)
     }
+
+    func testPaginateParametersWithRequest() throws {
+        let eventLoop = EmbeddedEventLoop()
+
+        let container = BasicContainer.init(
+            config: .default(),
+            environment: .testing,
+            services: .default(),
+            on: eventLoop
+        )
+
+        let request = Request(using: container)
+        let parameters = try request.offsetParameters().wait()
+
+        XCTAssertEqual(parameters.page, OffsetPaginatorConfig.default.defaultPage)
+        XCTAssertEqual(parameters.perPage, OffsetPaginatorConfig.default.perPage)
+    }
+
+    func testPaginateWithRequest() throws {
+        let requestParamPage = 1
+        let requestParamPerPage = 5
+        let eventLoop = EmbeddedEventLoop()
+
+        let container = BasicContainer.init(
+            config: .default(),
+            environment: .testing,
+            services: .default(),
+            on: eventLoop
+        )
+
+        let request = Request(using: container)
+        request.http.url = URL(
+            string: "/?page=\(requestParamPage)&perPage=\(requestParamPerPage)"
+        )!
+        let offsetPaginator = eventLoop.future(paginatable)
+
+        let paginator = try offsetPaginator.paginate(on: request).wait()
+        XCTAssertEqual(paginator.data.count, requestParamPerPage)
+        XCTAssertEqual(paginator.metadata.currentPage, requestParamPage)
+        XCTAssertEqual(paginator.metadata.perPage, requestParamPerPage)
+    }
 }
