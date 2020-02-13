@@ -59,8 +59,7 @@ class OffsetPaginatableTests: XCTestCase {
 
         let paginator = try offsetPaginator.paginate(
             parameters: parameters,
-            url: url,
-            transformer: .init()
+            url: url
         ).wait()
 
         XCTAssertEqual(paginator.data.count, self.parameters.perPage)

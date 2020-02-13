@@ -18,6 +18,7 @@ extension EventLoopFuture: OffsetPaginatable where T: Collection, T.Index == Int
 }
 
 extension QueryBuilder: OffsetPaginatable {
+
     /// Make an OffsetPaginationDataSource from the query builder.
     public func makeOffsetPaginationDataSource() -> OffsetPaginationDataSource<Result> {
         return .init(
@@ -36,7 +37,7 @@ extension OffsetPaginationDataSource: OffsetPaginatable {
 }
 
 extension OffsetPaginationDataSource where Element: Decodable {
-    struct CountResult: Codable {
+    struct CountResult: Decodable {
         let count: Int
     }
 
@@ -66,13 +67,13 @@ private extension SQLRawBuilder {
 }
 
 public extension OffsetPaginatable {
-    func paginate<Output>(
+    func paginate(
         parameters: OffsetParameters,
-        url: URL,
-        transformer: Transformer<Element, Output>
-    ) -> Future<OffsetPaginator<Output>> {
+        url: URL
+    ) -> Future<OffsetPaginator<Element>> {
         let source = makeOffsetPaginationDataSource()
-        return transformer.transform(source.results(parameters.range))
+        return source
+            .results(parameters.range)
             .flatMap { results in
                 source.totalCount().map { count in
                     try OffsetPaginator(
@@ -88,24 +89,14 @@ public extension OffsetPaginatable {
     }
 }
 
-public extension OffsetPaginatable where Element: Codable {
-    func paginate(
-        parameters: OffsetParameters,
-        url: URL
-    ) -> Future<OffsetPaginator<Element>> {
-        return paginate(parameters: parameters, url: url, transformer: .init())
-    }
-}
-
 // MARK: Creating `OffsetPaginator`s from `Request`s
 
 public extension OffsetPaginatable {
-    func paginate<Output>(
-        on request: Request,
-        transformer: Transformer<Element, Output>
-    ) -> EventLoopFuture<OffsetPaginator<Output>> {
+    func paginate(
+        on request: Request
+    ) -> EventLoopFuture<OffsetPaginator<Element>> {
         return request.offsetParameters().flatMap {
-            self.paginate(parameters: $0, url: request.http.url, transformer: transformer)
+            self.paginate(parameters: $0, url: request.http.url)
         }
     }
 }
@@ -120,11 +111,5 @@ public extension Request {
                 queryParameters: $0
             )
         }
-    }
-}
-
-public extension OffsetPaginatable where Element: Codable {
-    func paginate(on request: Request) -> EventLoopFuture<OffsetPaginator<Element>> {
-        return paginate(on: request, transformer: .init())
     }
 }
