@@ -22,9 +22,9 @@ extension QueryBuilder: OffsetPaginatable {
     public func makeOffsetPaginationDataSource() -> OffsetPaginationDataSource<Result> {
         return .init(
             results: { range in
-                self.range(range).all()
+                self.copy().range(range).all()
             },
-            totalCount: count
+            totalCount: copy().count
         )
     }
 }
