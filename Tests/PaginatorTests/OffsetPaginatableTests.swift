@@ -3,7 +3,7 @@ import Vapor
 @testable import Paginator
 
 class OffsetPaginatableTests: XCTestCase {
-    public struct PaginateableData: Codable {
+    struct PaginateableData: Codable {
         let id: Int
         let name: String
         let createdAt: Date

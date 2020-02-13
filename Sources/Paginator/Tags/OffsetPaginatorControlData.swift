@@ -25,19 +25,19 @@ middle = 3 4 5 6 7
 */
 
 public struct OffsetPaginatorControlData: Codable {
-    private struct Control: Codable {
+    struct Control: Codable {
         let url: String
         let page: Int
     }
 
-    private let current: Control
-    private let previous: Control?
-    private let next: Control?
-    private let first: Control
-    private let last: Control?
-    private let left: Bool
-    private let right: Bool
-    private let middle: [Control]
+    let current: Control
+    let previous: Control?
+    let next: Control?
+    let first: Control
+    let last: Control?
+    let left: Bool
+    let right: Bool
+    let middle: [Control]
 
     init(metadata: OffsetMetadata) throws {
         current = Control(url: metadata.url.absoluteString, page: metadata.currentPage)
