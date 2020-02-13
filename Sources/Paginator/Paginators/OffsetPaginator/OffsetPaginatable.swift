@@ -115,7 +115,10 @@ public extension Request {
         return EventLoopFuture.map(on: self) {
             try self.query.decode(OffsetQueryParameters.self)
         }.map {
-            OffsetParameters(config: (try? self.make()) ?? .default, queryParameters: $0)
+            OffsetParameters(
+                config: (try? self.make(OffsetPaginatorConfig.self)) ?? .default,
+                queryParameters: $0
+            )
         }
     }
 }
