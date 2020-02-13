@@ -2,7 +2,7 @@ import XCTest
 import Vapor
 @testable import Paginator
 
-class OffsetMetadataTests: XCTestCase {
+final class OffsetMetadataTests: XCTestCase {
 
     func testInitNoRequest() throws {
         let url: URL = URL(string: "https://www.google.com")!

@@ -2,7 +2,7 @@ import XCTest
 import Vapor
 @testable import Paginator
 
-class OffsetPaginationDataSourceTests: XCTestCase {
+final class OffsetPaginationDataSourceTests: XCTestCase {
     func testDataSourcePaginate() throws {
         let data = [1,2,3,4,5,6,7]
         let parameters = OffsetParameters(page: 1, perPage: 1)
