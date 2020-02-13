@@ -17,7 +17,7 @@ Add `Paginator` to the package dependencies (in your `Package.swift` file):
 ```swift
 dependencies: [
     ...,
-    .package(url: "https://github.com/nodes-vapor/paginator.git", from: "3.0.0")
+    .package(url: "https://github.com/nodes-vapor/paginator.git", from: "4.0.0")
 ]
 ```
 
@@ -86,7 +86,7 @@ router.get("galaxies") { (req: Request) -> Future<OffsetPaginator<Galaxy>> in
 
 ### `RawSQL`
 
-For convenience, Paginator also comes with support for paginating raw SQL queries for complex expressions not compatible with Fluent
+Paginator also comes with support for paginating raw SQL queries for complex expressions not compatible with Fluent.
 
 Simple example using PostgreSQL:
 ```swift
@@ -100,7 +100,7 @@ router.get("galaxies") { (req: Request) -> Future<OffsetPaginator<Galaxy>> in
                 SELECT COUNT(*) as "count"
                 FROM public."Galaxy"
             """, connection: conn)
-        return try rawBuilder.paginate(for: req)
+        return try rawBuilder.paginate(on: req)
     }
 }
 ```
@@ -175,6 +175,38 @@ Calling the Leaf tag for `OffsetPaginator` will automatically generate the Boots
 ```
 
 
+## Transforming
+
+The data in an OffsetPaginator can be transformed by mapping over the paginator and transforming each element at a time:
+
+```swift
+Galaxy.query(on: req).paginate(on: req).map { paginator in
+    paginator.map { (galaxy: Galaxy) -> GalaxyViewModel in 
+        GalaxyViewModel(galaxy: galaxy)
+    }
+}
+```
+
+You can also transform a whole page of results at once:
+
+```swift
+Galaxy.query(on: req).paginate(on: req).map { paginator in
+    paginator.map { (galaxies: [Galaxy]) -> [GalaxyViewModel] in 
+        galaxies.map(GalaxyViewModel.init)
+    }
+}
+```
+
+In case the transformation requires async work you can do:
+
+```swift
+Galaxy.query(on: req).paginate(on: req).map { paginator in
+    paginator.flatMap { (galaxies: [Galaxy]) -> Future<[GalaxyViewModel]> in 
+        galaxies.someAsyncMethod()
+    }
+}
+```
+
 ## Configuration
 
 The `OffsetPaginator` has a configuration file (`OffsetPaginatorConfig`) that can be overwritten if needed. This can be done in `configure.swift`:
@@ -188,7 +220,6 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     ))
 }
 ```
-
 
 ## 🏆 Credits
 
