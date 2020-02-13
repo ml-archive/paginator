@@ -17,7 +17,7 @@ Add `Paginator` to the package dependencies (in your `Package.swift` file):
 ```swift
 dependencies: [
     ...,
-    .package(url: "https://github.com/nodes-vapor/paginator.git", from: "3.0.0-rc")
+    .package(url: "https://github.com/nodes-vapor/paginator.git", from: "3.0.0")
 ]
 ```
 
@@ -193,7 +193,6 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
 ## 🏆 Credits
 
 This package is developed and maintained by the Vapor team at [Nodes](https://www.nodesagency.com).
-The package owner for this project is [Siemen](https://github.com/siemensikkema/).
 
 
 ## 📄 License
