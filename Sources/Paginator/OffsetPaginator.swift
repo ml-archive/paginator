@@ -15,7 +15,7 @@ public struct OffsetPaginator<Object> {
         return .init(data: try closure(data), metadata: metadata)
     }
 
-    public func map<Output>(
+    public func flatMap<Output>(
         _ closure: ([Object]) -> Future<[Output]>
     ) -> Future<OffsetPaginator<Output>> {
         return closure(data).map {

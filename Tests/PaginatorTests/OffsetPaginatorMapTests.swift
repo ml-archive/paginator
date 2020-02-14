@@ -24,7 +24,7 @@ final class OffsetPaginatorMapTests: XCTestCase {
     func testAsyncMap() throws {
         let eventloop = EmbeddedEventLoop()
         let paginator = OffsetPaginator(data: [1, 2], metadata: metadata)
-        let mapped = try paginator.map { eventloop.future($0.map(String.init)) }.wait()
+        let mapped = try paginator.flatMap { eventloop.future($0.map(String.init)) }.wait()
         XCTAssertEqual(mapped.data, ["1", "2"])
     }
 }
