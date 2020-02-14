@@ -1,8 +1,6 @@
 import Vapor
 
 public struct OffsetPaginator<Object> {
-    public typealias PaginatorMetadata = OffsetMetadata
-
     public let data: [Object]
     public let metadata: OffsetMetadata
 
@@ -11,13 +9,13 @@ public struct OffsetPaginator<Object> {
         self.metadata = metadata
     }
 
-    public func map<Output: Codable>(
+    public func map<Output>(
         _ closure: ([Object]) throws -> [Output]
     ) rethrows -> OffsetPaginator<Output> {
         return .init(data: try closure(data), metadata: metadata)
     }
 
-    public func map<Output: Codable>(
+    public func map<Output>(
         _ closure: ([Object]) -> Future<[Output]>
     ) -> Future<OffsetPaginator<Output>> {
         return closure(data).map {
@@ -25,7 +23,7 @@ public struct OffsetPaginator<Object> {
         }
     }
 
-    public func map<Output: Codable>(
+    public func map<Output>(
         _ closure: (Object) throws -> Output
     ) rethrows -> OffsetPaginator<Output> {
         return .init(data: try data.map(closure), metadata: metadata)
@@ -36,11 +34,6 @@ extension OffsetPaginator: Content where Object: Codable {}
 extension OffsetPaginator: Codable where Object: Codable {}
 extension OffsetPaginator: RequestCodable where Object: Codable {}
 extension OffsetPaginator: ResponseCodable where Object: Codable {}
-
-public extension OffsetPaginator {
-    typealias ResultObject = Object
-    typealias PaginatableMetadata = OffsetMetadata
-}
 
 public enum OffsetMetadataError: Error {
     case invalidParameters
