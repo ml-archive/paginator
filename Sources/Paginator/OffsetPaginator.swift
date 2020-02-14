@@ -1,8 +1,6 @@
 import Vapor
 
-public struct OffsetPaginator<Object> {
-    public typealias PaginatorMetadata = OffsetMetadata
-
+public struct OffsetPaginator<Object>: OffsetPaginatorProtocol {
     public let data: [Object]
     public let metadata: OffsetMetadata
 
@@ -10,32 +8,68 @@ public struct OffsetPaginator<Object> {
         self.data = data
         self.metadata = metadata
     }
-
-    public func map<Output: Codable>(
-        _ closure: ([Object]) throws -> [Output]
-    ) rethrows -> OffsetPaginator<Output> {
-        return .init(data: try closure(data), metadata: metadata)
-    }
-
-    public func map<Output: Codable>(
-        _ closure: ([Object]) -> Future<[Output]>
-    ) -> Future<OffsetPaginator<Output>> {
-        return closure(data).map {
-            .init(data: $0, metadata: self.metadata)
-        }
-    }
-
-    public func map<Output: Codable>(
-        _ closure: (Object) throws -> Output
-    ) rethrows -> OffsetPaginator<Output> {
-        return .init(data: try data.map(closure), metadata: metadata)
-    }
 }
 
 extension OffsetPaginator: Content where Object: Codable {}
 extension OffsetPaginator: Codable where Object: Codable {}
 extension OffsetPaginator: RequestCodable where Object: Codable {}
 extension OffsetPaginator: ResponseCodable where Object: Codable {}
+
+/// This protocol enables extension on `EventLoopFuture`s of `OffsetPaginator`s
+public protocol OffsetPaginatorProtocol {
+    associatedtype Object
+    var data: [Object] { get }
+    var metadata: OffsetMetadata { get }
+    init(data: [Object], metadata: OffsetMetadata)
+}
+
+extension OffsetPaginatorProtocol {
+    public func transform<Output>(
+        _ closure: ([Object]) throws -> [Output]
+    ) rethrows -> OffsetPaginator<Output> {
+        return .init(data: try closure(data), metadata: metadata)
+    }
+
+    public func transform<Output>(
+        _ closure: ([Object]) -> EventLoopFuture<[Output]>
+    ) -> Future<OffsetPaginator<Output>> {
+        return closure(data).map {
+            .init(data: $0, metadata: self.metadata)
+        }
+    }
+
+    public func transform<Output>(
+        _ closure: (Object) throws -> Output
+    ) rethrows -> OffsetPaginator<Output> {
+        return .init(data: try data.map(closure), metadata: metadata)
+    }
+}
+
+extension EventLoopFuture where T: OffsetPaginatorProtocol {
+    public func transform<Output>(
+        _ closure: @escaping ([T.Object]) throws -> [Output]
+    ) -> EventLoopFuture<OffsetPaginator<Output>> {
+        return map {
+            try $0.transform(closure)
+        }
+    }
+
+    public func transform<Output>(
+        _ closure: @escaping ([T.Object]) -> EventLoopFuture<[Output]>
+    ) -> EventLoopFuture<OffsetPaginator<Output>> {
+        return flatMap {
+            $0.transform(closure)
+        }
+    }
+
+    public func transform<Output: Codable>(
+        _ closure: @escaping (T.Object) throws -> Output
+    ) rethrows -> EventLoopFuture<OffsetPaginator<Output>> {
+        return map {
+            try $0.transform(closure)
+        }
+    }
+}
 
 public extension OffsetPaginator {
     typealias ResultObject = Object
