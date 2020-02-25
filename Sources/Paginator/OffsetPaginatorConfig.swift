@@ -5,6 +5,9 @@ public struct OffsetPaginatorConfig: Service {
     public let defaultPage: Int
 
     public init(perPage: Int, defaultPage: Int) {
+        precondition(perPage > 0)
+        precondition(defaultPage > 0)
+        
         self.perPage = perPage
         self.defaultPage = defaultPage
     }

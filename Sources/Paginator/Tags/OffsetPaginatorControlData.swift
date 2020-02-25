@@ -25,44 +25,44 @@ middle = 3 4 5 6 7
 */
 
 public struct OffsetPaginatorControlData: Codable {
-    private struct Control: Codable {
+    struct Control: Codable {
         let url: String
         let page: Int
     }
 
-    private let current: Control
-    private let previous: Control?
-    private let next: Control?
-    private let first: Control
-    private let last: Control?
-    private let left: Bool
-    private let right: Bool
-    private let middle: [Control]
+    let current: Control
+    let previous: Control?
+    let next: Control?
+    let first: Control
+    let last: Control?
+    let left: Bool
+    let right: Bool
+    let middle: [Control]
 
-    init(metaData: OffsetMetaData) throws {
-        current = Control(url: metaData.url.absoluteString, page: metaData.currentPage)
-        previous = metaData.links.previous.map { Control(url: $0, page: metaData.currentPage - 1) }
-        next = metaData.links.next.map { Control(url: $0, page: metaData.currentPage + 1) }
-        first = Control(url: try metaData.link(for: 1), page: 1)
+    init(metadata: OffsetMetadata) throws {
+        current = Control(url: metadata.url.absoluteString, page: metadata.currentPage)
+        previous = metadata.links.previous.map { Control(url: $0, page: metadata.currentPage - 1) }
+        next = metadata.links.next.map { Control(url: $0, page: metadata.currentPage + 1) }
+        first = Control(url: try metadata.link(for: 1), page: 1)
 
-        let check = try metaData.link(for: metaData.totalPages)
-        last = first.url == check ? nil : Control(url: check, page: metaData.totalPages)
+        let check = try metadata.link(for: metadata.totalPages)
+        last = first.url == check ? nil : Control(url: check, page: metadata.totalPages)
 
-        let showDots = metaData.totalPages > 9
-        left = showDots && metaData.currentPage >= 5
-        right = showDots && metaData.currentPage <= metaData.totalPages - 5
+        let showDots = metadata.totalPages > 9
+        left = showDots && metadata.currentPage >= 5
+        right = showDots && metadata.currentPage <= metadata.totalPages - 5
 
         var middle: [Control]
-        if metaData.totalPages > 2 {
+        if metadata.totalPages > 2 {
             let bounds = OffsetPaginatorControlData.bounds(
                 left: left,
                 right: right,
-                current: metaData.currentPage,
-                total: metaData.totalPages
+                current: metadata.currentPage,
+                total: metadata.totalPages
             )
 
             let range: CountableClosedRange = bounds.lower...bounds.upper
-            let middleLinks = try metaData.links(in: range)
+            let middleLinks = try metadata.links(in: range)
             middle = zip(range, middleLinks).map { (page, url) in
                 Control(url: url, page: page)
             }
@@ -91,27 +91,22 @@ private let userInfoKey = "offsetPaginatorControlData"
 
 public enum TagContextPaginatorError: Error {
     case paginatorNotPassedInToRender
-    case paginatorDoesNotContainMetaData
 }
 
 public extension OffsetPaginator {
     func userInfo() throws -> [AnyHashable: Any] {
-        guard let metaData = self.metaData() else {
-            throw TagContextPaginatorError.paginatorDoesNotContainMetaData
-        }
-
-        return [userInfoKey: try OffsetPaginatorControlData(metaData: metaData)]
+        return try [userInfoKey: OffsetPaginatorControlData(metadata: metadata)]
     }
 }
 
 public extension TagContext {
     func requireOffsetPaginatorControlData() throws -> OffsetPaginatorControlData {
         guard
-            let metaData = self.context.userInfo[userInfoKey] as? OffsetPaginatorControlData
+            let metadata = self.context.userInfo[userInfoKey] as? OffsetPaginatorControlData
         else {
             throw TagContextPaginatorError.paginatorNotPassedInToRender
         }
 
-        return metaData
+        return metadata
     }
 }

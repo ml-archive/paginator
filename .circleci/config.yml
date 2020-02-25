@@ -2,12 +2,12 @@ version: 2
 jobs:
   MacOS:
     macos:
-      xcode: "10.0.0"
+      xcode: "10.1.0" # swift 4.2.1
     steps:
       - checkout
       - restore_cache:
           keys:
-            - v1-spm-deps-{{ checksum "Package.swift" }}
+            - v2-spm-deps-{{ checksum "Package.swift" }}
       - run:
           name: Install dependencies
           command: |
@@ -27,7 +27,7 @@ jobs:
           command: |
             bash <(curl -s https://codecov.io/bash)
       - save_cache:
-          key: v1-spm-deps-{{ checksum "Package.swift" }}
+          key: v2-spm-deps-{{ checksum "Package.swift" }}
           paths:
             - .build
   Linux:
@@ -37,7 +37,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v2-spm-deps-{{ checksum "Package.swift" }}
+            - v1-spm-deps-{{ checksum "Package.swift" }}
       - run:
           name: Copy Package File
           command: cp Package.swift res
@@ -45,12 +45,12 @@ jobs:
           name: Build and Run Tests
           no_output_timeout: 1800
           command: |
-            swift test -Xswiftc -DNOJSON
+            swift test
       - run:
           name: Restoring Package File
           command: mv res Package.swift
       - save_cache:
-          key: v2-spm-deps-{{ checksum "Package.swift" }}
+          key: v1-spm-deps-{{ checksum "Package.swift" }}
           paths:
             - .build
 workflows:
